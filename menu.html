@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu — Taqueria El Coral</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red: #C0392B; --red-dark: #96291F; --red-glow: rgba(192,57,43,0.35);
+      --cream: #F5EDD6; --cream-dim: #A89070;
+      --gold: #C9962E; --gold-light: #E5B84A;
+      --bg: #0F0902; --bg1: #1A1005; --bg2: #261808; --bg3: #342210; --bg4: #42301A;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--cream);
+      font-family: 'DM Sans', sans-serif; line-height: 1.7; overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9000; opacity: 0.07; mix-blend-mode: overlay;
+    }
+
+    /* NAV */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(15,9,2,0.94); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(201,150,46,0.12);
+      padding: 14px 0;
+    }
+    .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 40px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em; color: var(--cream); text-decoration: none; }
+    .nav-logo span { color: var(--red); }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-link { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cream); text-decoration: none; opacity: 0.7; transition: opacity 0.2s ease, color 0.2s ease; }
+    .nav-link:hover { opacity: 1; color: var(--gold); }
+    .nav-link.active { opacity: 1; color: var(--gold); }
+    .btn-order {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px; background: var(--red); color: var(--cream);
+      font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      text-decoration: none; border-radius: 3px;
+      box-shadow: 0 3px 14px var(--red-glow);
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease;
+    }
+    .btn-order:hover { background: var(--red-dark); transform: translateY(-2px); }
+    .btn-order:active { transform: translateY(0); }
+    #cart-badge {
+      background: var(--gold); color: var(--bg); border-radius: 50%;
+      width: 18px; height: 18px; font-size: 10px; font-weight: 700;
+      display: none; align-items: center; justify-content: center;
+    }
+
+    /* MEAT BANNER */
+    .meat-banner {
+      background: var(--bg2);
+      border-bottom: 1px solid rgba(201,150,46,0.12);
+      padding: 16px 40px;
+      position: sticky; top: 56px; z-index: 990;
+    }
+    .meat-banner-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .meat-label { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+    .meat-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .meat-pill {
+      padding: 5px 14px; border-radius: 100px;
+      border: 1px solid rgba(245,237,214,0.15);
+      font-size: 12px; font-weight: 500; color: var(--cream); opacity: 0.75;
+      background: transparent; cursor: pointer;
+      transition: border-color 0.2s ease, opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+    .meat-pill:hover { opacity: 1; border-color: var(--gold); color: var(--gold); }
+    .meat-pill.selected { background: var(--red); border-color: var(--red); color: var(--cream); opacity: 1; }
+    .meat-pill:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+    /* LAYOUT */
+    .menu-layout {
+      max-width: 1280px; margin: 0 auto;
+      padding: 0 40px;
+      display: grid; grid-template-columns: 220px 1fr; gap: 48px;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      padding-top: 48px;
+    }
+    .sidebar-nav { position: sticky; top: 140px; }
+    .sidebar-heading { font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 4px;
+      font-size: 13px; font-weight: 500; color: var(--cream);
+      text-decoration: none; opacity: 0.65;
+      transition: opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
+      margin-bottom: 2px;
+    }
+    .sidebar-link:hover { opacity: 1; background: rgba(245,237,214,0.04); }
+    .sidebar-link.active { opacity: 1; color: var(--gold); background: rgba(201,150,46,0.08); }
+    .sidebar-link .icon { font-size: 16px; opacity: 0.8; }
+    .sidebar-link:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+    /* MENU CONTENT */
+    .menu-content { padding: 48px 0; }
+
+    .menu-category { margin-bottom: 80px; }
+    .cat-header { margin-bottom: 32px; border-bottom: 1px solid rgba(245,237,214,0.06); padding-bottom: 24px; }
+    .cat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+    .cat-label::before { content: ''; display: block; width: 20px; height: 1.5px; background: var(--gold); opacity: 0.5; }
+    .cat-title { font-family: 'Bebas Neue', sans-serif; font-size: 48px; letter-spacing: 0.03em; color: var(--cream); line-height: 1; }
+    .cat-desc { font-size: 14px; color: var(--cream-dim); margin-top: 8px; line-height: 1.6; }
+
+    /* MENU ITEMS GRID */
+    .items-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .menu-item {
+      background: var(--bg2);
+      border: 1px solid rgba(245,237,214,0.06);
+      border-radius: 6px; padding: 20px 24px;
+      display: flex; flex-direction: column;
+      transition: border-color 0.2s ease, transform 0.2s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.2s ease;
+      position: relative; overflow: hidden;
+    }
+    .menu-item::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 80% at 0% 0%, rgba(201,150,46,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .menu-item:hover {
+      border-color: rgba(201,150,46,0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 40px rgba(201,150,46,0.04);
+    }
+    .item-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 6px; }
+    .item-name { font-size: 15px; font-weight: 600; color: var(--cream); line-height: 1.3; }
+    .item-price { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--gold); letter-spacing: 0.03em; white-space: nowrap; }
+    .item-desc { font-size: 12px; color: var(--cream-dim); line-height: 1.55; flex: 1; margin-bottom: 14px; }
+    .item-meat-note { font-size: 11px; color: var(--red); opacity: 0.8; margin-bottom: 12px; font-weight: 500; letter-spacing: 0.05em; }
+
+    .btn-add {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 9px 18px; background: transparent;
+      border: 1.5px solid rgba(192,57,43,0.4);
+      border-radius: 3px; color: var(--red);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      cursor: pointer; align-self: flex-start;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .btn-add:hover { background: var(--red); border-color: var(--red); color: var(--cream); transform: translateY(-1px); }
+    .btn-add:active { transform: translateY(0); }
+    .btn-add:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+    .btn-add.added { background: var(--red); border-color: var(--red); color: var(--cream); }
+
+    /* TOAST */
+    #toast {
+      position: fixed; bottom: 32px; right: 32px; z-index: 8000;
+      background: var(--bg3); border: 1px solid rgba(201,150,46,0.25);
+      border-radius: 6px; padding: 14px 20px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+    #toast .toast-icon { color: var(--gold); font-size: 18px; }
+    #toast .toast-msg { font-size: 13px; font-weight: 500; color: var(--cream); }
+
+    /* FOOTER MINI */
+    .footer-mini {
+      background: var(--bg1);
+      border-top: 1px solid rgba(201,150,46,0.1);
+      padding: 32px 40px;
+      text-align: center;
+    }
+    .footer-mini a { color: var(--cream-dim); text-decoration: none; font-size: 13px; margin: 0 16px; }
+    .footer-mini a:hover { color: var(--gold); }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--red); }
+
+    @media (max-width: 900px) {
+      .menu-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .items-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <a href="index.html" style="display:inline-flex; align-items:center; text-decoration:none;">
+        <img src="brand_assets/images/img-01.png" alt="Taqueria El Coral" style="height:48px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5));">
+      </a>
+      <div class="nav-links">
+        <a href="menu.html" class="nav-link active">Menu</a>
+        <a href="about.html" class="nav-link">About</a>
+        <button onclick="cwToggle()" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; letter-spacing:0.08em; color:var(--gold); background:none; border:none; cursor:pointer; padding:0; opacity:0.85; transition:opacity 0.2s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'" title="Call options — copy, dial, or scan QR code">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          (408) 422-1508
+        </button>
+        <a href="order.html" class="btn-order">
+          Order
+          <span id="cart-badge">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MENU HERO STRIP -->
+  <div style="margin-top:56px; position:relative; height:240px; overflow:hidden;">
+    <img src="brand_assets/images/img-06.png" alt="Enchilada plate" style="width:100%; height:100%; object-fit:cover; object-position:center 60%; filter:brightness(0.65) contrast(1.1) saturate(1.05);">
+    <div style="position:absolute; inset:0; background:linear-gradient(to right, rgba(15,9,2,0.85) 0%, rgba(15,9,2,0.55) 50%, rgba(15,9,2,0.2) 100%);"></div>
+    <div style="position:absolute; inset:0; background:rgba(120,50,0,0.2); mix-blend-mode:multiply;"></div>
+    <div style="position:absolute; inset:0; display:flex; align-items:center; padding:0 40px; max-width:1280px; margin:0 auto;">
+      <div style="position:absolute; left:40px; right:40px;">
+        <div style="font-size:11px; font-weight:600; letter-spacing:0.22em; text-transform:uppercase; color:#C9962E; margin-bottom:10px;">Taqueria El Coral</div>
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:clamp(56px,7vw,88px); letter-spacing:0.03em; line-height:0.9; color:#F5EDD6;">OUR MENU</div>
+        <div style="font-family:'Fraunces',serif; font-style:italic; font-size:16px; color:#F5EDD6; opacity:0.7; margin-top:12px;">Made fresh · 12 meats · 10 categories</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEAT SELECTOR BANNER -->
+  <div class="meat-banner">
+    <div class="meat-banner-inner">
+      <span class="meat-label">Choose Your Meat:</span>
+      <div class="meat-pills" id="meat-pills">
+        <button class="meat-pill selected" data-meat="Grilled Steak">Grilled Steak</button>
+        <button class="meat-pill" data-meat="Grilled Chicken">Grilled Chicken</button>
+        <button class="meat-pill" data-meat="Al Pastor">Al Pastor</button>
+        <button class="meat-pill" data-meat="Carnitas">Carnitas</button>
+        <button class="meat-pill" data-meat="Chorizo">Chorizo</button>
+        <button class="meat-pill" data-meat="Tripa">Tripa</button>
+        <button class="meat-pill" data-meat="Chile Verde">Chile Verde</button>
+        <button class="meat-pill" data-meat="Beef Tongue">Beef Tongue</button>
+        <button class="meat-pill" data-meat="Beef Head">Beef Head</button>
+        <button class="meat-pill" data-meat="Barbacoa">Barbacoa</button>
+        <button class="meat-pill" data-meat="Buche">Buche</button>
+        <button class="meat-pill" data-meat="Chile Relleno">Chile Relleno</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="menu-layout" style="margin-top: 0; padding-top:0;">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-heading">Categories</div>
+        <a href="#tacos" class="sidebar-link active"><span class="icon">🌮</span> Tacos</a>
+        <a href="#meals" class="sidebar-link"><span class="icon">🍽️</span> Meals</a>
+        <a href="#burritos" class="sidebar-link"><span class="icon">🌯</span> Burritos</a>
+        <a href="#seafood" class="sidebar-link"><span class="icon">🦐</span> Seafood</a>
+        <a href="#breakfast" class="sidebar-link"><span class="icon">🍳</span> Breakfast</a>
+        <a href="#grilled" class="sidebar-link"><span class="icon">🥩</span> Grilled Platters</a>
+        <a href="#kids" class="sidebar-link"><span class="icon">⭐</span> Kids Menu</a>
+        <a href="#specials" class="sidebar-link"><span class="icon">🌟</span> Specials</a>
+        <a href="#sides" class="sidebar-link"><span class="icon">🍚</span> Sides</a>
+        <a href="#drinks" class="sidebar-link"><span class="icon">🥤</span> Drinks</a>
+      </nav>
+    </aside>
+
+    <!-- MENU CONTENT -->
+    <main class="menu-content" id="menu-content">
+    </main>
+  </div>
+
+  <!-- FOOTER MINI -->
+  <div class="footer-mini">
+    <a href="index.html">Home</a>
+    <a href="order.html">Order Pickup</a>
+    <a href="about.html">About Us</a>
+    <div style="margin-top:16px; font-size:12px; color:var(--cream-dim); opacity:0.5;">
+      &copy; 2024 Taqueria El Coral &middot; San Jose, CA
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast">
+    <span class="toast-icon">✓</span>
+    <span class="toast-msg" id="toast-msg">Added to order!</span>
+  </div>
+
+  <script>
+    // ── CART ──────────────────────────────────────────────────────────────────
+    const CART_KEY = 'elCoral_cart';
+
+    function getCart() { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
+    function saveCart(c) { localStorage.setItem(CART_KEY, JSON.stringify(c)); updateCartBadge(); }
+
+    function addToCart(item) {
+      const cart = getCart();
+      const existing = cart.find(i => i.id === item.id && i.meatChoice === item.meatChoice);
+      if (existing) { existing.quantity++; }
+      else { cart.push({ ...item, quantity: 1 }); }
+      saveCart(cart);
+    }
+
+    function updateCartBadge() {
+      const cart = getCart();
+      const count = cart.reduce((s, i) => s + i.quantity, 0);
+      const badge = document.getElementById('cart-badge');
+      if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
+    }
+
+    // ── MEAT SELECTION ────────────────────────────────────────────────────────
+    let selectedMeat = 'Grilled Steak';
+    document.getElementById('meat-pills').addEventListener('click', e => {
+      const pill = e.target.closest('.meat-pill');
+      if (!pill) return;
+      document.querySelectorAll('.meat-pill').forEach(p => p.classList.remove('selected'));
+      pill.classList.add('selected');
+      selectedMeat = pill.dataset.meat;
+    });
+
+    // ── MENU DATA ─────────────────────────────────────────────────────────────
+    const MENU = [
+      {
+        id: 'tacos', label: 'Tacos', icon: '🌮',
+        desc: 'Our tacos are handcrafted on fresh corn tortillas — always made to order.',
+        items: [
+          { id: 't1', name: 'Regular Taco', desc: 'Fresh corn tortilla, your choice of meat, cilantro & onion.', price: 4.09, hasMeat: true },
+          { id: 't2', name: 'Super Taco', desc: 'Flour tortilla loaded with meat, cheese, sour cream, guacamole & salsa.', price: 6.69, hasMeat: true },
+          { id: 't3', name: 'Crispy Taco', desc: 'Crispy corn shell with meat, shredded cheese, lettuce & tomato.', price: 4.69, hasMeat: true },
+          { id: 't4', name: 'Shrimp Taco', desc: 'Battered shrimp, cabbage slaw, chipotle crema, pico de gallo.', price: 8.99, hasMeat: false },
+          { id: 't5', name: 'Fish Taco', desc: 'Beer-battered cod fillet, crispy cabbage, salsa fresca & lime.', price: 8.99, hasMeat: false },
+          { id: 't6', name: 'Birria Taco', desc: 'Slow-braised beef birria on a dipped tortilla, served with consommé.', price: 4.19, hasMeat: false },
+        ]
+      },
+      {
+        id: 'meals', label: 'Meals', icon: '🍽️',
+        desc: 'Full plate meals served with rice, beans & fresh tortillas.',
+        items: [
+          { id: 'm1', name: 'Burrito Plate', desc: 'One full burrito with your choice of meat, served with rice, beans & salsa.', price: 12.99, hasMeat: true },
+          { id: 'm2', name: 'Taco Plate', desc: 'Three tacos with your choice of meat, served with rice & beans.', price: 13.99, hasMeat: true },
+          { id: 'm3', name: 'Chile Relleno Plate', desc: 'Two roasted poblano chiles stuffed with cheese, battered & fried. Rice & beans.', price: 14.99, hasMeat: false },
+          { id: 'm4', name: 'Enchilada Plate', desc: 'Three enchiladas with your choice of meat, red or green sauce, cheese. Rice & beans.', price: 13.49, hasMeat: true },
+          { id: 'm5', name: 'Tamale Plate', desc: 'Two handmade tamales with your choice of meat filling. Rice & beans on the side.', price: 12.49, hasMeat: true },
+          { id: 'm6', name: 'Quesadilla Plate', desc: 'Large flour tortilla with meat & melted cheese. Served with rice & beans.', price: 13.99, hasMeat: true },
+        ]
+      },
+      {
+        id: 'burritos', label: 'Burritos', icon: '🌯',
+        desc: 'Generously filled burritos wrapped tight in a warm flour tortilla.',
+        items: [
+          { id: 'b1', name: 'Regular Burrito', desc: 'Flour tortilla with your choice of meat, rice, beans & salsa.', price: 9.49, hasMeat: true },
+          { id: 'b2', name: 'Super Burrito', desc: 'Everything in the regular plus cheese, sour cream & guacamole.', price: 12.49, hasMeat: true },
+          { id: 'b3', name: 'Breakfast Burrito', desc: 'Scrambled eggs, crispy potatoes, your choice of meat & melted cheese.', price: 9.99, hasMeat: true },
+          { id: 'b4', name: 'Veggie Burrito', desc: 'Rice, beans, grilled peppers, onions, cheese & fresh guacamole.', price: 9.49, hasMeat: false },
+          { id: 'b5', name: 'Wet Burrito', desc: 'Super burrito smothered in red sauce & melted cheese. Knife & fork required.', price: 13.99, hasMeat: true },
+        ]
+      },
+      {
+        id: 'seafood', label: 'Seafood', icon: '🦐',
+        desc: 'Fresh seafood dishes — light, flavorful, and made to order.',
+        items: [
+          { id: 'sf1', name: 'Shrimp Taco', desc: 'Battered shrimp, cabbage slaw, chipotle crema, pico de gallo.', price: 8.99, hasMeat: false },
+          { id: 'sf2', name: 'Fish Taco', desc: 'Beer-battered cod, crispy cabbage, salsa fresca & a squeeze of lime.', price: 8.99, hasMeat: false },
+          { id: 'sf3', name: 'Shrimp Burrito', desc: 'Grilled shrimp, rice, beans, pico, avocado & chipotle in a flour tortilla.', price: 13.99, hasMeat: false },
+          { id: 'sf4', name: 'Seafood Plate', desc: 'Grilled shrimp & fish, rice, beans, tortillas & salsa fresca.', price: 16.99, hasMeat: false },
+          { id: 'sf5', name: 'Caldo de Mariscos', desc: 'Hearty seafood stew with shrimp, fish & vegetables. Served with tortillas.', price: 14.99, hasMeat: false },
+        ]
+      },
+      {
+        id: 'breakfast', label: 'Breakfast', icon: '🍳',
+        desc: 'Served all morning — because a great day starts with great food.',
+        items: [
+          { id: 'br1', name: 'Breakfast Burrito', desc: 'Scrambled eggs, hash browns, your choice of meat & melted cheese.', price: 9.99, hasMeat: true },
+          { id: 'br2', name: 'Huevos Rancheros', desc: 'Two eggs over ranchero sauce on corn tortillas, rice & beans.', price: 10.99, hasMeat: false },
+          { id: 'br3', name: 'Chilaquiles', desc: 'Crispy tortilla chips in red or green salsa, topped with eggs & crema.', price: 10.49, hasMeat: true },
+          { id: 'br4', name: 'Breakfast Plate', desc: 'Two eggs any style with rice, beans & warm flour tortillas.', price: 9.49, hasMeat: true },
+          { id: 'br5', name: 'Huevos a la Mexicana', desc: 'Scrambled eggs with tomato, onion & jalapeño. Rice, beans & tortillas.', price: 9.99, hasMeat: false },
+        ]
+      },
+      {
+        id: 'grilled', label: 'Grilled Platters', icon: '🥩',
+        desc: 'Mesquite-grilled to perfection, served with all the sides.',
+        items: [
+          { id: 'gp1', name: 'Carne Asada Platter', desc: 'Grilled skirt steak, rice, beans, fresh guacamole, pico & warm tortillas.', price: 17.99, hasMeat: false },
+          { id: 'gp2', name: 'Pollo Asado Platter', desc: 'Marinated grilled chicken, rice, beans, salsa & warm tortillas.', price: 15.99, hasMeat: false },
+          { id: 'gp3', name: 'Mixed Grill Platter', desc: 'Half steak, half chicken, rice, beans, guacamole & warm tortillas.', price: 19.99, hasMeat: false },
+          { id: 'gp4', name: 'Fajita Platter', desc: 'Sizzling grilled steak or chicken, peppers & onions with tortillas & all the fixings.', price: 16.99, hasMeat: true },
+          { id: 'gp5', name: 'Al Pastor Platter', desc: 'Marinated pork with pineapple, rice, beans & warm tortillas.', price: 15.49, hasMeat: false },
+        ]
+      },
+      {
+        id: 'kids', label: 'Kids Menu', icon: '⭐',
+        desc: 'Smaller portions, big flavors — for our youngest guests.',
+        items: [
+          { id: 'k1', name: 'Kids Taco', desc: 'One soft taco with a small side of rice or beans.', price: 5.99, hasMeat: true },
+          { id: 'k2', name: 'Kids Burrito', desc: 'Small flour tortilla burrito with meat, rice & beans.', price: 6.49, hasMeat: true },
+          { id: 'k3', name: 'Kids Quesadilla', desc: 'Flour tortilla with melted cheese. Small rice or beans on the side.', price: 5.49, hasMeat: false },
+          { id: 'k4', name: 'Kids Bean & Cheese Burrito', desc: 'Simple and satisfying — beans, cheese & a warm flour tortilla.', price: 4.99, hasMeat: false },
+        ]
+      },
+      {
+        id: 'specials', label: 'Specials', icon: '🌟',
+        desc: 'House favorites and seasonal plates — worth coming back for.',
+        items: [
+          { id: 'sp1', name: 'Birria Plate', desc: 'Slow-braised beef birria, consommé for dipping, rice, beans & tortillas.', price: 15.99, hasMeat: false },
+          { id: 'sp2', name: 'Carnitas Plate', desc: 'Crispy slow-cooked pork carnitas, rice, beans & warm tortillas.', price: 15.49, hasMeat: false },
+          { id: 'sp3', name: 'Al Pastor Plate', desc: 'Marinated pork al pastor with pineapple, rice, beans & tortillas.', price: 14.99, hasMeat: false },
+          { id: 'sp4', name: 'Weekend Menudo', desc: 'Traditional beef tripe soup with hominy & broth. Weekends only.', price: 12.99, hasMeat: false },
+          { id: 'sp5', name: 'Pozole Rojo', desc: 'Pork & hominy in rich red broth with all the garnishes & tostadas.', price: 12.49, hasMeat: false },
+          { id: 'sp6', name: 'Barbacoa Plate', desc: 'Slow-cooked beef barbacoa, rice, beans, pico de gallo & tortillas.', price: 15.99, hasMeat: false },
+        ]
+      },
+      {
+        id: 'sides', label: 'Sides', icon: '🍚',
+        desc: 'Perfect additions to round out your meal.',
+        items: [
+          { id: 'si1', name: 'Mexican Rice', desc: 'Fluffy rice cooked with tomato, onion & spices.', price: 2.49, hasMeat: false },
+          { id: 'si2', name: 'Refried Beans', desc: 'Creamy pinto beans, slow-cooked the traditional way.', price: 2.49, hasMeat: false },
+          { id: 'si3', name: 'Guacamole', desc: 'Fresh avocado, lime, cilantro & jalapeño.', price: 3.99, hasMeat: false },
+          { id: 'si4', name: 'Chips & Salsa', desc: 'Crispy tortilla chips with our house-made salsa.', price: 4.49, hasMeat: false },
+          { id: 'si5', name: 'Sour Cream', desc: 'A generous side of cool sour cream.', price: 1.49, hasMeat: false },
+          { id: 'si6', name: 'Extra Tortillas', desc: 'Three warm flour or corn tortillas.', price: 1.99, hasMeat: false },
+          { id: 'si7', name: 'Jalapeños', desc: 'Pickled or fresh jalapeño slices.', price: 0.99, hasMeat: false },
+        ]
+      },
+      {
+        id: 'drinks', label: 'Drinks', icon: '🥤',
+        desc: 'Refreshing aguas frescas and classic beverages.',
+        items: [
+          { id: 'dr1', name: 'Horchata', desc: 'Sweet rice milk with cinnamon & vanilla. Served cold.', price: 3.49, hasMeat: false },
+          { id: 'dr2', name: 'Jamaica', desc: 'Hibiscus tea, sweet and tart — a classic.', price: 3.49, hasMeat: false },
+          { id: 'dr3', name: 'Tamarindo', desc: 'Sweet-sour tamarind agua fresca.', price: 3.49, hasMeat: false },
+          { id: 'dr4', name: 'Mexican Coke', desc: 'The real thing — made with cane sugar.', price: 2.99, hasMeat: false },
+          { id: 'dr5', name: 'Agua Fresca', desc: 'Seasonal fresh fruit water — ask for today\'s flavor.', price: 3.49, hasMeat: false },
+          { id: 'dr6', name: 'Coffee', desc: 'Hot brewed coffee.', price: 2.49, hasMeat: false },
+          { id: 'dr7', name: 'Orange Juice', desc: 'Fresh-squeezed orange juice.', price: 3.49, hasMeat: false },
+          { id: 'dr8', name: 'Bottled Water', desc: 'Still or sparkling.', price: 1.99, hasMeat: false },
+        ]
+      },
+    ];
+
+    // ── RENDER ─────────────────────────────────────────────────────────────────
+    function renderMenu() {
+      const content = document.getElementById('menu-content');
+      content.innerHTML = MENU.map(cat => `
+        <section class="menu-category" id="${cat.id}">
+          <div class="cat-header">
+            <div class="cat-label">${cat.icon} ${cat.label}</div>
+            <div class="cat-title">${cat.label.toUpperCase()}</div>
+            ${cat.desc ? `<div class="cat-desc">${cat.desc}</div>` : ''}
+          </div>
+          <div class="items-grid">
+            ${cat.items.map(item => `
+              <div class="menu-item">
+                <div class="item-header">
+                  <div class="item-name">${item.name}</div>
+                  <div class="item-price">$${item.price.toFixed(2)}</div>
+                </div>
+                <div class="item-desc">${item.desc}</div>
+                ${item.hasMeat ? '<div class="item-meat-note">↑ Uses your meat selection</div>' : ''}
+                <button class="btn-add" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}" data-meat="${item.hasMeat}">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add to Order
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+      `).join('');
+
+      content.addEventListener('click', e => {
+        const btn = e.target.closest('.btn-add');
+        if (!btn) return;
+        const hasMeat = btn.dataset.meat === 'true';
+        const item = {
+          id: btn.dataset.id,
+          name: btn.dataset.name,
+          price: parseFloat(btn.dataset.price),
+          meatChoice: hasMeat ? selectedMeat : null,
+        };
+        addToCart(item);
+        showToast(`${item.name}${hasMeat ? ` (${selectedMeat})` : ''} added!`);
+        btn.classList.add('added');
+        btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Added!`;
+        setTimeout(() => {
+          btn.classList.remove('added');
+          btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add to Order`;
+        }, 1800);
+      });
+    }
+
+    // ── TOAST ──────────────────────────────────────────────────────────────────
+    let toastTimer;
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // ── SIDEBAR ACTIVE STATE ───────────────────────────────────────────────────
+    function updateSidebarActive() {
+      const sections = MENU.map(c => document.getElementById(c.id));
+      const scrollY = window.scrollY + 200;
+      let active = sections[0];
+      for (const s of sections) {
+        if (s && s.offsetTop <= scrollY) active = s;
+      }
+      document.querySelectorAll('.sidebar-link').forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + (active ? active.id : ''));
+      });
+    }
+
+    // ── INIT ───────────────────────────────────────────────────────────────────
+    renderMenu();
+    updateCartBadge();
+    window.addEventListener('scroll', updateSidebarActive, { passive: true });
+    updateSidebarActive();
+  </script>
+
+<!-- ── CALL WIDGET ──────────────────────────────────────────────────────── -->
+<style>
+  #cw { position:fixed; bottom:28px; right:28px; z-index:8000; }
+  #cw-panel {
+    display:none; opacity:0; transform:translateY(14px) scale(0.96);
+    position:absolute; bottom:calc(100% + 14px); right:0;
+    width:292px;
+    background:#261808;
+    border:1px solid rgba(201,150,46,0.22);
+    border-radius:14px; padding:24px 24px 20px;
+    box-shadow:0 24px 64px rgba(0,0,0,0.75), 0 4px 16px rgba(0,0,0,0.4);
+    transition:opacity 0.22s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  #cw-panel.cw-open { opacity:1; transform:translateY(0) scale(1); }
+  @keyframes cwPulse {
+    0%,100% { box-shadow:0 4px 28px rgba(192,57,43,0.5), 0 2px 8px rgba(0,0,0,0.4); }
+    50%      { box-shadow:0 6px 40px rgba(192,57,43,0.8), 0 2px 12px rgba(0,0,0,0.4); }
+  }
+  #cw-pill {
+    display:flex; align-items:center; gap:10px;
+    padding:13px 22px 13px 18px;
+    background:#C0392B; border:none; border-radius:100px;
+    cursor:pointer; font-family:'DM Sans',sans-serif;
+    box-shadow:0 4px 28px rgba(192,57,43,0.5), 0 2px 8px rgba(0,0,0,0.4);
+    animation:cwPulse 3s ease-in-out infinite;
+    transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  #cw-pill:hover { transform:translateY(-2px); }
+  #cw-pill:active { transform:translateY(0); }
+  #cw-pill span { font-size:14px; font-weight:700; letter-spacing:0.04em; color:#F5EDD6; }
+  .cw-action {
+    display:flex; align-items:center; gap:10px;
+    width:100%; padding:12px 14px;
+    border-radius:7px; cursor:pointer;
+    font-family:'DM Sans',sans-serif;
+    font-size:13px; font-weight:600; letter-spacing:0.06em;
+    text-decoration:none; border:none;
+    transition:transform 0.18s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease, box-shadow 0.15s ease;
+    margin-bottom:8px;
+  }
+  .cw-action:last-child { margin-bottom:0; }
+  .cw-action:hover { transform:translateY(-2px); }
+  .cw-action:active { transform:translateY(0); }
+  .cw-dial {
+    background:#C0392B; color:#F5EDD6;
+    box-shadow:0 3px 16px rgba(192,57,43,0.4);
+  }
+  .cw-dial:hover { background:#96291F; box-shadow:0 5px 24px rgba(192,57,43,0.6); }
+  .cw-copy-btn {
+    background:rgba(245,237,214,0.07); color:#F5EDD6;
+    border:1.5px solid rgba(245,237,214,0.15) !important;
+  }
+  .cw-copy-btn:hover { background:rgba(245,237,214,0.12); border-color:rgba(245,237,214,0.35) !important; }
+  .cw-copy-btn.cw-copied { color:#C9962E; border-color:rgba(201,150,46,0.5) !important; background:rgba(201,150,46,0.08); }
+  .cw-divider {
+    display:flex; align-items:center; gap:10px;
+    margin:16px 0; color:#A89070; font-size:10px;
+    font-family:'DM Sans',sans-serif; letter-spacing:0.14em; text-transform:uppercase;
+  }
+  .cw-divider::before,.cw-divider::after { content:''; flex:1; height:1px; background:rgba(245,237,214,0.08); }
+</style>
+
+<div id="cw">
+  <!-- Expanded panel -->
+  <div id="cw-panel" role="dialog" aria-label="Call options">
+    <!-- Close -->
+    <button onclick="cwClose()" aria-label="Close" style="position:absolute; top:10px; right:14px; background:none; border:none; color:#A89070; font-size:20px; cursor:pointer; line-height:1; padding:4px; opacity:0.6; transition:opacity 0.15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">&times;</button>
+
+    <!-- Header -->
+    <div style="font-size:10px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:#C9962E; margin-bottom:6px; font-family:'DM Sans',sans-serif;">Order by Phone</div>
+    <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; letter-spacing:0.05em; color:#F5EDD6; line-height:1; margin-bottom:4px;">(408) 422-1508</div>
+    <div style="font-size:12px; color:#A89070; margin-bottom:20px; font-family:'DM Sans',sans-serif;">Both locations &middot; Mon&ndash;Sun</div>
+
+    <!-- Option 1: Open dialer -->
+    <a href="tel:4084221508" class="cw-action cw-dial">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      <div>
+        <div>Open Phone App</div>
+        <div style="font-size:11px; opacity:0.65; font-weight:400; margin-top:1px;">Works with iPhone &amp; Skype on desktop</div>
+      </div>
+    </a>
+
+    <!-- Option 2: Copy number -->
+    <button id="cw-copy-btn" class="cw-action cw-copy-btn" onclick="cwCopy()">
+      <svg id="cw-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      <div>
+        <div id="cw-copy-label">Copy Number</div>
+        <div style="font-size:11px; opacity:0.65; font-weight:400; margin-top:1px;">Paste it into any app to call</div>
+      </div>
+    </button>
+
+    <!-- Divider -->
+    <div class="cw-divider">scan from your phone</div>
+
+    <!-- Option 3: QR code -->
+    <div style="display:flex; align-items:center; gap:16px;">
+      <div style="background:#F5EDD6; border-radius:10px; padding:8px; flex-shrink:0;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?data=tel%3A4084221508&size=120x120&margin=2" alt="Scan to call" width="96" height="96" style="display:block;">
+      </div>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#F5EDD6; font-family:'DM Sans',sans-serif; margin-bottom:4px;">Scan with your phone</div>
+        <div style="font-size:12px; color:#A89070; font-family:'DM Sans',sans-serif; line-height:1.5;">Opens your dialer automatically &mdash; no typing needed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating pill -->
+  <button id="cw-pill" onclick="cwToggle()" aria-expanded="false" aria-controls="cw-panel">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5EDD6" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+    <span>(408) 422-1508</span>
+  </button>
+</div>
+
+<script>
+(function() {
+  var open = false;
+  function cwShow() {
+    open = true;
+    var p = document.getElementById('cw-panel');
+    p.style.display = 'block';
+    requestAnimationFrame(function() { requestAnimationFrame(function() { p.classList.add('cw-open'); }); });
+    document.getElementById('cw-pill').setAttribute('aria-expanded','true');
+    document.getElementById('cw-pill').style.animation = 'none';
+  }
+  window.cwClose = function() {
+    open = false;
+    var p = document.getElementById('cw-panel');
+    p.classList.remove('cw-open');
+    setTimeout(function() { p.style.display = 'none'; }, 230);
+    document.getElementById('cw-pill').setAttribute('aria-expanded','false');
+    document.getElementById('cw-pill').style.animation = 'cwPulse 3s ease-in-out infinite';
+  };
+  window.cwToggle = function() { open ? cwClose() : cwShow(); };
+  window.cwCopy = function() {
+    var num = '(408) 422-1508';
+    var btn = document.getElementById('cw-copy-btn');
+    var lbl = document.getElementById('cw-copy-label');
+    var ico = document.getElementById('cw-copy-icon');
+    function flash() {
+      btn.classList.add('cw-copied');
+      lbl.textContent = 'Copied!';
+      ico.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+      ico.setAttribute('viewBox','0 0 24 24');
+      setTimeout(function() {
+        btn.classList.remove('cw-copied');
+        lbl.textContent = 'Copy Number';
+        ico.innerHTML = '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>';
+      }, 2200);
+    }
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(num).then(flash).catch(function() { fallbackCopy(num); flash(); });
+    } else { fallbackCopy(num); flash(); }
+  };
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
+  }
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && open) cwClose(); });
+  document.addEventListener('click', function(e) {
+    if (open && !document.getElementById('cw').contains(e.target)) cwClose();
+  });
+})();
+</script>
+<!-- ── END CALL WIDGET ──────────────────────────────────────────────────── -->
+</body>
+</html>

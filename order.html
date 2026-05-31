@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Pickup — Taqueria El Coral</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <script src="config.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red: #C0392B; --red-dark: #96291F; --red-glow: rgba(192,57,43,0.35);
+      --cream: #F5EDD6; --cream-dim: #A89070;
+      --gold: #C9962E; --gold-light: #E5B84A;
+      --bg: #0F0902; --bg1: #1A1005; --bg2: #261808; --bg3: #342210; --bg4: #42301A;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--cream); font-family: 'DM Sans', sans-serif; line-height: 1.7; overflow-x: hidden; }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9000; opacity: 0.07; mix-blend-mode: overlay;
+    }
+
+    /* NAV */
+    #nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(15,9,2,0.94); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(201,150,46,0.12); padding: 14px 0; }
+    .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 40px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em; color: var(--cream); text-decoration: none; }
+    .nav-logo span { color: var(--red); }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-link { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cream); text-decoration: none; opacity: 0.7; transition: opacity 0.2s ease, color 0.2s ease; }
+    .nav-link:hover { opacity: 1; color: var(--gold); }
+    .nav-link.active { opacity: 1; color: var(--gold); }
+
+    /* PAGE */
+    .page { max-width: 1280px; margin: 0 auto; padding: 100px 40px 80px; }
+    .page-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 6vw, 80px); letter-spacing: 0.03em; color: var(--cream); line-height: 0.9; margin-bottom: 8px; }
+    .page-heading span { color: var(--red); }
+    .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .section-label::before { content: ''; display: block; width: 20px; height: 1.5px; background: var(--gold); opacity: 0.5; }
+
+    /* CARDS */
+    .card {
+      background: var(--bg2); border: 1px solid rgba(245,237,214,0.07);
+      border-radius: 8px; padding: 32px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5), 0 12px 40px rgba(0,0,0,0.35);
+    }
+    .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.04em; color: var(--cream); margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+
+    /* CART ITEMS */
+    .cart-item {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(245,237,214,0.06);
+    }
+    .cart-item:last-child { border-bottom: none; }
+    .item-qty-ctrl { display: flex; align-items: center; gap: 8px; }
+    .qty-btn {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--bg3); border: 1px solid rgba(245,237,214,0.12);
+      color: var(--cream); font-size: 16px; line-height: 1;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .qty-btn:hover { background: var(--bg4); border-color: rgba(245,237,214,0.25); }
+    .qty-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+    .qty-num { font-size: 14px; font-weight: 600; color: var(--cream); min-width: 20px; text-align: center; }
+    .item-name { flex: 1; font-size: 14px; font-weight: 500; color: var(--cream); }
+    .item-meta { font-size: 12px; color: var(--cream-dim); margin-top: 2px; }
+    .item-price-cell { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--gold); letter-spacing: 0.03em; }
+    .remove-btn { background: none; border: none; color: var(--cream-dim); cursor: pointer; padding: 4px; opacity: 0.5; transition: opacity 0.2s ease, color 0.2s ease; }
+    .remove-btn:hover { opacity: 1; color: var(--red); }
+
+    /* LOCATION SELECTOR */
+    .loc-option {
+      border: 1.5px solid rgba(245,237,214,0.1);
+      border-radius: 6px; padding: 20px 24px; cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+      position: relative;
+    }
+    .loc-option:hover { border-color: rgba(201,150,46,0.3); background: rgba(201,150,46,0.03); }
+    .loc-option.selected { border-color: var(--red); background: rgba(192,57,43,0.05); }
+    .loc-option::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 6px 6px 0 0; background: linear-gradient(to right, var(--red), var(--gold)); opacity: 0; transition: opacity 0.2s ease; }
+    .loc-option.selected::before { opacity: 1; }
+    .loc-option input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+    .loc-option-name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--cream); }
+    .loc-option-addr { font-size: 13px; color: var(--cream-dim); margin-top: 4px; line-height: 1.5; }
+    .loc-option-hours { font-size: 12px; color: var(--gold); margin-top: 8px; font-weight: 500; }
+    .loc-radio-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(245,237,214,0.25); margin-left: auto; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: border-color 0.2s ease; }
+    .loc-option.selected .loc-radio-dot { border-color: var(--red); }
+    .loc-radio-inner { width: 8px; height: 8px; border-radius: 50%; background: var(--red); opacity: 0; transition: opacity 0.2s ease; }
+    .loc-option.selected .loc-radio-inner { opacity: 1; }
+
+    /* FORM */
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .form-input, .form-select {
+      width: 100%; background: var(--bg3);
+      border: 1.5px solid rgba(245,237,214,0.1);
+      border-radius: 4px; padding: 13px 16px;
+      color: var(--cream); font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-weight: 400;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      appearance: none;
+    }
+    .form-input::placeholder { color: var(--cream-dim); opacity: 0.5; }
+    .form-input:focus, .form-select:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,0.12); }
+    .form-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A89070' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; cursor: pointer; }
+    .form-select option { background: var(--bg3); }
+
+    /* TOTALS */
+    .totals-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; font-size: 14px; color: var(--cream); }
+    .totals-row .label { color: var(--cream-dim); }
+    .totals-row .value { font-weight: 600; }
+    .totals-total { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-top: 1px solid rgba(245,237,214,0.12); margin-top: 8px; }
+    .totals-total .label { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; }
+    .totals-total .value { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--gold); letter-spacing: 0.03em; }
+
+    /* SUBMIT */
+    .btn-submit {
+      width: 100%; padding: 18px; background: var(--red); color: var(--cream);
+      font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      border: none; border-radius: 4px; cursor: pointer;
+      box-shadow: 0 4px 24px var(--red-glow), 0 2px 8px rgba(0,0,0,0.5);
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease, box-shadow 0.2s ease;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .btn-submit:hover { background: var(--red-dark); transform: translateY(-2px); box-shadow: 0 8px 32px var(--red-glow); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* EMPTY CART */
+    .empty-cart { text-align: center; padding: 60px 0; }
+    .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+    .empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--cream); margin-bottom: 8px; }
+    .empty-sub { font-size: 14px; color: var(--cream-dim); margin-bottom: 32px; }
+    .btn-browse { display: inline-flex; align-items: center; gap: 8px; padding: 13px 30px; background: var(--red); color: var(--cream); font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; border-radius: 3px; box-shadow: 0 4px 20px var(--red-glow); transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease; }
+    .btn-browse:hover { background: var(--red-dark); transform: translateY(-2px); }
+
+    /* CONFIRMATION */
+    #confirmation { display: none; text-align: center; padding: 80px 40px; }
+    .confirm-check { width: 72px; height: 72px; border-radius: 50%; background: rgba(192,57,43,0.15); border: 2px solid var(--red); display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; }
+    .confirm-title { font-family: 'Bebas Neue', sans-serif; font-size: 52px; letter-spacing: 0.03em; color: var(--cream); line-height: 1; margin-bottom: 12px; }
+    .confirm-sub { font-family: 'Fraunces', serif; font-style: italic; font-size: 18px; color: var(--cream-dim); margin-bottom: 8px; }
+    .confirm-detail { font-size: 14px; color: var(--cream-dim); opacity: 0.7; margin-bottom: 40px; }
+    .confirm-order-id { display: inline-block; background: var(--bg2); border: 1px solid rgba(201,150,46,0.2); border-radius: 4px; padding: 10px 20px; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 40px; }
+
+    /* NOTICE */
+    .stripe-notice { font-size: 12px; color: var(--cream-dim); opacity: 0.6; text-align: center; margin-top: 14px; line-height: 1.5; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--red); }
+
+    @media (max-width: 900px) {
+      .order-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <a href="index.html" style="display:inline-flex; align-items:center; text-decoration:none;">
+        <img src="brand_assets/images/img-01.png" alt="Taqueria El Coral" style="height:48px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5));">
+      </a>
+      <div class="nav-links">
+        <a href="menu.html" class="nav-link">Menu</a>
+        <a href="about.html" class="nav-link">About</a>
+        <button onclick="cwToggle()" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; letter-spacing:0.08em; color:var(--gold); background:none; border:none; cursor:pointer; padding:0; opacity:0.85; transition:opacity 0.2s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'" title="Call options — copy, dial, or scan QR code">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          (408) 422-1508
+        </button>
+        <a href="order.html" class="nav-link active">Order</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONFIRMATION (hidden initially) -->
+  <div id="confirmation">
+    <div class="page" style="max-width:640px;">
+      <div class="confirm-check">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="confirm-title">ORDER PLACED!</div>
+      <div class="confirm-sub">Your order is confirmed.</div>
+      <div class="confirm-detail">We'll have it ready for pickup at your selected location.</div>
+      <div class="confirm-order-id" id="confirm-order-id">#EC-000000</div>
+      <div id="confirm-details" style="background:var(--bg2); border-radius:6px; padding:24px; text-align:left; max-width:480px; margin:0 auto 40px; font-size:14px; color:var(--cream-dim); line-height:1.8;"></div>
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+        <a href="index.html" style="display:inline-flex; align-items:center; gap:8px; padding:14px 32px; background:var(--red); color:var(--cream); font-size:13px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; text-decoration:none; border-radius:3px; box-shadow:0 4px 20px var(--red-glow); transition:transform 0.2s ease, background 0.15s ease;">
+          Back to Home
+        </a>
+        <a href="menu.html" style="display:inline-flex; align-items:center; gap:8px; padding:14px 32px; background:transparent; color:var(--cream); font-size:13px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; text-decoration:none; border-radius:3px; border:1.5px solid rgba(245,237,214,0.25); transition:transform 0.2s ease, border-color 0.2s ease;">
+          Order Again
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDER FORM (shown initially) -->
+  <div id="order-form-wrap">
+    <div class="page">
+
+      <!-- Header -->
+      <div style="margin-bottom: 56px;">
+        <div class="section-label">Pickup Order</div>
+        <h1 class="page-heading">YOUR<br><span>ORDER</span></h1>
+        <p style="font-family:'Fraunces',serif; font-style:italic; font-size:16px; color:var(--cream-dim); margin-top:12px;">
+          Review your cart, choose a location, and we'll have it ready.
+        </p>
+        <!-- CALL ALTERNATIVE BANNER -->
+        <div style="display:flex; align-items:center; gap:12px; margin-top:24px; padding:16px 20px; background:var(--bg2); border:1px solid rgba(201,150,46,0.2); border-radius:6px; box-shadow:0 4px 20px rgba(0,0,0,0.3); flex-wrap:wrap;">
+          <div style="width:40px; height:40px; border-radius:50%; background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <div style="flex:1; min-width:160px;">
+            <div style="font-size:11px; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:3px;">Prefer to call?</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:0.06em; color:var(--cream); line-height:1;">(408) 422-1508</div>
+            <div style="font-size:12px; color:var(--cream-dim); margin-top:2px;">Both locations &middot; call to place your order</div>
+          </div>
+          <div style="display:flex; gap:8px; flex-shrink:0;">
+            <a href="tel:4084221508" style="display:inline-flex; align-items:center; gap:6px; padding:9px 14px; background:var(--red); color:var(--cream); font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none; border-radius:4px; box-shadow:0 2px 10px var(--red-glow); transition:background 0.15s ease, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='var(--red-dark)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--red)';this.style.transform='translateY(0)'">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              Dial
+            </a>
+            <button id="banner-copy" onclick="bannerCopy()" style="display:inline-flex; align-items:center; gap:6px; padding:9px 14px; background:transparent; color:var(--cream); font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; border:1.5px solid rgba(245,237,214,0.18); border-radius:4px; cursor:pointer; transition:border-color 0.15s ease, color 0.15s ease, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.borderColor='rgba(245,237,214,0.4)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(245,237,214,0.18)';this.style.transform='translateY(0)'">
+              <svg id="bcopy-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              <span id="bcopy-lbl">Copy</span>
+            </button>
+            <button onclick="cwToggle()" title="Scan QR code" style="display:inline-flex; align-items:center; gap:6px; padding:9px 14px; background:transparent; color:var(--gold); font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; border:1.5px solid rgba(201,150,46,0.25); border-radius:4px; cursor:pointer; transition:border-color 0.15s ease, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.borderColor='rgba(201,150,46,0.55)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(201,150,46,0.25)';this.style.transform='translateY(0)'">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="2" width="7" height="7"/><rect x="15" y="2" width="7" height="7"/><rect x="2" y="15" width="7" height="7"/><path d="M17 17h2v2h-2zM21 17h.01M17 21h2M21 21h.01"/></svg>
+              QR
+            </button>
+          </div>
+        </div>
+        <script>
+        function bannerCopy() {
+          var lbl = document.getElementById('bcopy-lbl');
+          var ico = document.getElementById('bcopy-icon');
+          var btn = document.getElementById('banner-copy');
+          function flash() {
+            lbl.textContent = 'Copied!'; btn.style.color = '#C9962E'; btn.style.borderColor = 'rgba(201,150,46,0.5)';
+            ico.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+            setTimeout(function() {
+              lbl.textContent = 'Copy'; btn.style.color = 'var(--cream)'; btn.style.borderColor = 'rgba(245,237,214,0.18)';
+              ico.innerHTML = '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>';
+            }, 2200);
+          }
+          if (navigator.clipboard) { navigator.clipboard.writeText('(408) 422-1508').then(flash); }
+          else {
+            var ta = document.createElement('textarea'); ta.value = '(408) 422-1508';
+            ta.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(ta);
+            ta.select(); try { document.execCommand('copy'); } catch(e) {} document.body.removeChild(ta);
+            flash();
+          }
+        }
+        </script>
+      </div>
+
+      <div class="order-grid" style="display:grid; grid-template-columns:1fr 420px; gap:32px; align-items:start;">
+
+        <!-- LEFT: Cart + Location + Form -->
+        <div style="display:flex; flex-direction:column; gap:24px;">
+
+          <!-- Cart -->
+          <div class="card">
+            <div class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61H19a2 2 0 001.99-1.81L22 7H6"/></svg>
+              Cart
+            </div>
+            <div id="cart-list">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div class="card">
+            <div class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Pickup Location
+            </div>
+            <div style="display:grid; gap:12px;">
+              <label class="loc-option selected" id="loc-1" for="loc-radio-1">
+                <input type="radio" name="location" id="loc-radio-1" value="Santa Teresa" checked>
+                <div style="display:flex; align-items:flex-start; gap:16px;">
+                  <div style="flex:1;">
+                    <div class="loc-option-name">Santa Teresa Blvd</div>
+                    <div class="loc-option-addr">5899 Santa Teresa Blvd #109, San Jose, CA 95123<br><a href="tel:4085784077" style="color:var(--gold); text-decoration:none;">(408) 578-4077</a></div>
+                    <div class="loc-option-hours">Mon–Fri 10am–8pm · Sat 10am–4pm · Sun Closed</div>
+                  </div>
+                  <div class="loc-radio-dot"><div class="loc-radio-inner"></div></div>
+                </div>
+              </label>
+              <label class="loc-option" id="loc-2" for="loc-radio-2">
+                <input type="radio" name="location" id="loc-radio-2" value="Capitol Expressway">
+                <div style="display:flex; align-items:flex-start; gap:16px;">
+                  <div style="flex:1;">
+                    <div class="loc-option-name">W Capitol Expressway</div>
+                    <div class="loc-option-addr">426 W Capitol Expy, San Jose, CA 95136<br><a href="tel:4082292190" style="color:var(--gold); text-decoration:none;">(408) 229-2190</a></div>
+                    <div class="loc-option-hours">Mon–Thu 10am–9pm · Fri–Sun 9am–9pm</div>
+                  </div>
+                  <div class="loc-radio-dot"><div class="loc-radio-inner"></div></div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Customer Info -->
+          <div class="card">
+            <div class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Your Info
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div class="form-group">
+                <label class="form-label" for="customer-name">Name</label>
+                <input type="text" id="customer-name" class="form-input" placeholder="Your full name" autocomplete="name" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="customer-phone">Phone</label>
+                <input type="tel" id="customer-phone" class="form-input" placeholder="(555) 000-0000" autocomplete="tel" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pickup-time">Pickup Time</label>
+              <select id="pickup-time" class="form-select" required>
+                <option value="">Select a pickup time...</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" for="order-notes">Special Instructions (optional)</label>
+              <textarea id="order-notes" class="form-input" placeholder="Any allergies, special requests..." rows="3" style="resize:vertical; min-height:80px;"></textarea>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: Order Summary + Submit -->
+        <div style="position:sticky; top:100px; display:flex; flex-direction:column; gap:20px;">
+
+          <div class="card">
+            <div class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1" ry="1"/></svg>
+              Summary
+            </div>
+            <div id="summary-list" style="margin-bottom:16px; min-height:60px; color:var(--cream-dim); font-size:14px;"></div>
+            <div class="totals-row"><span class="label">Subtotal</span><span class="value" id="subtotal-display">$0.00</span></div>
+            <div class="totals-row"><span class="label">Tax (9.25%)</span><span class="value" id="tax-display">$0.00</span></div>
+            <div class="totals-row"><span class="label">Pickup Fee</span><span class="value" style="color:var(--gold);">Free</span></div>
+            <div class="totals-total">
+              <span class="label">TOTAL</span>
+              <span class="value" id="total-display">$0.00</span>
+            </div>
+
+            <!-- Payment notice -->
+            <div style="background:var(--bg3); border:1px solid rgba(201,150,46,0.12); border-radius:4px; padding:16px; margin:20px 0; display:flex; align-items:flex-start; gap:12px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="flex-shrink:0; margin-top:2px;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              <div style="font-size:12px; color:var(--cream-dim); line-height:1.55;">
+                Pay at pickup — we accept cash and all major cards at both locations.
+                <span id="stripe-note" style="display:none;"> Online payment via Stripe is available.</span>
+              </div>
+            </div>
+
+            <button class="btn-submit" id="place-order-btn" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Place Order
+            </button>
+            <div class="stripe-notice" id="stripe-footer" style="display:none;">
+              Secure payment powered by Stripe
+            </div>
+          </div>
+
+          <!-- Social links -->
+          <div style="text-align:center; padding:16px;">
+            <div style="font-size:12px; color:var(--cream-dim); opacity:0.5; margin-bottom:12px;">Follow us for daily specials</div>
+            <div style="display:flex; gap:12px; justify-content:center;">
+              <a href="https://www.facebook.com/profile.php?id=100094609569474" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; border:1px solid rgba(245,237,214,0.1); border-radius:50%; color:var(--cream-dim); text-decoration:none; transition:border-color 0.2s ease, color 0.2s ease;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+              </a>
+              <a href="https://www.instagram.com/taquerialelcoral1/" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; border:1px solid rgba(245,237,214,0.1); border-radius:50%; color:var(--cream-dim); text-decoration:none; transition:border-color 0.2s ease, color 0.2s ease;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CART_KEY = 'elCoral_cart';
+    const TAX_RATE = 0.0925;
+
+    function getCart() { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
+    function saveCart(c) { localStorage.setItem(CART_KEY, JSON.stringify(c)); renderAll(); }
+
+    // ── PICKUP TIMES ───────────────────────────────────────────────────────────
+    function generatePickupTimes() {
+      const sel = document.getElementById('pickup-time');
+      const now = new Date();
+      // Round up to next 15-minute slot, add 20 min minimum
+      const base = new Date(now.getTime() + 20 * 60000);
+      const mins = base.getMinutes();
+      const roundedMins = Math.ceil(mins / 15) * 15;
+      base.setMinutes(roundedMins, 0, 0);
+      if (roundedMins >= 60) { base.setHours(base.getHours() + 1); base.setMinutes(0); }
+
+      for (let i = 0; i < 12; i++) {
+        const t = new Date(base.getTime() + i * 15 * 60000);
+        const h = t.getHours(), m = t.getMinutes();
+        const label = `${h > 12 ? h - 12 : h || 12}:${m.toString().padStart(2,'0')} ${h >= 12 ? 'PM' : 'AM'}`;
+        const opt = document.createElement('option');
+        opt.value = label; opt.textContent = `Today, ${label}`;
+        sel.appendChild(opt);
+      }
+    }
+
+    // ── CART RENDER ─────────────────────────────────────────────────────────────
+    function renderCart() {
+      const cart = getCart();
+      const cartList = document.getElementById('cart-list');
+
+      if (cart.length === 0) {
+        cartList.innerHTML = `
+          <div class="empty-cart">
+            <div class="empty-icon">🛒</div>
+            <div class="empty-title">Your cart is empty</div>
+            <div class="empty-sub">Add something delicious from our menu.</div>
+            <a href="menu.html" class="btn-browse">Browse Menu →</a>
+          </div>`;
+        document.getElementById('place-order-btn').disabled = true;
+        return;
+      }
+      document.getElementById('place-order-btn').disabled = false;
+
+      cartList.innerHTML = cart.map((item, idx) => `
+        <div class="cart-item">
+          <div class="item-qty-ctrl">
+            <button class="qty-btn" data-action="dec" data-idx="${idx}">−</button>
+            <span class="qty-num">${item.quantity}</span>
+            <button class="qty-btn" data-action="inc" data-idx="${idx}">+</button>
+          </div>
+          <div style="flex:1;">
+            <div class="item-name">${item.name}</div>
+            ${item.meatChoice ? `<div class="item-meta">${item.meatChoice}</div>` : ''}
+          </div>
+          <div class="item-price-cell">$${(item.price * item.quantity).toFixed(2)}</div>
+          <button class="remove-btn" data-action="remove" data-idx="${idx}" aria-label="Remove item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      `).join('');
+
+      cartList.addEventListener('click', e => {
+        const btn = e.target.closest('[data-action]');
+        if (!btn) return;
+        const idx = parseInt(btn.dataset.idx);
+        const cart = getCart();
+        if (btn.dataset.action === 'inc') { cart[idx].quantity++; }
+        else if (btn.dataset.action === 'dec') {
+          cart[idx].quantity--;
+          if (cart[idx].quantity <= 0) cart.splice(idx, 1);
+        }
+        else if (btn.dataset.action === 'remove') { cart.splice(idx, 1); }
+        saveCart(cart);
+      }, { once: true });
+    }
+
+    // ── SUMMARY & TOTALS ────────────────────────────────────────────────────────
+    function renderSummary() {
+      const cart = getCart();
+      const summaryList = document.getElementById('summary-list');
+      if (cart.length === 0) {
+        summaryList.innerHTML = '<span style="opacity:0.5;">No items yet.</span>';
+        document.getElementById('subtotal-display').textContent = '$0.00';
+        document.getElementById('tax-display').textContent = '$0.00';
+        document.getElementById('total-display').textContent = '$0.00';
+        return;
+      }
+      summaryList.innerHTML = cart.map(item =>
+        `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(245,237,214,0.05);">
+          <span>${item.quantity}× ${item.name}${item.meatChoice ? ` <span style="opacity:0.5; font-size:12px;">(${item.meatChoice})</span>` : ''}</span>
+          <span>$${(item.price * item.quantity).toFixed(2)}</span>
+        </div>`
+      ).join('');
+
+      const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+      const tax = subtotal * TAX_RATE;
+      const total = subtotal + tax;
+      document.getElementById('subtotal-display').textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById('tax-display').textContent = `$${tax.toFixed(2)}`;
+      document.getElementById('total-display').textContent = `$${total.toFixed(2)}`;
+    }
+
+    function renderAll() { renderCart(); renderSummary(); }
+
+    // ── LOCATION TOGGLE ─────────────────────────────────────────────────────────
+    document.querySelectorAll('input[name="location"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        document.querySelectorAll('.loc-option').forEach(el => el.classList.remove('selected'));
+        radio.closest('.loc-option').classList.add('selected');
+      });
+    });
+    document.querySelectorAll('.loc-option').forEach(label => {
+      label.addEventListener('click', () => {
+        const radio = label.querySelector('input[type="radio"]');
+        if (radio) { radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
+      });
+    });
+
+    // ── PLACE ORDER ─────────────────────────────────────────────────────────────
+    document.getElementById('place-order-btn').addEventListener('click', async () => {
+      const cart = getCart();
+      if (cart.length === 0) { alert('Your cart is empty.'); return; }
+
+      const name = document.getElementById('customer-name').value.trim();
+      const phone = document.getElementById('customer-phone').value.trim();
+      const pickupTime = document.getElementById('pickup-time').value;
+      const location = document.querySelector('input[name="location"]:checked')?.value;
+      const notes = document.getElementById('order-notes').value.trim();
+
+      if (!name) { document.getElementById('customer-name').focus(); return; }
+      if (!phone) { document.getElementById('customer-phone').focus(); return; }
+      if (!pickupTime) { document.getElementById('pickup-time').focus(); return; }
+
+      const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+      const tax = subtotal * TAX_RATE;
+      const total = subtotal + tax;
+
+      const orderId = 'EC-' + Date.now().toString(36).toUpperCase().slice(-6);
+
+      const payload = {
+        orderId,
+        timestamp: new Date().toISOString(),
+        location,
+        customer: { name, phone },
+        pickupTime,
+        notes,
+        items: cart.map(i => ({ name: i.name, quantity: i.quantity, price: i.price, meatChoice: i.meatChoice })),
+        subtotal: +subtotal.toFixed(2),
+        tax: +tax.toFixed(2),
+        total: +total.toFixed(2),
+      };
+
+      const btn = document.getElementById('place-order-btn');
+      btn.disabled = true;
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Placing Order...`;
+
+      // Post to webhook if configured
+      const webhookUrl = (typeof CONFIG !== 'undefined' && CONFIG.webhookUrl) ? CONFIG.webhookUrl : '';
+      if (webhookUrl) {
+        try {
+          await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+        } catch (err) {
+          console.warn('Webhook error (order still confirmed):', err);
+        }
+      }
+
+      // Clear cart
+      localStorage.removeItem(CART_KEY);
+
+      // Show confirmation
+      setTimeout(() => {
+        document.getElementById('order-form-wrap').style.display = 'none';
+        document.getElementById('confirmation').style.display = 'block';
+        document.getElementById('confirm-order-id').textContent = `#${orderId}`;
+        document.getElementById('confirm-details').innerHTML = `
+          <strong style="color:var(--cream);">📍 ${location}</strong><br>
+          <strong style="color:var(--cream);">🕐 Pickup at ${pickupTime}</strong><br>
+          <strong style="color:var(--cream);">👤 ${name}</strong> · ${phone}<br>
+          <strong style="color:var(--gold);">Total: $${total.toFixed(2)}</strong> (pay at pickup)
+        `;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 800);
+    });
+
+    // ── STRIPE INTEGRATION (if key set) ────────────────────────────────────────
+    if (typeof CONFIG !== 'undefined' && CONFIG.stripePublishableKey) {
+      document.getElementById('stripe-note').style.display = 'inline';
+      document.getElementById('stripe-footer').style.display = 'block';
+    }
+
+    // ── INIT ───────────────────────────────────────────────────────────────────
+    generatePickupTimes();
+    renderAll();
+
+    // CSS spin for loading button
+    const style = document.createElement('style');
+    style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+    document.head.appendChild(style);
+  </script>
+
+<!-- ── CALL WIDGET ──────────────────────────────────────────────────────── -->
+<style>
+  #cw { position:fixed; bottom:28px; right:28px; z-index:8000; }
+  #cw-panel {
+    display:none; opacity:0; transform:translateY(14px) scale(0.96);
+    position:absolute; bottom:calc(100% + 14px); right:0;
+    width:292px;
+    background:#261808;
+    border:1px solid rgba(201,150,46,0.22);
+    border-radius:14px; padding:24px 24px 20px;
+    box-shadow:0 24px 64px rgba(0,0,0,0.75), 0 4px 16px rgba(0,0,0,0.4);
+    transition:opacity 0.22s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  #cw-panel.cw-open { opacity:1; transform:translateY(0) scale(1); }
+  @keyframes cwPulse {
+    0%,100% { box-shadow:0 4px 28px rgba(192,57,43,0.5), 0 2px 8px rgba(0,0,0,0.4); }
+    50%      { box-shadow:0 6px 40px rgba(192,57,43,0.8), 0 2px 12px rgba(0,0,0,0.4); }
+  }
+  #cw-pill {
+    display:flex; align-items:center; gap:10px;
+    padding:13px 22px 13px 18px;
+    background:#C0392B; border:none; border-radius:100px;
+    cursor:pointer; font-family:'DM Sans',sans-serif;
+    box-shadow:0 4px 28px rgba(192,57,43,0.5), 0 2px 8px rgba(0,0,0,0.4);
+    animation:cwPulse 3s ease-in-out infinite;
+    transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  #cw-pill:hover { transform:translateY(-2px); }
+  #cw-pill:active { transform:translateY(0); }
+  #cw-pill span { font-size:14px; font-weight:700; letter-spacing:0.04em; color:#F5EDD6; }
+  .cw-action {
+    display:flex; align-items:center; gap:10px;
+    width:100%; padding:12px 14px;
+    border-radius:7px; cursor:pointer;
+    font-family:'DM Sans',sans-serif;
+    font-size:13px; font-weight:600; letter-spacing:0.06em;
+    text-decoration:none; border:none;
+    transition:transform 0.18s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease, box-shadow 0.15s ease;
+    margin-bottom:8px;
+  }
+  .cw-action:last-child { margin-bottom:0; }
+  .cw-action:hover { transform:translateY(-2px); }
+  .cw-action:active { transform:translateY(0); }
+  .cw-dial {
+    background:#C0392B; color:#F5EDD6;
+    box-shadow:0 3px 16px rgba(192,57,43,0.4);
+  }
+  .cw-dial:hover { background:#96291F; box-shadow:0 5px 24px rgba(192,57,43,0.6); }
+  .cw-copy-btn {
+    background:rgba(245,237,214,0.07); color:#F5EDD6;
+    border:1.5px solid rgba(245,237,214,0.15) !important;
+  }
+  .cw-copy-btn:hover { background:rgba(245,237,214,0.12); border-color:rgba(245,237,214,0.35) !important; }
+  .cw-copy-btn.cw-copied { color:#C9962E; border-color:rgba(201,150,46,0.5) !important; background:rgba(201,150,46,0.08); }
+  .cw-divider {
+    display:flex; align-items:center; gap:10px;
+    margin:16px 0; color:#A89070; font-size:10px;
+    font-family:'DM Sans',sans-serif; letter-spacing:0.14em; text-transform:uppercase;
+  }
+  .cw-divider::before,.cw-divider::after { content:''; flex:1; height:1px; background:rgba(245,237,214,0.08); }
+</style>
+
+<div id="cw">
+  <!-- Expanded panel -->
+  <div id="cw-panel" role="dialog" aria-label="Call options">
+    <!-- Close -->
+    <button onclick="cwClose()" aria-label="Close" style="position:absolute; top:10px; right:14px; background:none; border:none; color:#A89070; font-size:20px; cursor:pointer; line-height:1; padding:4px; opacity:0.6; transition:opacity 0.15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">&times;</button>
+
+    <!-- Header -->
+    <div style="font-size:10px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:#C9962E; margin-bottom:6px; font-family:'DM Sans',sans-serif;">Order by Phone</div>
+    <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; letter-spacing:0.05em; color:#F5EDD6; line-height:1; margin-bottom:4px;">(408) 422-1508</div>
+    <div style="font-size:12px; color:#A89070; margin-bottom:20px; font-family:'DM Sans',sans-serif;">Both locations &middot; Mon&ndash;Sun</div>
+
+    <!-- Option 1: Open dialer -->
+    <a href="tel:4084221508" class="cw-action cw-dial">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      <div>
+        <div>Open Phone App</div>
+        <div style="font-size:11px; opacity:0.65; font-weight:400; margin-top:1px;">Works with iPhone &amp; Skype on desktop</div>
+      </div>
+    </a>
+
+    <!-- Option 2: Copy number -->
+    <button id="cw-copy-btn" class="cw-action cw-copy-btn" onclick="cwCopy()">
+      <svg id="cw-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      <div>
+        <div id="cw-copy-label">Copy Number</div>
+        <div style="font-size:11px; opacity:0.65; font-weight:400; margin-top:1px;">Paste it into any app to call</div>
+      </div>
+    </button>
+
+    <!-- Divider -->
+    <div class="cw-divider">scan from your phone</div>
+
+    <!-- Option 3: QR code -->
+    <div style="display:flex; align-items:center; gap:16px;">
+      <div style="background:#F5EDD6; border-radius:10px; padding:8px; flex-shrink:0;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?data=tel%3A4084221508&size=120x120&margin=2" alt="Scan to call" width="96" height="96" style="display:block;">
+      </div>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#F5EDD6; font-family:'DM Sans',sans-serif; margin-bottom:4px;">Scan with your phone</div>
+        <div style="font-size:12px; color:#A89070; font-family:'DM Sans',sans-serif; line-height:1.5;">Opens your dialer automatically &mdash; no typing needed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating pill -->
+  <button id="cw-pill" onclick="cwToggle()" aria-expanded="false" aria-controls="cw-panel">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5EDD6" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+    <span>(408) 422-1508</span>
+  </button>
+</div>
+
+<script>
+(function() {
+  var open = false;
+  function cwShow() {
+    open = true;
+    var p = document.getElementById('cw-panel');
+    p.style.display = 'block';
+    requestAnimationFrame(function() { requestAnimationFrame(function() { p.classList.add('cw-open'); }); });
+    document.getElementById('cw-pill').setAttribute('aria-expanded','true');
+    document.getElementById('cw-pill').style.animation = 'none';
+  }
+  window.cwClose = function() {
+    open = false;
+    var p = document.getElementById('cw-panel');
+    p.classList.remove('cw-open');
+    setTimeout(function() { p.style.display = 'none'; }, 230);
+    document.getElementById('cw-pill').setAttribute('aria-expanded','false');
+    document.getElementById('cw-pill').style.animation = 'cwPulse 3s ease-in-out infinite';
+  };
+  window.cwToggle = function() { open ? cwClose() : cwShow(); };
+  window.cwCopy = function() {
+    var num = '(408) 422-1508';
+    var btn = document.getElementById('cw-copy-btn');
+    var lbl = document.getElementById('cw-copy-label');
+    var ico = document.getElementById('cw-copy-icon');
+    function flash() {
+      btn.classList.add('cw-copied');
+      lbl.textContent = 'Copied!';
+      ico.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+      ico.setAttribute('viewBox','0 0 24 24');
+      setTimeout(function() {
+        btn.classList.remove('cw-copied');
+        lbl.textContent = 'Copy Number';
+        ico.innerHTML = '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>';
+      }, 2200);
+    }
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(num).then(flash).catch(function() { fallbackCopy(num); flash(); });
+    } else { fallbackCopy(num); flash(); }
+  };
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
+  }
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && open) cwClose(); });
+  document.addEventListener('click', function(e) {
+    if (open && !document.getElementById('cw').contains(e.target)) cwClose();
+  });
+})();
+</script>
+<!-- ── END CALL WIDGET ──────────────────────────────────────────────────── -->
+</body>
+</html>

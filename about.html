@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us — Taqueria El Coral</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300;1,9..144,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red: #C0392B; --red-dark: #96291F; --red-glow: rgba(192,57,43,0.35);
+      --cream: #F5EDD6; --cream-dim: #A89070;
+      --gold: #C9962E; --gold-light: #E5B84A;
+      --bg: #0F0902; --bg1: #1A1005; --bg2: #261808; --bg3: #342210; --bg4: #42301A;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--cream);
+      font-family: 'DM Sans', sans-serif; line-height: 1.7; overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9000; opacity: 0.07; mix-blend-mode: overlay;
+    }
+
+    /* NAV */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(15,9,2,0.92); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(201,150,46,0.12);
+      padding: 14px 0;
+    }
+    .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 40px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em; color: var(--cream); text-decoration: none; }
+    .nav-logo span { color: var(--red); }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-link { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cream); text-decoration: none; opacity: 0.7; transition: opacity 0.2s ease, color 0.2s ease; }
+    .nav-link:hover { opacity: 1; color: var(--gold); }
+    .nav-link.active { opacity: 1; color: var(--gold); }
+    .btn-nav {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px; background: var(--red); color: var(--cream);
+      font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      text-decoration: none; border-radius: 3px; box-shadow: 0 3px 14px var(--red-glow);
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease;
+    }
+    .btn-nav:hover { background: var(--red-dark); transform: translateY(-2px); }
+    .btn-nav:active { transform: translateY(0); }
+    #cart-badge { background: var(--gold); color: var(--bg); border-radius: 50%; width: 18px; height: 18px; font-size: 10px; font-weight: 700; display: none; align-items: center; justify-content: center; }
+
+    /* SHARED BUTTONS */
+    .btn-red {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 15px 36px; background: var(--red); color: var(--cream);
+      font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      text-decoration: none; border-radius: 3px;
+      box-shadow: 0 4px 24px var(--red-glow), 0 2px 8px rgba(0,0,0,0.5);
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease, background 0.15s ease;
+    }
+    .btn-red:hover { background: var(--red-dark); transform: translateY(-3px); box-shadow: 0 8px 32px var(--red-glow); }
+    .btn-red:active { transform: translateY(0); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 15px 36px; background: transparent; color: var(--cream);
+      font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      text-decoration: none; border-radius: 3px;
+      border: 1.5px solid rgba(245,237,214,0.3);
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), border-color 0.2s ease, background 0.2s ease;
+    }
+    .btn-ghost:hover { border-color: var(--cream); background: rgba(245,237,214,0.07); transform: translateY(-3px); }
+    .btn-ghost:active { transform: translateY(0); }
+
+    /* PAGE HERO */
+    .page-hero {
+      min-height: 52vh; display: flex; align-items: flex-end;
+      padding: 100px 0 80px; position: relative; overflow: hidden;
+    }
+    .page-hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 80% at 30% 60%, rgba(192,57,43,0.2) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 50% at 80% 20%, rgba(201,150,46,0.1) 0%, transparent 55%),
+        var(--bg);
+    }
+    .page-hero-img {
+      position: absolute; right: 0; top: 0; bottom: 0; width: 45%;
+      overflow: hidden;
+    }
+    .page-hero-img > div { width: 100%; height: 100%; }
+    .page-hero-img::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to right, var(--bg) 0%, rgba(15,9,2,0.5) 50%, rgba(15,9,2,0.15) 100%);
+    }
+
+    /* TYPOGRAPHY */
+    .section-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gold);
+      display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+    }
+    .section-label::before { content: ''; display: block; width: 24px; height: 1.5px; background: var(--gold); opacity: 0.6; }
+    h1.page-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(56px, 7vw, 100px);
+      letter-spacing: 0.03em; line-height: 0.9; color: var(--cream);
+    }
+    h1.page-title span { color: var(--red); }
+    h2.section-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(36px, 4vw, 60px);
+      letter-spacing: 0.03em; line-height: 1; color: var(--cream); margin-bottom: 16px;
+    }
+    .rule { width: 80px; height: 2px; margin: 28px 0; background: linear-gradient(to right, var(--red), var(--gold)); }
+
+    /* STORY */
+    .story-body {
+      font-size: 16px; color: var(--cream); opacity: 0.8;
+      line-height: 1.8; max-width: 540px;
+    }
+    .story-body p + p { margin-top: 20px; }
+
+    .story-quote {
+      font-family: 'Fraunces', serif; font-style: italic;
+      font-size: clamp(22px, 2.5vw, 32px);
+      color: var(--cream); line-height: 1.45;
+      border-left: 3px solid var(--red);
+      padding-left: 28px; margin: 40px 0;
+      opacity: 0.85;
+    }
+
+    .stat-block {
+      background: var(--bg2);
+      border: 1px solid rgba(201,150,46,0.12);
+      border-radius: 6px; padding: 28px 32px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .stat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 56px; letter-spacing: 0.02em;
+      color: var(--gold); line-height: 1;
+    }
+    .stat-label { font-size: 13px; color: var(--cream-dim); margin-top: 4px; }
+
+    /* LOCATION CARDS */
+    .loc-card {
+      background: var(--bg2); border: 1px solid rgba(201,150,46,0.12); border-radius: 8px;
+      padding: 36px 40px; position: relative; overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.6), 0 16px 48px rgba(0,0,0,0.45);
+      transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.3s ease;
+    }
+    .loc-card:hover { transform: translateY(-4px); box-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 24px 64px rgba(0,0,0,0.5); }
+    .loc-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(to right, var(--red), var(--gold)); }
+    .loc-name { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.04em; color: var(--cream); margin-bottom: 6px; }
+    .loc-addr { font-size: 14px; color: var(--cream-dim); line-height: 1.65; margin-bottom: 20px; }
+    .loc-phone { display: inline-flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 600; color: var(--cream); text-decoration: none; transition: color 0.2s ease; }
+    .loc-phone:hover { color: var(--gold); }
+    .hours-label { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+    .hours-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--cream); padding: 4px 0; border-bottom: 1px solid rgba(245,237,214,0.05); }
+    .hours-row .days { opacity: 0.6; }
+    .hours-row .time { font-weight: 500; }
+
+    /* VALUES */
+    .value-card {
+      background: var(--bg2); border: 1px solid rgba(245,237,214,0.06);
+      border-radius: 6px; padding: 32px;
+      transition: border-color 0.2s ease, transform 0.2s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .value-card:hover { border-color: rgba(201,150,46,0.2); transform: translateY(-3px); }
+    .value-icon { font-size: 32px; margin-bottom: 16px; }
+    .value-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 0.04em; color: var(--cream); margin-bottom: 8px; }
+    .value-text { font-size: 14px; color: var(--cream-dim); line-height: 1.65; }
+
+    /* CTA BANNER */
+    .cta-banner {
+      background: var(--bg2);
+      border-top: 1px solid rgba(201,150,46,0.12);
+      border-bottom: 1px solid rgba(201,150,46,0.12);
+    }
+
+    /* FOOTER */
+    footer { background: var(--bg1); border-top: 1px solid rgba(201,150,46,0.1); }
+    .foot-inner { max-width: 1280px; margin: 0 auto; padding: 48px 40px 32px; }
+    .foot-logo { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 0.06em; color: var(--cream); }
+    .foot-logo span { color: var(--red); }
+    .foot-link { font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cream-dim); text-decoration: none; transition: color 0.2s ease; }
+    .foot-link:hover { color: var(--gold); }
+    .foot-social { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(245,237,214,0.15); border-radius: 50%; color: var(--cream-dim); text-decoration: none; transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1); }
+    .foot-social:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-3px); }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+    .fade-up { animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+    .d1 { animation-delay: 0.1s; } .d2 { animation-delay: 0.2s; } .d3 { animation-delay: 0.32s; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--red); }
+
+    @media (max-width: 768px) {
+      .page-hero-img { display: none; }
+      .story-split { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <a href="index.html" style="display:inline-flex; align-items:center; text-decoration:none;">
+        <img src="brand_assets/images/img-01.png" alt="Taqueria El Coral" style="height:48px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5));">
+      </a>
+      <div class="nav-links">
+        <a href="menu.html" class="nav-link">Menu</a>
+        <a href="about.html" class="nav-link active">About</a>
+        <button onclick="cwToggle()" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; letter-spacing:0.08em; color:var(--gold); background:none; border:none; cursor:pointer; padding:0; opacity:0.85; transition:opacity 0.2s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'" title="Call options — copy, dial, or scan QR code">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          (408) 422-1508
+        </button>
+        <a href="order.html" class="btn-nav">
+          Order
+          <span id="cart-badge">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="page-hero-bg"></div>
+    <div class="page-hero-img">
+      <img src="brand_assets/images/img-09.png" alt="Green enchiladas with rice and beans" style="width:100%; height:100%; object-fit:cover; object-position:center; filter:brightness(0.75) contrast(1.05) saturate(1.1);">
+    </div>
+    <div style="position:relative; z-index:10; max-width:1280px; margin:0 auto; padding:0 40px; width:100%;">
+      <div class="section-label fade-up">Our Story</div>
+      <h1 class="page-title fade-up d1">
+        MADE WITH<br>
+        <span>LOVE &amp;</span><br>
+        TRADITION
+      </h1>
+      <div class="rule fade-up d2"></div>
+      <p style="font-family:'Fraunces',serif; font-style:italic; font-size:18px; color:var(--cream); opacity:0.7; max-width:420px; line-height:1.65;" class="fade-up d3">
+        Two locations. One family. The same flavors since day one.
+      </p>
+    </div>
+  </section>
+
+  <!-- STORY SECTION -->
+  <section style="padding: 100px 0; background: var(--bg); position:relative;">
+    <div style="position:absolute; inset:0; background: radial-gradient(ellipse 60% 60% at 80% 50%, rgba(192,57,43,0.06) 0%, transparent 65%); pointer-events:none;"></div>
+    <div style="max-width:1280px; margin:0 auto; padding:0 40px;">
+      <div class="story-split" style="display:flex; gap:80px; align-items:flex-start; flex-wrap:wrap;">
+
+        <!-- Text side -->
+        <div style="flex:1; min-width:300px;">
+          <div class="section-label">Who We Are</div>
+          <h2 class="section-heading">The Heart of El Coral</h2>
+          <div class="story-body">
+            <p>
+              Taqueria El Coral is a family-run Mexican restaurant with deep roots in San Jose, California.
+              What started as a dream to bring the bold, honest flavors of traditional Mexican cooking to our
+              community has grown into two beloved locations — and a lot of happy regulars.
+            </p>
+            <p>
+              Every taco, burrito, and plate is made the way it's always been made: fresh ingredients,
+              time-honored recipes, and the kind of care you can only find in a family kitchen. We choose
+              our meats, prepare our salsas, and cook our beans the same way every single day.
+            </p>
+          </div>
+
+          <blockquote class="story-quote">
+            "We cook the same way our family has cooked for generations — nothing shortcut, nothing frozen, nothing fake."
+          </blockquote>
+
+          <div class="story-body">
+            <p>
+              Whether you're stopping in for a quick breakfast burrito before work or settling in for a
+              full carne asada platter with your familia on a weekend, you'll find the same warmth, the
+              same quality, and the same flavors every time you walk through our doors.
+            </p>
+            <p>
+              Twelve meats. Ten menu categories. Hundreds of possible combinations. And every one of them
+              made fresh, made fast, and made with love.
+            </p>
+          </div>
+        </div>
+
+        <!-- Stats side -->
+        <div style="flex:0 0 320px;">
+          <div style="display:grid; gap:16px;">
+            <div class="stat-block">
+              <div class="stat-number">2</div>
+              <div class="stat-label">Locations in San Jose, CA</div>
+            </div>
+            <div class="stat-block">
+              <div class="stat-number">12</div>
+              <div class="stat-label">Meats to choose from</div>
+            </div>
+            <div class="stat-block">
+              <div class="stat-number">10</div>
+              <div class="stat-label">Menu categories</div>
+            </div>
+            <div class="stat-block">
+              <div class="stat-number">1</div>
+              <div class="stat-label">Family behind it all</div>
+            </div>
+          </div>
+
+          <!-- Food image -->
+          <div style="margin-top:16px; border-radius:6px; overflow:hidden; position:relative; height:200px;">
+            <img src="brand_assets/images/img-07.png" alt="Torta sandwich" style="width:100%; height:100%; object-fit:cover; object-position:center; filter:brightness(0.75) contrast(1.05) saturate(1.1);">
+            <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(15,9,2,0.8) 0%, transparent 60%);"></div>
+            <div style="position:absolute; inset:0; background:rgba(140,60,0,0.18); mix-blend-mode:multiply;"></div>
+            <div style="position:absolute; bottom:16px; left:20px; right:20px;">
+              <div style="font-family:'Fraunces',serif; font-style:italic; font-size:14px; color:var(--cream); opacity:0.9;">Fresh every morning, gone by night.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <section style="padding:80px 0; background:var(--bg1); position:relative;">
+    <div style="position:absolute; inset:0; background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(192,57,43,0.05) 0%, transparent 65%); pointer-events:none;"></div>
+    <div style="max-width:1280px; margin:0 auto; padding:0 40px;">
+      <div style="text-align:center; margin-bottom:56px;">
+        <div class="section-label" style="justify-content:center;">What Drives Us</div>
+        <h2 class="section-heading">Our Promises to You</h2>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+        <div class="value-card">
+          <div class="value-icon">🌮</div>
+          <div class="value-title">Always Fresh</div>
+          <div class="value-text">Every tortilla pressed, every salsa made, every taco assembled to order. We don't cut corners and we don't reheat yesterday's work.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">👨‍👩‍👧‍👦</div>
+          <div class="value-title">Family First</div>
+          <div class="value-text">Taqueria El Coral is a family business, from the kitchen to the counter. The people who cook your food are the same people who care about this place.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🫶</div>
+          <div class="value-title">Community</div>
+          <div class="value-text">We serve our neighbors. San Jose is home — and every meal we make is our way of saying thanks for letting us be a part of your day.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATIONS -->
+  <section style="padding:100px 0; background:var(--bg);">
+    <div style="max-width:1280px; margin:0 auto; padding:0 40px;">
+      <div style="text-align:center; margin-bottom:64px;">
+        <div class="section-label" style="justify-content:center;">Come Visit</div>
+        <h2 class="section-heading">Find Us in San Jose</h2>
+        <p style="font-size:15px; color:var(--cream-dim); max-width:400px; margin:0 auto;">Two locations, both ready to welcome you. Walk in, order at the counter, and enjoy.</p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+
+        <div class="loc-card">
+          <div class="section-label" style="margin-bottom:8px;">Location 01</div>
+          <div class="loc-name">Santa Teresa Blvd</div>
+          <div class="loc-addr">5899 Santa Teresa Blvd #109<br>San Jose, CA 95123</div>
+          <a href="tel:4085784077" class="loc-phone">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            (408) 578-4077
+          </a>
+          <div style="border-top:1px solid rgba(245,237,214,0.08); margin-top:24px; padding-top:24px;">
+            <div class="hours-label" style="margin-bottom:12px;">Hours</div>
+            <div class="hours-row"><span class="days">Mon – Fri</span><span class="time">10 am – 8 pm</span></div>
+            <div class="hours-row"><span class="days">Saturday</span><span class="time">10 am – 4 pm</span></div>
+            <div class="hours-row"><span class="days">Sunday</span><span class="time" style="color:var(--red);">Closed</span></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; margin-top:20px;">
+            <a href="tel:4084221508" style="display:inline-flex; align-items:center; gap:8px; flex:1; justify-content:center; padding:12px 16px; background:var(--red); color:var(--cream); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; border-radius:4px; box-shadow:0 3px 16px var(--red-glow); transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease;" onmouseover="this.style.background='var(--red-dark)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--red)';this.style.transform='translateY(0)'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              Call to Order
+            </a>
+            <a href="https://maps.google.com/?q=5899+Santa+Teresa+Blvd+109+San+Jose+CA+95123" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); text-decoration:none; opacity:0.8; white-space:nowrap; transition:opacity 0.2s ease;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Directions
+            </a>
+          </div>
+        </div>
+
+        <div class="loc-card">
+          <div class="section-label" style="margin-bottom:8px;">Location 02</div>
+          <div class="loc-name">W Capitol Expy</div>
+          <div class="loc-addr">426 W Capitol Expy<br>San Jose, CA 95136</div>
+          <a href="tel:4082292190" class="loc-phone">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            (408) 229-2190
+          </a>
+          <div style="border-top:1px solid rgba(245,237,214,0.08); margin-top:24px; padding-top:24px;">
+            <div class="hours-label" style="margin-bottom:12px;">Hours</div>
+            <div class="hours-row"><span class="days">Mon – Thu</span><span class="time">10 am – 9 pm</span></div>
+            <div class="hours-row"><span class="days">Fri – Sun</span><span class="time">9 am – 9 pm</span></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; margin-top:20px;">
+            <a href="tel:4084221508" style="display:inline-flex; align-items:center; gap:8px; flex:1; justify-content:center; padding:12px 16px; background:var(--red); color:var(--cream); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; border-radius:4px; box-shadow:0 3px 16px var(--red-glow); transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease;" onmouseover="this.style.background='var(--red-dark)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--red)';this.style.transform='translateY(0)'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              Call to Order
+            </a>
+            <a href="https://maps.google.com/?q=426+W+Capitol+Expy+San+Jose+CA+95136" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); text-decoration:none; opacity:0.8; white-space:nowrap; transition:opacity 0.2s ease;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Directions
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner" style="padding:80px 0; position:relative; overflow:hidden;">
+    <div style="position:absolute; inset:0; background: radial-gradient(ellipse 70% 100% at 50% 50%, rgba(192,57,43,0.12) 0%, transparent 70%); pointer-events:none;"></div>
+    <div style="max-width:1280px; margin:0 auto; padding:0 40px; text-align:center; position:relative; z-index:1;">
+      <div style="font-family:'Fraunces',serif; font-style:italic; font-size:clamp(28px,3.5vw,48px); color:var(--cream); line-height:1.3; margin-bottom:12px;">
+        Ready for something good?
+      </div>
+      <p style="font-size:15px; color:var(--cream-dim); margin-bottom:40px;">Order pickup online or walk into either location — we're ready for you.</p>
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+        <a href="order.html" class="btn-red">Order Pickup Now</a>
+        <a href="menu.html" class="btn-ghost">Browse the Menu</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot-inner">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px;">
+        <div>
+          <img src="brand_assets/images/img-01.png" alt="Taqueria El Coral" style="height:72px; width:auto; filter:drop-shadow(0 3px 12px rgba(0,0,0,0.6));">
+          <div style="font-family:'Fraunces',serif; font-style:italic; font-size:13px; color:var(--cream-dim); margin-top:10px;">Authentic Mexican flavors, made with love.</div>
+        </div>
+        <div style="display:flex; gap:32px; flex-wrap:wrap; align-items:center;">
+          <a href="index.html" class="foot-link">Home</a>
+          <a href="menu.html" class="foot-link">Menu</a>
+          <a href="order.html" class="foot-link">Order</a>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <a href="https://www.facebook.com/profile.php?id=100094609569474" target="_blank" rel="noopener" class="foot-social" aria-label="Facebook">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/taquerialelcoral1/" target="_blank" rel="noopener" class="foot-social" aria-label="Instagram">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(245,237,214,0.06); margin-top:40px; padding-top:24px; font-size:12px; color:var(--cream-dim); opacity:0.5;">
+        &copy; 2024 Taqueria El Coral &middot; All rights reserved &middot; San Jose, CA
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function updateCartBadge() {
+      const cart = JSON.parse(localStorage.getItem('elCoral_cart') || '[]');
+      const count = cart.reduce((s, i) => s + i.quantity, 0);
+      const badge = document.getElementById('cart-badge');
+      if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
+    }
+    updateCartBadge();
+  </script>
+
+<!-- ── CALL WIDGET ──────────────────────────────────────────────────────── -->
+<style>
+  #cw { position:fixed; bottom:28px; right:28px; z-index:8000; }
+  #cw-panel {
+    display:none; opacity:0; transform:translateY(14px) scale(0.96);
+    position:absolute; bottom:calc(100% + 14px); right:0;
+    width:292px;
+    background:#261808;
+    border:1px solid rgba(201,150,46,0.22);
+    border-radius:14px; padding:24px 24px 20px;
+    box-shadow:0 24px 64px rgba(0,0,0,0.75), 0 4px 16px rgba(0,0,0,0.4);
+    transition:opacity 0.22s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  #cw-panel.cw-open { opacity:1; transform:translateY(0) scale(1); }
+  @keyframes cwPulse {
+    0%,100% { box-shadow:0 4px 28px rgba(192,57,43,0.5), 0 2px 8px rgba(0,0,0,0.4); }
+    50%      { box-shadow:0 6px 40px rgba(192,57,43,0.8), 0 2px 12px rgba(0,0,0,0.4); }
+  }
+  #cw-pill {
+    display:flex; align-items:center; gap:10px;
+    padding:13px 22px 13px 18px;
+    background:#C0392B; border:none; border-radius:100px;
+    cursor:pointer; font-family:'DM Sans',sans-serif;
+    box-shadow:0 4px 28px rgba(192,57,43,0.5), 0 2px 8px rgba(0,0,0,0.4);
+    animation:cwPulse 3s ease-in-out infinite;
+    transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  #cw-pill:hover { transform:translateY(-2px); }
+  #cw-pill:active { transform:translateY(0); }
+  #cw-pill span { font-size:14px; font-weight:700; letter-spacing:0.04em; color:#F5EDD6; }
+  .cw-action {
+    display:flex; align-items:center; gap:10px;
+    width:100%; padding:12px 14px;
+    border-radius:7px; cursor:pointer;
+    font-family:'DM Sans',sans-serif;
+    font-size:13px; font-weight:600; letter-spacing:0.06em;
+    text-decoration:none; border:none;
+    transition:transform 0.18s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease, box-shadow 0.15s ease;
+    margin-bottom:8px;
+  }
+  .cw-action:last-child { margin-bottom:0; }
+  .cw-action:hover { transform:translateY(-2px); }
+  .cw-action:active { transform:translateY(0); }
+  .cw-dial {
+    background:#C0392B; color:#F5EDD6;
+    box-shadow:0 3px 16px rgba(192,57,43,0.4);
+  }
+  .cw-dial:hover { background:#96291F; box-shadow:0 5px 24px rgba(192,57,43,0.6); }
+  .cw-copy-btn {
+    background:rgba(245,237,214,0.07); color:#F5EDD6;
+    border:1.5px solid rgba(245,237,214,0.15) !important;
+  }
+  .cw-copy-btn:hover { background:rgba(245,237,214,0.12); border-color:rgba(245,237,214,0.35) !important; }
+  .cw-copy-btn.cw-copied { color:#C9962E; border-color:rgba(201,150,46,0.5) !important; background:rgba(201,150,46,0.08); }
+  .cw-divider {
+    display:flex; align-items:center; gap:10px;
+    margin:16px 0; color:#A89070; font-size:10px;
+    font-family:'DM Sans',sans-serif; letter-spacing:0.14em; text-transform:uppercase;
+  }
+  .cw-divider::before,.cw-divider::after { content:''; flex:1; height:1px; background:rgba(245,237,214,0.08); }
+</style>
+
+<div id="cw">
+  <!-- Expanded panel -->
+  <div id="cw-panel" role="dialog" aria-label="Call options">
+    <!-- Close -->
+    <button onclick="cwClose()" aria-label="Close" style="position:absolute; top:10px; right:14px; background:none; border:none; color:#A89070; font-size:20px; cursor:pointer; line-height:1; padding:4px; opacity:0.6; transition:opacity 0.15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">&times;</button>
+
+    <!-- Header -->
+    <div style="font-size:10px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:#C9962E; margin-bottom:6px; font-family:'DM Sans',sans-serif;">Order by Phone</div>
+    <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; letter-spacing:0.05em; color:#F5EDD6; line-height:1; margin-bottom:4px;">(408) 422-1508</div>
+    <div style="font-size:12px; color:#A89070; margin-bottom:20px; font-family:'DM Sans',sans-serif;">Both locations &middot; Mon&ndash;Sun</div>
+
+    <!-- Option 1: Open dialer -->
+    <a href="tel:4084221508" class="cw-action cw-dial">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      <div>
+        <div>Open Phone App</div>
+        <div style="font-size:11px; opacity:0.65; font-weight:400; margin-top:1px;">Works with iPhone &amp; Skype on desktop</div>
+      </div>
+    </a>
+
+    <!-- Option 2: Copy number -->
+    <button id="cw-copy-btn" class="cw-action cw-copy-btn" onclick="cwCopy()">
+      <svg id="cw-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      <div>
+        <div id="cw-copy-label">Copy Number</div>
+        <div style="font-size:11px; opacity:0.65; font-weight:400; margin-top:1px;">Paste it into any app to call</div>
+      </div>
+    </button>
+
+    <!-- Divider -->
+    <div class="cw-divider">scan from your phone</div>
+
+    <!-- Option 3: QR code -->
+    <div style="display:flex; align-items:center; gap:16px;">
+      <div style="background:#F5EDD6; border-radius:10px; padding:8px; flex-shrink:0;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?data=tel%3A4084221508&size=120x120&margin=2" alt="Scan to call" width="96" height="96" style="display:block;">
+      </div>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#F5EDD6; font-family:'DM Sans',sans-serif; margin-bottom:4px;">Scan with your phone</div>
+        <div style="font-size:12px; color:#A89070; font-family:'DM Sans',sans-serif; line-height:1.5;">Opens your dialer automatically &mdash; no typing needed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating pill -->
+  <button id="cw-pill" onclick="cwToggle()" aria-expanded="false" aria-controls="cw-panel">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5EDD6" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+    <span>(408) 422-1508</span>
+  </button>
+</div>
+
+<script>
+(function() {
+  var open = false;
+  function cwShow() {
+    open = true;
+    var p = document.getElementById('cw-panel');
+    p.style.display = 'block';
+    requestAnimationFrame(function() { requestAnimationFrame(function() { p.classList.add('cw-open'); }); });
+    document.getElementById('cw-pill').setAttribute('aria-expanded','true');
+    document.getElementById('cw-pill').style.animation = 'none';
+  }
+  window.cwClose = function() {
+    open = false;
+    var p = document.getElementById('cw-panel');
+    p.classList.remove('cw-open');
+    setTimeout(function() { p.style.display = 'none'; }, 230);
+    document.getElementById('cw-pill').setAttribute('aria-expanded','false');
+    document.getElementById('cw-pill').style.animation = 'cwPulse 3s ease-in-out infinite';
+  };
+  window.cwToggle = function() { open ? cwClose() : cwShow(); };
+  window.cwCopy = function() {
+    var num = '(408) 422-1508';
+    var btn = document.getElementById('cw-copy-btn');
+    var lbl = document.getElementById('cw-copy-label');
+    var ico = document.getElementById('cw-copy-icon');
+    function flash() {
+      btn.classList.add('cw-copied');
+      lbl.textContent = 'Copied!';
+      ico.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+      ico.setAttribute('viewBox','0 0 24 24');
+      setTimeout(function() {
+        btn.classList.remove('cw-copied');
+        lbl.textContent = 'Copy Number';
+        ico.innerHTML = '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>';
+      }, 2200);
+    }
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(num).then(flash).catch(function() { fallbackCopy(num); flash(); });
+    } else { fallbackCopy(num); flash(); }
+  };
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
+  }
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && open) cwClose(); });
+  document.addEventListener('click', function(e) {
+    if (open && !document.getElementById('cw').contains(e.target)) cwClose();
+  });
+})();
+</script>
+<!-- ── END CALL WIDGET ──────────────────────────────────────────────────── -->
+</body>
+</html>
