@@ -3,3 +3,4 @@ package-lock.json
 temporary screenshots/
 *.DS_Store
 .DS_Store
+.vercel

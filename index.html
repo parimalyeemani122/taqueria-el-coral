@@ -12,18 +12,19 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --red: #C0392B;
-      --red-dark: #96291F;
-      --red-glow: rgba(192,57,43,0.35);
-      --cream: #F5EDD6;
-      --cream-dim: #A89070;
-      --gold: #C9962E;
-      --gold-light: #E5B84A;
-      --bg: #0F0902;
-      --bg1: #1A1005;
-      --bg2: #261808;
-      --bg3: #342210;
-      --bg4: #42301A;
+      --red: #D94F2B;
+      --red-dark: #B83D22;
+      --red-glow: rgba(217,79,43,0.28);
+      --cream: #2C1810;
+      --cream-dim: #7B5C4A;
+      --light: #FFF8F0;
+      --gold: #E8940F;
+      --gold-light: #F5B031;
+      --bg: #FFF8F0;
+      --bg1: #FFF2E2;
+      --bg2: #FFFFFF;
+      --bg3: #F5EDE0;
+      --bg4: #D8C8B4;
     }
 
     html { scroll-behavior: smooth; }
@@ -37,7 +38,6 @@
       overflow-x: hidden;
     }
 
-    /* Grain texture */
     body::before {
       content: '';
       position: fixed;
@@ -45,24 +45,56 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
       pointer-events: none;
       z-index: 9000;
-      opacity: 0.07;
-      mix-blend-mode: overlay;
+      opacity: 0.025;
+      mix-blend-mode: multiply;
     }
+
+    /* ── NAV TOPBAR ── */
+    .nav-topbar {
+      background: var(--bg1);
+      border-bottom: 1px solid rgba(44,24,16,0.07);
+      padding: 6px 0;
+    }
+    .nav-topbar-inner {
+      max-width: 1280px; margin: 0 auto;
+      padding: 0 40px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-locs-desktop {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 500;
+    }
+    .nav-loc {
+      display: inline-flex; align-items: center; gap: 4px;
+      color: var(--cream-dim); text-decoration: none;
+      transition: color 0.2s ease;
+      white-space: nowrap;
+    }
+    .nav-loc:hover { color: var(--red); }
+    .nav-loc-sep {
+      color: var(--cream-dim); opacity: 0.35;
+      font-size: 14px; margin: 0 4px;
+    }
+    .nav-locs-mobile { display: none; }
 
     /* ── NAV ── */
     #nav {
       position: fixed; top: 0; left: 0; right: 0;
       z-index: 1000;
-      padding: 20px 0;
+      padding: 0;
       background: transparent;
-      transition: background 0.4s ease, padding 0.3s ease, box-shadow 0.4s ease;
+      transition: background 0.4s ease, box-shadow 0.4s ease;
     }
     #nav.scrolled {
-      background: rgba(15,9,2,0.94);
+      background: rgba(255,248,240,0.97);
       backdrop-filter: blur(16px);
-      padding: 14px 0;
-      box-shadow: 0 1px 0 rgba(201,150,46,0.15), 0 4px 24px rgba(0,0,0,0.5);
+      box-shadow: 0 1px 0 rgba(232,148,15,0.12), 0 4px 20px rgba(44,24,16,0.07);
     }
+    #nav.scrolled .nav-topbar { display: block; }
+    .nav-topbar { display: none; }
+    #nav.scrolled .nav-main { padding: 12px 0; }
+
+    .nav-main { padding: 20px 0; transition: padding 0.3s ease; }
     .nav-inner {
       max-width: 1280px; margin: 0 auto;
       padding: 0 40px;
@@ -79,15 +111,15 @@
       font-size: 12px; font-weight: 600;
       letter-spacing: 0.14em; text-transform: uppercase;
       color: var(--cream); text-decoration: none;
-      opacity: 0.75;
+      opacity: 0.65;
       transition: opacity 0.2s ease, color 0.2s ease;
     }
-    .nav-link:hover { opacity: 1; color: var(--gold); }
+    .nav-link:hover { opacity: 1; color: var(--red); }
     .nav-link:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; border-radius: 2px; opacity: 1; }
     .btn-nav {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 10px 22px;
-      background: var(--red); color: var(--cream);
+      background: var(--red); color: var(--light);
       font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
       text-decoration: none; border-radius: 3px;
       box-shadow: 0 3px 14px var(--red-glow);
@@ -99,7 +131,7 @@
     .btn-nav:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
     #cart-badge {
       display: none;
-      background: var(--gold); color: var(--bg);
+      background: var(--gold); color: var(--light);
       border-radius: 50%; width: 18px; height: 18px;
       font-size: 10px; font-weight: 700;
       align-items: center; justify-content: center;
@@ -109,15 +141,15 @@
     .btn-red {
       display: inline-flex; align-items: center; gap: 10px;
       padding: 15px 36px;
-      background: var(--red); color: var(--cream);
+      background: var(--red); color: var(--light);
       font-family: 'DM Sans', sans-serif;
       font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
       text-decoration: none; border-radius: 3px;
-      box-shadow: 0 4px 24px var(--red-glow), 0 2px 8px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 24px var(--red-glow), 0 2px 8px rgba(44,24,16,0.12);
       transform: translateY(0);
       transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease, background 0.15s ease;
     }
-    .btn-red:hover { background: var(--red-dark); transform: translateY(-3px); box-shadow: 0 8px 32px var(--red-glow), 0 4px 16px rgba(0,0,0,0.5); }
+    .btn-red:hover { background: var(--red-dark); transform: translateY(-3px); box-shadow: 0 8px 32px var(--red-glow), 0 4px 16px rgba(44,24,16,0.12); }
     .btn-red:active { transform: translateY(0); }
     .btn-red:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
     .btn-ghost {
@@ -127,11 +159,11 @@
       font-family: 'DM Sans', sans-serif;
       font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
       text-decoration: none; border-radius: 3px;
-      border: 1.5px solid rgba(245,237,214,0.35);
+      border: 1.5px solid rgba(44,24,16,0.2);
       transform: translateY(0);
       transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), border-color 0.2s ease, background 0.2s ease;
     }
-    .btn-ghost:hover { border-color: var(--cream); background: rgba(245,237,214,0.07); transform: translateY(-3px); }
+    .btn-ghost:hover { border-color: rgba(44,24,16,0.45); background: rgba(44,24,16,0.04); transform: translateY(-3px); }
     .btn-ghost:active { transform: translateY(0); }
     .btn-ghost:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
@@ -145,9 +177,9 @@
     .hero-bg {
       position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse 90% 80% at 72% 50%, rgba(192,57,43,0.22) 0%, transparent 65%),
-        radial-gradient(ellipse 60% 60% at 10% 85%, rgba(201,150,46,0.14) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 40% at 85% 8%, rgba(192,57,43,0.1) 0%, transparent 55%),
+        radial-gradient(ellipse 90% 80% at 72% 50%, rgba(217,79,43,0.10) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 60% at 10% 85%, rgba(232,148,15,0.08) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 85% 8%, rgba(217,79,43,0.06) 0%, transparent 55%),
         var(--bg);
     }
     .hero-img-wrap {
@@ -157,29 +189,31 @@
     }
     .hero-img-wrap img {
       width: 100%; height: 100%; object-fit: cover;
-      filter: sepia(0.3) brightness(0.65) contrast(1.2) saturate(1.6);
+      filter: sepia(0.2) brightness(0.75) contrast(1.15) saturate(1.5);
+      transform: scale(1);
+      transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
     }
     .hero-img-wrap .img-overlay-dark {
       position: absolute; inset: 0;
-      background: linear-gradient(to right, var(--bg) 0%, rgba(15,9,2,0.7) 35%, rgba(15,9,2,0.2) 100%);
+      background: linear-gradient(to right, var(--bg) 0%, rgba(255,248,240,0.6) 35%, rgba(255,248,240,0.05) 100%);
     }
     .hero-img-wrap .img-overlay-warm {
       position: absolute; inset: 0;
-      background: rgba(180,80,0,0.25);
+      background: rgba(160,60,0,0.2);
       mix-blend-mode: multiply;
     }
     .hero-content {
       position: relative; z-index: 10;
       max-width: 1280px; margin: 0 auto;
-      padding: 120px 40px 80px;
+      padding: 140px 40px 80px;
       width: 100%;
     }
     .hero-text { max-width: 640px; }
 
     .badge {
       display: inline-flex; align-items: center; gap: 10px;
-      background: rgba(192,57,43,0.12);
-      border: 1px solid rgba(192,57,43,0.28);
+      background: rgba(217,79,43,0.08);
+      border: 1px solid rgba(217,79,43,0.22);
       padding: 7px 18px; border-radius: 100px;
       margin-bottom: 40px;
     }
@@ -213,7 +247,7 @@
       font-family: 'Fraunces', serif;
       font-style: italic;
       font-size: 19px;
-      color: var(--cream); opacity: 0.7;
+      color: var(--cream); opacity: 0.65;
       line-height: 1.65;
       margin-bottom: 52px;
     }
@@ -223,7 +257,7 @@
       position: absolute; bottom: 40px; left: 50%;
       transform: translateX(-50%);
       display: flex; flex-direction: column; align-items: center; gap: 8px;
-      opacity: 0.45;
+      opacity: 0.3;
     }
     .scroll-caret span {
       font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
@@ -259,28 +293,28 @@
     /* ── LOCATIONS ── */
     .loc-card {
       background: var(--bg2);
-      border: 1px solid rgba(201,150,46,0.14);
+      border: 1px solid rgba(44,24,16,0.07);
       border-radius: 8px;
       padding: 40px;
       position: relative; overflow: hidden;
       box-shadow:
-        0 2px 4px rgba(0,0,0,0.6),
-        0 16px 48px rgba(0,0,0,0.45),
-        0 0 80px rgba(192,57,43,0.05);
+        0 2px 4px rgba(44,24,16,0.06),
+        0 12px 40px rgba(44,24,16,0.04),
+        0 0 0 1px rgba(217,79,43,0.03);
       transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.3s ease;
     }
     .loc-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 24px 64px rgba(0,0,0,0.5), 0 0 100px rgba(192,57,43,0.08);
+      box-shadow: 0 4px 8px rgba(44,24,16,0.08), 0 20px 56px rgba(44,24,16,0.07), 0 0 0 1px rgba(217,79,43,0.06);
     }
     .loc-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
       background: linear-gradient(to right, var(--red), var(--gold));
     }
     .loc-number {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 72px; line-height: 1;
-      color: var(--red); opacity: 0.12;
+      color: var(--red); opacity: 0.08;
       position: absolute; top: 24px; right: 32px;
       pointer-events: none;
     }
@@ -298,11 +332,11 @@
       text-decoration: none;
       transition: color 0.2s ease;
     }
-    .loc-phone:hover { color: var(--gold); }
+    .loc-phone:hover { color: var(--red); }
     .loc-phone:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
     .loc-hours {
       margin-top: 24px;
-      border-top: 1px solid rgba(245,237,214,0.08);
+      border-top: 1px solid rgba(44,24,16,0.07);
       padding-top: 24px;
     }
     .hours-label {
@@ -311,10 +345,10 @@
     }
     .hours-row {
       display: flex; justify-content: space-between;
-      font-size: 13px; color: var(--cream); padding: 4px 0;
-      border-bottom: 1px solid rgba(245,237,214,0.05);
+      font-size: 13px; color: var(--cream); padding: 5px 0;
+      border-bottom: 1px solid rgba(44,24,16,0.05);
     }
-    .hours-row .days { opacity: 0.65; }
+    .hours-row .days { opacity: 0.55; }
     .hours-row .time { font-weight: 500; }
     .loc-map {
       display: inline-flex; align-items: center; gap: 6px;
@@ -334,7 +368,7 @@
       gap: 10px;
     }
     .fg-item {
-      position: relative; overflow: hidden; border-radius: 6px;
+      position: relative; overflow: hidden; border-radius: 8px;
       cursor: pointer;
     }
     .fg-item img {
@@ -359,11 +393,11 @@
     }
     .fg-item .fg-label-name {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px; letter-spacing: 0.04em; color: var(--cream);
+      font-size: 22px; letter-spacing: 0.04em; color: #FFF8F0;
       line-height: 1;
     }
     .fg-item .fg-label-desc {
-      font-size: 12px; color: var(--cream); opacity: 0.65; margin-top: 4px;
+      font-size: 12px; color: #FFF8F0; opacity: 0.65; margin-top: 4px;
     }
     .fg-featured { grid-row: span 2; }
     .fg-featured, .fg-featured img { min-height: 560px; }
@@ -372,7 +406,7 @@
     /* ── FOOTER ── */
     footer {
       background: var(--bg1);
-      border-top: 1px solid rgba(201,150,46,0.1);
+      border-top: 1px solid rgba(44,24,16,0.08);
     }
     .foot-inner {
       max-width: 1280px; margin: 0 auto;
@@ -396,20 +430,20 @@
       text-decoration: none;
       transition: color 0.2s ease;
     }
-    .foot-nav-link:hover { color: var(--gold); }
+    .foot-nav-link:hover { color: var(--red); }
     .foot-social {
       display: flex; align-items: center; justify-content: center;
       width: 38px; height: 38px;
-      border: 1px solid rgba(245,237,214,0.15);
+      border: 1px solid rgba(44,24,16,0.15);
       border-radius: 50%; color: var(--cream-dim);
       text-decoration: none;
       transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
     }
-    .foot-social:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-3px); }
+    .foot-social:hover { border-color: var(--red); color: var(--red); transform: translateY(-3px); }
     .foot-social:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
     .foot-addr { font-size: 13px; color: var(--cream-dim); line-height: 1.7; }
     .foot-copyright {
-      border-top: 1px solid rgba(245,237,214,0.06);
+      border-top: 1px solid rgba(44,24,16,0.07);
       margin-top: 48px; padding-top: 24px;
       font-size: 12px; color: var(--cream-dim); opacity: 0.5;
     }
@@ -433,15 +467,15 @@
     ::-webkit-scrollbar-thumb:hover { background: var(--red); }
 
     @media (max-width: 768px) {
-      .hero-img-wrap { width: 100%; clip-path: none; opacity: 0.3; }
-      .hero-img-wrap .img-overlay-dark {
-        background: linear-gradient(to right, var(--bg) 0%, rgba(15,9,2,0.9) 100%);
-      }
+      .hero-img-wrap { width: 100%; clip-path: none; opacity: 0.25; }
       .nav-links .nav-link { display: none; }
       .food-grid { grid-template-columns: 1fr 1fr; }
       .fg-featured { grid-column: span 2; grid-row: span 1; }
       .fg-featured img { height: 200px; }
       .fg-normal img { height: 160px; }
+      .nav-locs-desktop { display: none; }
+      .nav-locs-mobile { display: flex; }
+      .nav-topbar-inner { justify-content: center; }
     }
   </style>
 </head>
@@ -449,21 +483,35 @@
 
   <!-- NAV -->
   <nav id="nav">
-    <div class="nav-inner">
-      <a href="index.html" style="display:inline-flex; align-items:center; text-decoration:none;">
-        <img src="brand_assets/images/img-01.png" alt="Taqueria El Coral" style="height:48px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5));">
-      </a>
-      <div class="nav-links">
-        <a href="menu.html" class="nav-link">Menu</a>
-        <a href="about.html" class="nav-link">About</a>
-        <button onclick="cwToggle()" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; letter-spacing:0.08em; color:var(--gold); background:none; border:none; cursor:pointer; padding:0; opacity:0.85; transition:opacity 0.2s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'" title="Call options — copy, dial, or scan QR code">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-          (408) 422-1508
-        </button>
-        <a href="order.html" class="btn-nav">
-          Order Pickup
-          <span id="cart-badge">0</span>
+    <div class="nav-topbar" id="nav-topbar">
+      <div class="nav-topbar-inner">
+        <div class="nav-locs-desktop">
+          <a href="https://maps.google.com/?q=5899+Santa+Teresa+Blvd+109+San+Jose+CA+95123" target="_blank" rel="noopener" class="nav-loc">📍 5899 Santa Teresa Blvd #109 · (408) 578-4077</a>
+          <span class="nav-loc-sep">·</span>
+          <a href="https://maps.google.com/?q=426+W+Capitol+Expy+San+Jose+CA+95136" target="_blank" rel="noopener" class="nav-loc">📍 426 W Capitol Expy · (408) 229-2190</a>
+        </div>
+        <div class="nav-locs-mobile">
+          <a href="#locations" class="nav-loc">📍 2 Locations in San Jose</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-main">
+      <div class="nav-inner">
+        <a href="index.html" style="display:inline-flex; align-items:center; text-decoration:none;">
+          <img src="brand_assets/images/img-01.png" alt="Taqueria El Coral" style="height:48px; width:auto; filter:drop-shadow(0 2px 6px rgba(44,24,16,0.15));">
         </a>
+        <div class="nav-links">
+          <a href="menu.html" class="nav-link">Menu</a>
+          <a href="about.html" class="nav-link">About</a>
+          <button onclick="cwToggle()" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; letter-spacing:0.08em; color:var(--gold); background:none; border:none; cursor:pointer; padding:0; opacity:0.85; transition:opacity 0.2s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'" title="Call options — copy, dial, or scan QR code">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            (408) 422-1508
+          </button>
+          <a href="order.html" class="btn-nav">
+            Order Pickup
+            <span id="cart-badge">0</span>
+          </a>
+        </div>
       </div>
     </div>
   </nav>
@@ -502,7 +550,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61H19a2 2 0 001.99-1.81L22 7H6"/></svg>
             Order Pickup
           </a>
-          <a href="tel:4084221508" class="btn-ghost" style="border-color:rgba(201,150,46,0.45); color:var(--gold);">
+          <a href="tel:4084221508" class="btn-ghost" style="border-color:rgba(232,148,15,0.4); color:var(--gold);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
             Call to Order
           </a>
@@ -521,8 +569,8 @@
   </section>
 
   <!-- LOCATIONS -->
-  <section style="padding: 100px 0; background: var(--bg1); position:relative;">
-    <div style="position:absolute; inset:0; background: radial-gradient(ellipse 60% 60% at 50% 0%, rgba(192,57,43,0.06) 0%, transparent 70%); pointer-events:none;"></div>
+  <section id="locations" style="padding: 100px 0; background: var(--bg1); position:relative;">
+    <div style="position:absolute; inset:0; background: radial-gradient(ellipse 60% 60% at 50% 0%, rgba(217,79,43,0.04) 0%, transparent 70%); pointer-events:none;"></div>
     <div style="max-width:1280px; margin:0 auto; padding:0 40px;">
       <div style="text-align:center; margin-bottom:64px;">
         <div class="section-label" style="justify-content:center;">Find Us</div>
@@ -551,7 +599,7 @@
             <div class="hours-row"><span class="days">Sunday</span><span class="time" style="color:var(--red);">Closed</span></div>
           </div>
           <div style="display:flex; align-items:center; gap:12px; margin-top:20px;">
-            <a href="tel:4084221508" style="display:inline-flex; align-items:center; gap:8px; flex:1; justify-content:center; padding:12px 16px; background:var(--red); color:var(--cream); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; border-radius:4px; box-shadow:0 3px 16px var(--red-glow); transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease;" onmouseover="this.style.background='var(--red-dark)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--red)';this.style.transform='translateY(0)'">
+            <a href="tel:4085784077" style="display:inline-flex; align-items:center; gap:8px; flex:1; justify-content:center; padding:12px 16px; background:var(--red); color:var(--light); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; border-radius:4px; box-shadow:0 3px 16px var(--red-glow); transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease;" onmouseover="this.style.background='var(--red-dark)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--red)';this.style.transform='translateY(0)'">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
               Call to Order
             </a>
@@ -578,7 +626,7 @@
             <div class="hours-row"><span class="days">Fri – Sun</span><span class="time">9 am – 9 pm</span></div>
           </div>
           <div style="display:flex; align-items:center; gap:12px; margin-top:20px;">
-            <a href="tel:4084221508" style="display:inline-flex; align-items:center; gap:8px; flex:1; justify-content:center; padding:12px 16px; background:var(--red); color:var(--cream); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; border-radius:4px; box-shadow:0 3px 16px var(--red-glow); transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease;" onmouseover="this.style.background='var(--red-dark)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--red)';this.style.transform='translateY(0)'">
+            <a href="tel:4082292190" style="display:inline-flex; align-items:center; gap:8px; flex:1; justify-content:center; padding:12px 16px; background:var(--red); color:var(--light); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; border-radius:4px; box-shadow:0 3px 16px var(--red-glow); transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease;" onmouseover="this.style.background='var(--red-dark)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--red)';this.style.transform='translateY(0)'">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
               Call to Order
             </a>
@@ -595,7 +643,7 @@
 
   <!-- FOOD GRID -->
   <section style="padding: 100px 0; background: var(--bg); position:relative; overflow:hidden;">
-    <div style="position:absolute; inset:0; background: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(201,150,46,0.06) 0%, transparent 65%); pointer-events:none;"></div>
+    <div style="position:absolute; inset:0; background: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(232,148,15,0.04) 0%, transparent 65%); pointer-events:none;"></div>
     <div style="max-width:1280px; margin:0 auto; padding:0 40px;">
       <div style="display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:48px; flex-wrap:wrap; gap:24px;">
         <div>
@@ -663,7 +711,7 @@
     <div class="foot-inner">
       <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap:48px; flex-wrap:wrap;">
         <div>
-          <img src="brand_assets/images/img-01.png" alt="Taqueria El Coral" style="height:80px; width:auto; filter:drop-shadow(0 3px 12px rgba(0,0,0,0.6));">
+          <img src="brand_assets/images/img-01.png" alt="Taqueria El Coral" style="height:80px; width:auto; filter:drop-shadow(0 3px 12px rgba(44,24,16,0.15));">
           <div class="foot-tagline" style="margin-top:12px;">Authentic Mexican flavors,<br>made with love.</div>
           <div style="display:flex; gap:12px; margin-top:28px;">
             <a href="https://www.facebook.com/profile.php?id=100094609569474" target="_blank" rel="noopener" class="foot-social" aria-label="Facebook">
@@ -689,7 +737,7 @@
           <div class="foot-addr">
             5899 Santa Teresa Blvd #109<br>
             San Jose, CA 95123<br>
-            <a href="tel:4085784077" style="color:var(--gold); text-decoration:none; font-weight:500;">(408) 578-4077</a>
+            <a href="tel:4085784077" style="color:var(--red); text-decoration:none; font-weight:500;">(408) 578-4077</a>
           </div>
         </div>
 
@@ -698,25 +746,26 @@
           <div class="foot-addr">
             426 W Capitol Expy<br>
             San Jose, CA 95136<br>
-            <a href="tel:4082292190" style="color:var(--gold); text-decoration:none; font-weight:500;">(408) 229-2190</a>
+            <a href="tel:4082292190" style="color:var(--red); text-decoration:none; font-weight:500;">(408) 229-2190</a>
           </div>
         </div>
       </div>
 
       <div class="foot-copyright">
-        &copy; 2024 Taqueria El Coral. All rights reserved. &middot; San Jose, CA
+        &copy; 2025 Taqueria El Coral. All rights reserved. &middot; San Jose, CA
       </div>
     </div>
   </footer>
 
   <script>
-    // Nav scroll behavior
     const nav = document.getElementById('nav');
+    const topbar = document.getElementById('nav-topbar');
     window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 60);
+      const scrolled = window.scrollY > 60;
+      nav.classList.toggle('scrolled', scrolled);
+      topbar.style.display = scrolled ? 'block' : 'none';
     });
 
-    // Cart count badge
     function updateCartBadge() {
       const cart = JSON.parse(localStorage.getItem('elCoral_cart') || '[]');
       const count = cart.reduce((s, i) => s + i.quantity, 0);
@@ -737,29 +786,29 @@
     display:none; opacity:0; transform:translateY(14px) scale(0.96);
     position:absolute; bottom:calc(100% + 14px); right:0;
     width:292px;
-    background:#261808;
-    border:1px solid rgba(201,150,46,0.22);
+    background:#FFFFFF;
+    border:1px solid rgba(44,24,16,0.1);
     border-radius:14px; padding:24px 24px 20px;
-    box-shadow:0 24px 64px rgba(0,0,0,0.75), 0 4px 16px rgba(0,0,0,0.4);
+    box-shadow:0 20px 60px rgba(44,24,16,0.12), 0 4px 16px rgba(44,24,16,0.06);
     transition:opacity 0.22s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
   }
   #cw-panel.cw-open { opacity:1; transform:translateY(0) scale(1); }
   @keyframes cwPulse {
-    0%,100% { box-shadow:0 4px 28px rgba(192,57,43,0.5), 0 2px 8px rgba(0,0,0,0.4); }
-    50%      { box-shadow:0 6px 40px rgba(192,57,43,0.8), 0 2px 12px rgba(0,0,0,0.4); }
+    0%,100% { box-shadow:0 4px 28px rgba(217,79,43,0.45), 0 2px 8px rgba(44,24,16,0.12); }
+    50%      { box-shadow:0 6px 40px rgba(217,79,43,0.7), 0 2px 12px rgba(44,24,16,0.12); }
   }
   #cw-pill {
     display:flex; align-items:center; gap:10px;
     padding:13px 22px 13px 18px;
-    background:#C0392B; border:none; border-radius:100px;
+    background:#D94F2B; border:none; border-radius:100px;
     cursor:pointer; font-family:'DM Sans',sans-serif;
-    box-shadow:0 4px 28px rgba(192,57,43,0.5), 0 2px 8px rgba(0,0,0,0.4);
+    box-shadow:0 4px 28px rgba(217,79,43,0.45), 0 2px 8px rgba(44,24,16,0.12);
     animation:cwPulse 3s ease-in-out infinite;
     transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
   }
   #cw-pill:hover { transform:translateY(-2px); }
   #cw-pill:active { transform:translateY(0); }
-  #cw-pill span { font-size:14px; font-weight:700; letter-spacing:0.04em; color:#F5EDD6; }
+  #cw-pill span { font-size:14px; font-weight:700; letter-spacing:0.04em; color:#FFF8F0; }
   .cw-action {
     display:flex; align-items:center; gap:10px;
     width:100%; padding:12px 14px;
@@ -774,71 +823,57 @@
   .cw-action:hover { transform:translateY(-2px); }
   .cw-action:active { transform:translateY(0); }
   .cw-dial {
-    background:#C0392B; color:#F5EDD6;
-    box-shadow:0 3px 16px rgba(192,57,43,0.4);
+    background:#D94F2B; color:#FFF8F0;
+    box-shadow:0 3px 16px rgba(217,79,43,0.35);
   }
-  .cw-dial:hover { background:#96291F; box-shadow:0 5px 24px rgba(192,57,43,0.6); }
+  .cw-dial:hover { background:#B83D22; box-shadow:0 5px 24px rgba(217,79,43,0.55); }
   .cw-copy-btn {
-    background:rgba(245,237,214,0.07); color:#F5EDD6;
-    border:1.5px solid rgba(245,237,214,0.15) !important;
+    background:rgba(44,24,16,0.04); color:#2C1810;
+    border:1.5px solid rgba(44,24,16,0.12) !important;
   }
-  .cw-copy-btn:hover { background:rgba(245,237,214,0.12); border-color:rgba(245,237,214,0.35) !important; }
-  .cw-copy-btn.cw-copied { color:#C9962E; border-color:rgba(201,150,46,0.5) !important; background:rgba(201,150,46,0.08); }
+  .cw-copy-btn:hover { background:rgba(44,24,16,0.08); border-color:rgba(44,24,16,0.22) !important; }
+  .cw-copy-btn.cw-copied { color:#E8940F; border-color:rgba(232,148,15,0.4) !important; background:rgba(232,148,15,0.06); }
   .cw-divider {
     display:flex; align-items:center; gap:10px;
-    margin:16px 0; color:#A89070; font-size:10px;
+    margin:16px 0; color:#7B5C4A; font-size:10px;
     font-family:'DM Sans',sans-serif; letter-spacing:0.14em; text-transform:uppercase;
   }
-  .cw-divider::before,.cw-divider::after { content:''; flex:1; height:1px; background:rgba(245,237,214,0.08); }
+  .cw-divider::before,.cw-divider::after { content:''; flex:1; height:1px; background:rgba(44,24,16,0.1); }
 </style>
 
 <div id="cw">
-  <!-- Expanded panel -->
   <div id="cw-panel" role="dialog" aria-label="Call options">
-    <!-- Close -->
-    <button onclick="cwClose()" aria-label="Close" style="position:absolute; top:10px; right:14px; background:none; border:none; color:#A89070; font-size:20px; cursor:pointer; line-height:1; padding:4px; opacity:0.6; transition:opacity 0.15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">&times;</button>
-
-    <!-- Header -->
-    <div style="font-size:10px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:#C9962E; margin-bottom:6px; font-family:'DM Sans',sans-serif;">Order by Phone</div>
-    <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; letter-spacing:0.05em; color:#F5EDD6; line-height:1; margin-bottom:4px;">(408) 422-1508</div>
-    <div style="font-size:12px; color:#A89070; margin-bottom:20px; font-family:'DM Sans',sans-serif;">Both locations &middot; Mon&ndash;Sun</div>
-
-    <!-- Option 1: Open dialer -->
+    <button onclick="cwClose()" aria-label="Close" style="position:absolute; top:10px; right:14px; background:none; border:none; color:#7B5C4A; font-size:20px; cursor:pointer; line-height:1; padding:4px; opacity:0.6; transition:opacity 0.15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">&times;</button>
+    <div style="font-size:10px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:#E8940F; margin-bottom:6px; font-family:'DM Sans',sans-serif;">Order by Phone</div>
+    <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; letter-spacing:0.05em; color:#2C1810; line-height:1; margin-bottom:4px;">(408) 422-1508</div>
+    <div style="font-size:12px; color:#7B5C4A; margin-bottom:20px; font-family:'DM Sans',sans-serif;">Both locations &middot; Mon&ndash;Sun</div>
     <a href="tel:4084221508" class="cw-action cw-dial">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
       <div>
         <div>Open Phone App</div>
-        <div style="font-size:11px; opacity:0.65; font-weight:400; margin-top:1px;">Works with iPhone &amp; Skype on desktop</div>
+        <div style="font-size:11px; opacity:0.6; font-weight:400; margin-top:1px;">Works with iPhone &amp; Skype on desktop</div>
       </div>
     </a>
-
-    <!-- Option 2: Copy number -->
     <button id="cw-copy-btn" class="cw-action cw-copy-btn" onclick="cwCopy()">
       <svg id="cw-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
       <div>
         <div id="cw-copy-label">Copy Number</div>
-        <div style="font-size:11px; opacity:0.65; font-weight:400; margin-top:1px;">Paste it into any app to call</div>
+        <div style="font-size:11px; opacity:0.6; font-weight:400; margin-top:1px;">Paste it into any app to call</div>
       </div>
     </button>
-
-    <!-- Divider -->
     <div class="cw-divider">scan from your phone</div>
-
-    <!-- Option 3: QR code -->
     <div style="display:flex; align-items:center; gap:16px;">
-      <div style="background:#F5EDD6; border-radius:10px; padding:8px; flex-shrink:0;">
+      <div style="background:#F0E8DA; border-radius:10px; padding:8px; flex-shrink:0;">
         <img src="https://api.qrserver.com/v1/create-qr-code/?data=tel%3A4084221508&size=120x120&margin=2" alt="Scan to call" width="96" height="96" style="display:block;">
       </div>
       <div>
-        <div style="font-size:13px; font-weight:600; color:#F5EDD6; font-family:'DM Sans',sans-serif; margin-bottom:4px;">Scan with your phone</div>
-        <div style="font-size:12px; color:#A89070; font-family:'DM Sans',sans-serif; line-height:1.5;">Opens your dialer automatically &mdash; no typing needed</div>
+        <div style="font-size:13px; font-weight:600; color:#2C1810; font-family:'DM Sans',sans-serif; margin-bottom:4px;">Scan with your phone</div>
+        <div style="font-size:12px; color:#7B5C4A; font-family:'DM Sans',sans-serif; line-height:1.5;">Opens your dialer automatically &mdash; no typing needed</div>
       </div>
     </div>
   </div>
-
-  <!-- Floating pill -->
   <button id="cw-pill" onclick="cwToggle()" aria-expanded="false" aria-controls="cw-panel">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5EDD6" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFF8F0" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
     <span>(408) 422-1508</span>
   </button>
 </div>
