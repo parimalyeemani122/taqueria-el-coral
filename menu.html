@@ -261,6 +261,12 @@
       opacity: 0.45; background: var(--bg1);
       border-color: rgba(44,24,16,0.06);
     }
+    .ingredient-check.ingredient-extra { opacity: 0.45; }
+    .ingredient-check.ingredient-extra.extra-checked {
+      opacity: 1; background: rgba(232,148,15,0.08);
+      border-color: rgba(232,148,15,0.4); font-weight: 600;
+    }
+    .ingredient-check.ingredient-extra input { accent-color: var(--gold); }
     .modal-footer {
       padding: 20px 24px;
       display: flex; align-items: center; justify-content: space-between; gap: 16px;
@@ -451,8 +457,10 @@
         </select>
       </div>
       <div id="modal-ingredients-section" class="modal-section" style="display:none;">
-        <div class="modal-section-label">Customize Your Order <span style="font-weight:400; text-transform:none; letter-spacing:0; font-size:9px; opacity:0.6;">(uncheck to remove)</span></div>
+        <div class="modal-section-label">Remove Toppings <span style="font-weight:400; text-transform:none; letter-spacing:0; font-size:9px; opacity:0.6;">(uncheck to remove)</span></div>
         <div class="modal-ingredients" id="modal-ingredients"></div>
+        <div class="modal-section-label" style="margin-top:16px;">Extra Toppings <span style="font-weight:400; text-transform:none; letter-spacing:0; font-size:9px; opacity:0.6;">(check to add extra)</span></div>
+        <div class="modal-ingredients" id="modal-extra-ingredients"></div>
       </div>
       <div class="modal-footer">
         <div class="modal-qty-ctrl">
@@ -666,22 +674,35 @@
       const ingList = INGREDIENTS[catId];
       const ingSec = document.getElementById('modal-ingredients-section');
       const ingContainer = document.getElementById('modal-ingredients');
+      const extraContainer = document.getElementById('modal-extra-ingredients');
       if (ingList && ingList.length) {
         ingSec.style.display = 'block';
+        // Remove toppings (checked by default)
         ingContainer.innerHTML = ingList.map(ing => `
           <label class="ingredient-check" onclick="toggleIngredient(this)">
             <input type="checkbox" checked value="${ing}" onclick="event.stopPropagation()"> ${ing}
           </label>
         `).join('');
-        // Wire checkboxes
         ingContainer.querySelectorAll('input[type=checkbox]').forEach(cb => {
           cb.addEventListener('change', () => {
             cb.closest('.ingredient-check').classList.toggle('unchecked', !cb.checked);
           });
         });
+        // Extra toppings (unchecked by default)
+        extraContainer.innerHTML = ingList.map(ing => `
+          <label class="ingredient-check ingredient-extra" onclick="toggleExtraIngredient(this)">
+            <input type="checkbox" value="${ing}" onclick="event.stopPropagation()"> + ${ing}
+          </label>
+        `).join('');
+        extraContainer.querySelectorAll('input[type=checkbox]').forEach(cb => {
+          cb.addEventListener('change', () => {
+            cb.closest('.ingredient-check').classList.toggle('extra-checked', cb.checked);
+          });
+        });
       } else {
         ingSec.style.display = 'none';
         ingContainer.innerHTML = '';
+        extraContainer.innerHTML = '';
       }
 
       const overlay = document.getElementById('modal-overlay');
@@ -694,6 +715,12 @@
       const cb = label.querySelector('input[type=checkbox]');
       cb.checked = !cb.checked;
       label.classList.toggle('unchecked', !cb.checked);
+    }
+
+    function toggleExtraIngredient(label) {
+      const cb = label.querySelector('input[type=checkbox]');
+      cb.checked = !cb.checked;
+      label.classList.toggle('extra-checked', cb.checked);
     }
 
     function closeModal() {
@@ -725,6 +752,10 @@
       document.querySelectorAll('#modal-ingredients input[type=checkbox]').forEach(cb => {
         if (!cb.checked) excludedIngredients.push(cb.value);
       });
+      const extraIngredients = [];
+      document.querySelectorAll('#modal-extra-ingredients input[type=checkbox]').forEach(cb => {
+        if (cb.checked) extraIngredients.push(cb.value);
+      });
 
       const ingList = INGREDIENTS[modalCatId] || [];
       const item = {
@@ -734,15 +765,17 @@
         quantity: modalQty,
         meatChoice,
         excludedIngredients,
+        extraIngredients,
         hasMeat: !!modalItem.hasMeat,
         availableIngredients: ingList,
       };
       addToCart(item);
 
-      let label = modalItem.name;
-      if (meatChoice) label += ` (${meatChoice})`;
-      if (excludedIngredients.length) label += `, no ${excludedIngredients.join(', no ')}`;
-      showToast(`${label} added!`);
+      let toastLabel = modalItem.name;
+      if (meatChoice) toastLabel += ` (${meatChoice})`;
+      if (extraIngredients.length) toastLabel += `, +extra ${extraIngredients.join(', ')}`;
+      if (excludedIngredients.length) toastLabel += `, no ${excludedIngredients.join(', no ')}`;
+      showToast(`${toastLabel} added!`);
       closeModal();
     }
 
