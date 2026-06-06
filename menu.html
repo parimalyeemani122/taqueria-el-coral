@@ -726,6 +726,7 @@
         if (!cb.checked) excludedIngredients.push(cb.value);
       });
 
+      const ingList = INGREDIENTS[modalCatId] || [];
       const item = {
         id: modalItem.id,
         name: modalItem.name,
@@ -733,6 +734,8 @@
         quantity: modalQty,
         meatChoice,
         excludedIngredients,
+        hasMeat: !!modalItem.hasMeat,
+        availableIngredients: ingList,
       };
       addToCart(item);
 

@@ -347,6 +347,7 @@
             <div id="summary-list" style="margin-bottom:16px; min-height:60px; color:var(--cream-dim); font-size:14px;"></div>
             <div class="totals-row"><span class="label">Subtotal</span><span class="value" id="subtotal-display">$0.00</span></div>
             <div class="totals-row"><span class="label">Tax (9.25%)</span><span class="value" id="tax-display">$0.00</span></div>
+            <div class="totals-row"><span class="label">Service Fee</span><span class="value">$0.99</span></div>
             <div class="totals-row" id="pickup-free-row"><span class="label">Pickup Fee</span><span class="value" style="color:var(--gold);">Free</span></div>
             <div class="totals-row" id="delivery-fee-row" style="display:none;"><span class="label">Delivery Fee</span><span class="value" style="color:var(--red);">$5.99</span></div>
             <div class="totals-total"><span class="label">TOTAL</span><span class="value" id="total-display">$0.00</span></div>
@@ -382,6 +383,9 @@
     const CART_KEY = 'elCoral_cart';
     const TAX_RATE = 0.0925;
     const DELIVERY_FEE = 5.99;
+    const SERVICE_FEE = 0.99;
+
+    const MEATS = ['Grilled Steak','Grilled Chicken','Al Pastor','Carnitas','Chorizo','Tripa','Chile Verde','Beef Tongue','Beef Head','Barbacoa','Buche','Chile Relleno'];
 
     // TODO: Replace with live DoorDash Drive API credentials — see https://developer.doordash.com/en-US/docs/drive/tutorials/get_started
     let fulfillmentMode = 'pickup';
@@ -446,6 +450,9 @@
             ${meta ? `<div class="item-meta">${meta}</div>` : ''}
           </div>
           <div class="item-price-cell">$${(item.price * item.quantity).toFixed(2)}</div>
+          <button class="edit-item-btn" data-action="edit" data-idx="${idx}" aria-label="Edit item" title="Edit">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
           <button class="remove-btn" data-action="remove" data-idx="${idx}" aria-label="Remove item">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
@@ -455,6 +462,7 @@
         const btn = e.target.closest('[data-action]');
         if (!btn) return;
         const idx = parseInt(btn.dataset.idx);
+        if (btn.dataset.action === 'edit') { openEditModal(idx); return; }
         const c = getCart();
         if (btn.dataset.action === 'inc') c[idx].quantity++;
         else if (btn.dataset.action === 'dec') { c[idx].quantity--; if (c[idx].quantity <= 0) c.splice(idx, 1); }
@@ -483,8 +491,8 @@
       }).join('');
       const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
       const tax = subtotal * TAX_RATE;
-      const fee = fulfillmentMode === 'delivery' ? DELIVERY_FEE : 0;
-      const total = subtotal + tax + fee;
+      const deliveryFee = fulfillmentMode === 'delivery' ? DELIVERY_FEE : 0;
+      const total = subtotal + tax + SERVICE_FEE + deliveryFee;
       document.getElementById('subtotal-display').textContent = `$${subtotal.toFixed(2)}`;
       document.getElementById('tax-display').textContent = `$${tax.toFixed(2)}`;
       document.getElementById('total-display').textContent = `$${total.toFixed(2)}`;
@@ -534,7 +542,7 @@
       const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
       const tax = subtotal * TAX_RATE;
       const fee = fulfillmentMode === 'delivery' ? DELIVERY_FEE : 0;
-      const total = subtotal + tax + fee;
+      const total = subtotal + tax + SERVICE_FEE + fee;
       const orderId = 'EC-' + Date.now().toString(36).toUpperCase().slice(-6);
 
       const payload = {
@@ -544,7 +552,7 @@
         deliveryAddress: fulfillmentMode === 'delivery' ? deliveryAddress : null,
         customer: { name, phone }, pickupTime: fulfillmentMode === 'pickup' ? pickupTime : null, notes,
         items: cart.map(i => ({ name: i.name, quantity: i.quantity, price: i.price, meatChoice: i.meatChoice || null, excludedIngredients: i.excludedIngredients || [] })),
-        subtotal: +subtotal.toFixed(2), tax: +tax.toFixed(2), deliveryFee: fee, total: +total.toFixed(2),
+        subtotal: +subtotal.toFixed(2), tax: +tax.toFixed(2), serviceFee: SERVICE_FEE, deliveryFee: fee, total: +total.toFixed(2),
       };
 
       const btn = document.getElementById('place-order-btn');
@@ -591,6 +599,169 @@
     style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
     document.head.appendChild(style);
   </script>
+
+<!-- ── EDIT MODAL ──────────────────────────────────────────────────────── -->
+<style>
+  .edit-item-btn { background: none; border: 1px solid rgba(44,24,16,0.14); border-radius: 4px; color: var(--cream-dim); cursor: pointer; padding: 5px 7px; opacity: 0.7; transition: opacity 0.2s ease, color 0.2s ease, border-color 0.2s ease; flex-shrink: 0; }
+  .edit-item-btn:hover { opacity: 1; color: var(--red); border-color: rgba(217,79,43,0.35); }
+  #edit-overlay { display:none; position:fixed; inset:0; background:rgba(44,24,16,0.35); backdrop-filter:blur(6px); z-index:5000; align-items:center; justify-content:center; padding:20px; }
+  #edit-overlay.edit-open { display:flex; }
+  #edit-box { background:#FFFFFF; border:1px solid rgba(44,24,16,0.1); border-radius:12px; width:100%; max-width:460px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 64px rgba(44,24,16,0.18), 0 4px 16px rgba(44,24,16,0.08); transform:translateY(16px) scale(0.97); opacity:0; transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease; }
+  #edit-overlay.edit-open #edit-box { transform:translateY(0) scale(1); opacity:1; }
+  .edit-hdr { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:24px 24px 0; }
+  .edit-hdr-name { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:0.04em; color:var(--cream); line-height:1.1; }
+  .edit-hdr-price { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--gold); letter-spacing:0.03em; white-space:nowrap; }
+  .edit-close { background:none; border:none; font-size:22px; color:var(--cream-dim); cursor:pointer; padding:0 4px; line-height:1; opacity:0.5; transition:opacity 0.15s; flex-shrink:0; }
+  .edit-close:hover { opacity:1; }
+  .edit-sec { padding:20px 24px 0; }
+  .edit-sec-title { font-size:10px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+  .edit-meat-sel { width:100%; background:var(--bg3); border:1.5px solid rgba(44,24,16,0.1); border-radius:4px; padding:11px 14px; color:var(--cream); font-family:'DM Sans',sans-serif; font-size:14px; outline:none; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237B5C4A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; cursor:pointer; }
+  .edit-meat-sel:focus { border-color:var(--red); box-shadow:0 0 0 3px rgba(217,79,43,0.1); }
+  .edit-meat-sel option { background:var(--bg3); color:var(--cream); }
+  .edit-ing-grid { display:flex; flex-wrap:wrap; gap:8px; }
+  .edit-ing-chip { display:flex; align-items:center; gap:6px; padding:7px 13px; border:1.5px solid rgba(44,24,16,0.12); border-radius:100px; cursor:pointer; font-size:13px; font-weight:500; color:var(--cream); background:var(--bg3); transition:background 0.15s ease, border-color 0.15s ease, color 0.15s ease; user-select:none; }
+  .edit-ing-chip input { display:none; }
+  .edit-ing-chip.chip-off { background:transparent; border-color:rgba(44,24,16,0.08); color:var(--cream-dim); text-decoration:line-through; opacity:0.5; }
+  .edit-ing-chip:hover { border-color:rgba(217,79,43,0.35); }
+  .edit-qty-row { display:flex; align-items:center; gap:16px; }
+  .edit-qty-btn { width:36px; height:36px; border-radius:50%; background:var(--bg3); border:1px solid rgba(44,24,16,0.12); color:var(--cream); font-size:18px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background 0.15s ease; }
+  .edit-qty-btn:hover { background:var(--bg4); }
+  .edit-qty-val { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--cream); min-width:28px; text-align:center; }
+  .edit-footer { padding:24px; display:flex; gap:10px; }
+  .edit-save-btn { flex:1; padding:15px; background:var(--red); color:var(--light); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; border:none; border-radius:4px; cursor:pointer; box-shadow:0 4px 20px var(--red-glow); transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease; }
+  .edit-save-btn:hover { background:var(--red-dark); transform:translateY(-2px); }
+  .edit-save-btn:active { transform:translateY(0); }
+</style>
+
+<div id="edit-overlay" onclick="if(event.target===this)closeEditModal()">
+  <div id="edit-box">
+    <div class="edit-hdr">
+      <div>
+        <div class="edit-hdr-name" id="edit-name"></div>
+        <div class="edit-hdr-price" id="edit-price"></div>
+      </div>
+      <button class="edit-close" onclick="closeEditModal()" aria-label="Close">×</button>
+    </div>
+
+    <div class="edit-sec" id="edit-meat-sec" style="display:none;">
+      <div class="edit-sec-title">Meat</div>
+      <select class="edit-meat-sel" id="edit-meat">
+        <!-- populated by JS -->
+      </select>
+    </div>
+
+    <div class="edit-sec" id="edit-ing-sec" style="display:none;">
+      <div class="edit-sec-title">Included — tap to remove</div>
+      <div class="edit-ing-grid" id="edit-ing-grid"></div>
+    </div>
+
+    <div class="edit-sec">
+      <div class="edit-sec-title">Quantity</div>
+      <div class="edit-qty-row">
+        <button class="edit-qty-btn" onclick="adjustEditQty(-1)">−</button>
+        <span class="edit-qty-val" id="edit-qty-val">1</span>
+        <button class="edit-qty-btn" onclick="adjustEditQty(1)">+</button>
+      </div>
+    </div>
+
+    <div class="edit-footer">
+      <button class="edit-save-btn" onclick="confirmEditModal()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let editIdx = -1;
+  let editQty = 1;
+
+  function openEditModal(idx) {
+    const cart = getCart();
+    const item = cart[idx];
+    if (!item) return;
+    editIdx = idx;
+    editQty = item.quantity;
+
+    document.getElementById('edit-name').textContent = item.name;
+    document.getElementById('edit-price').textContent = '$' + item.price.toFixed(2);
+    document.getElementById('edit-qty-val').textContent = editQty;
+
+    // Meat
+    const meatSec = document.getElementById('edit-meat-sec');
+    const meatSel = document.getElementById('edit-meat');
+    if (item.hasMeat) {
+      meatSec.style.display = 'block';
+      meatSel.innerHTML = MEATS.map(m => `<option value="${m}"${m === item.meatChoice ? ' selected' : ''}>${m}</option>`).join('');
+    } else {
+      meatSec.style.display = 'none';
+    }
+
+    // Ingredients
+    const ingSec = document.getElementById('edit-ing-sec');
+    const ingGrid = document.getElementById('edit-ing-grid');
+    const avail = item.availableIngredients;
+    if (avail && avail.length > 0) {
+      ingSec.style.display = 'block';
+      const excluded = item.excludedIngredients || [];
+      ingGrid.innerHTML = avail.map(ing => {
+        const off = excluded.includes(ing);
+        return `<label class="edit-ing-chip${off ? ' chip-off' : ''}" onclick="toggleEditChip(this)">
+          <input type="checkbox" value="${ing}"${off ? '' : ' checked'}> ${ing}
+        </label>`;
+      }).join('');
+    } else {
+      ingSec.style.display = 'none';
+      ingGrid.innerHTML = '';
+    }
+
+    const overlay = document.getElementById('edit-overlay');
+    overlay.classList.add('edit-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeEditModal() {
+    document.getElementById('edit-overlay').classList.remove('edit-open');
+    document.body.style.overflow = '';
+    editIdx = -1;
+  }
+
+  function toggleEditChip(label) {
+    const cb = label.querySelector('input');
+    cb.checked = !cb.checked;
+    label.classList.toggle('chip-off', !cb.checked);
+  }
+
+  function adjustEditQty(delta) {
+    editQty = Math.max(1, editQty + delta);
+    document.getElementById('edit-qty-val').textContent = editQty;
+  }
+
+  function confirmEditModal() {
+    if (editIdx < 0) return;
+    const cart = getCart();
+    const item = cart[editIdx];
+
+    if (item.hasMeat) {
+      item.meatChoice = document.getElementById('edit-meat').value;
+    }
+
+    const avail = item.availableIngredients;
+    if (avail && avail.length > 0) {
+      const excluded = [];
+      document.querySelectorAll('#edit-ing-grid input[type=checkbox]').forEach(cb => {
+        if (!cb.checked) excluded.push(cb.value);
+      });
+      item.excludedIngredients = excluded;
+    }
+
+    item.quantity = editQty;
+    saveCart(cart);
+    closeEditModal();
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && editIdx >= 0) closeEditModal();
+  });
+</script>
 
 <!-- ── CALL WIDGET ──────────────────────────────────────────────────────── -->
 <style>
