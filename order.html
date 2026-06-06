@@ -422,6 +422,7 @@
     const DELIVERY_FEE = 5.99;
     const SERVICE_FEE = 0.99;
     const MEATS = ['Grilled Steak','Grilled Chicken','Al Pastor','Carnitas','Chorizo','Tripa','Chile Verde','Beef Tongue','Beef Head','Barbacoa','Buche','Chile Relleno'];
+    const DEFAULT_TOPPINGS = ['Onion','Cilantro','Salsa','Guacamole','Sour Cream','Cheese','Lime','Jalapeños'];
 
     // TODO: Replace with live DoorDash Drive API credentials — see https://developer.doordash.com/en-US/docs/drive/tutorials/get_started
     let fulfillmentMode = 'pickup';
@@ -525,8 +526,9 @@
 
         // Detect meat: use hasMeat flag OR fall back to meatChoice being set (old cart items)
         const showMeat = item.hasMeat || item.meatChoice != null;
-        const avail = item.availableIngredients;
-        const hasIngredients = avail && avail.length > 0;
+        // Use stored ingredient list or fall back to default toppings for old cart items
+        const avail = (item.availableIngredients && item.availableIngredients.length > 0)
+          ? item.availableIngredients : DEFAULT_TOPPINGS;
         const excluded = item.excludedIngredients || [];
 
         const qtyHTML = `
@@ -547,7 +549,7 @@
             </select>
           </div>` : '';
 
-        const chipsHTML = hasIngredients ? `
+        const chipsHTML = `
           <div class="ie-row">
             <div class="ie-label">Toppings — tap to remove</div>
             <div class="ie-chips" id="ie-chips-${idx}">
@@ -556,13 +558,13 @@
                 return `<label class="ie-chip${off ? ' chip-off' : ''}" onclick="toggleIeChip(this)"><input type="checkbox" value="${ing}"${off ? '' : ' checked'}>${ing}</label>`;
               }).join('')}
             </div>
-          </div>` : '';
+          </div>`;
 
         return `<div class="cart-item-wrap">
           <div class="cart-item">
             <div style="flex:1;">
               <div class="item-name">${item.name}</div>
-              ${meta ? `<div class="item-meta" id="ie-meta-${idx}">${meta}</div>` : `<div class="item-meta" id="ie-meta-${idx}" style="display:none;"></div>`}
+              ${meta ? `<div class="item-meta" id="ie-meta-${idx}">${meta}</div>` : `<div class="item-meta" id="ie-meta-${idx}" style="display:none;" aria-hidden="true"></div>`}
               <div style="font-size:12px; color:var(--cream-dim); margin-top:3px;">qty: ${item.quantity}</div>
             </div>
             <div class="item-price-cell" id="ie-price-${idx}">$${(item.price * item.quantity).toFixed(2)}</div>
@@ -636,10 +638,13 @@
       const chipsContainer = document.getElementById(`ie-chips-${idx}`);
       if (chipsContainer) {
         const excluded = [];
+        const all = [];
         chipsContainer.querySelectorAll('input[type=checkbox]').forEach(cb => {
+          all.push(cb.value);
           if (!cb.checked) excluded.push(cb.value);
         });
         item.excludedIngredients = excluded;
+        item.availableIngredients = all; // persist the list for future edits
       }
 
       saveCart(c);
