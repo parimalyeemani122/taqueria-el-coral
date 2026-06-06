@@ -416,7 +416,7 @@
   <!-- FOOTER MINI -->
   <div class="footer-mini">
     <a href="index.html">Home</a>
-    <a href="order.html">Order Pickup</a>
+    <a href="order.html">Order</a>
     <a href="about.html">About Us</a>
     <div style="margin-top:16px; font-size:12px; color:var(--cream-dim); opacity:0.5;">
       &copy; 2025 Taqueria El Coral &middot; San Jose, CA
@@ -679,26 +679,16 @@
         ingSec.style.display = 'block';
         // Remove toppings (checked by default)
         ingContainer.innerHTML = ingList.map(ing => `
-          <label class="ingredient-check" onclick="toggleIngredient(this)">
-            <input type="checkbox" checked value="${ing}" onclick="event.stopPropagation()"> ${ing}
+          <label class="ingredient-check">
+            <input type="checkbox" checked value="${ing}" onchange="this.closest('.ingredient-check').classList.toggle('unchecked',!this.checked)"> ${ing}
           </label>
         `).join('');
-        ingContainer.querySelectorAll('input[type=checkbox]').forEach(cb => {
-          cb.addEventListener('change', () => {
-            cb.closest('.ingredient-check').classList.toggle('unchecked', !cb.checked);
-          });
-        });
         // Extra toppings (unchecked by default)
         extraContainer.innerHTML = ingList.map(ing => `
-          <label class="ingredient-check ingredient-extra" onclick="toggleExtraIngredient(this)">
-            <input type="checkbox" value="${ing}" onclick="event.stopPropagation()"> + ${ing}
+          <label class="ingredient-check ingredient-extra">
+            <input type="checkbox" value="${ing}" onchange="this.closest('.ingredient-check').classList.toggle('extra-checked',this.checked)"> + ${ing}
           </label>
         `).join('');
-        extraContainer.querySelectorAll('input[type=checkbox]').forEach(cb => {
-          cb.addEventListener('change', () => {
-            cb.closest('.ingredient-check').classList.toggle('extra-checked', cb.checked);
-          });
-        });
       } else {
         ingSec.style.display = 'none';
         ingContainer.innerHTML = '';
@@ -711,17 +701,6 @@
       document.body.style.overflow = 'hidden';
     }
 
-    function toggleIngredient(label) {
-      const cb = label.querySelector('input[type=checkbox]');
-      cb.checked = !cb.checked;
-      label.classList.toggle('unchecked', !cb.checked);
-    }
-
-    function toggleExtraIngredient(label) {
-      const cb = label.querySelector('input[type=checkbox]');
-      cb.checked = !cb.checked;
-      label.classList.toggle('extra-checked', cb.checked);
-    }
 
     function closeModal() {
       const overlay = document.getElementById('modal-overlay');
