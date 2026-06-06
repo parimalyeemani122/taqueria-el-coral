@@ -113,10 +113,11 @@
     .ie-meat-sel:focus { border-color: var(--red); box-shadow: 0 0 0 2px rgba(217,79,43,0.1); }
     .ie-meat-sel option { background: var(--bg2); color: var(--cream); }
     .ie-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .ie-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border: 1.5px solid rgba(44,24,16,0.15); border-radius: 100px; cursor: pointer; font-size: 12px; font-weight: 500; color: var(--cream); background: var(--bg2); transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease; user-select: none; }
-    .ie-chip input { display: none; }
-    .ie-chip.chip-off { background: transparent; border-color: rgba(44,24,16,0.08); color: var(--cream-dim); text-decoration: line-through; opacity: 0.45; }
-    .ie-chip:hover:not(.chip-off) { border-color: rgba(217,79,43,0.4); }
+    .ie-chips-hint { font-size: 11px; color: var(--cream-dim); opacity: 0.6; margin-bottom: 8px; }
+    .ie-chip { display: inline-flex; align-items: center; gap: 4px; padding: 5px 11px; border: 1.5px solid rgba(44,24,16,0.15); border-radius: 100px; cursor: pointer; font-size: 12px; font-weight: 500; color: var(--cream); background: var(--bg2); transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease; user-select: none; }
+    .ie-chip.chip-extra { background: rgba(232,148,15,0.1); border-color: var(--gold); color: var(--cream); font-weight: 600; }
+    .ie-chip.chip-off { background: transparent; border-color: rgba(44,24,16,0.08); color: var(--cream-dim); text-decoration: line-through; opacity: 0.4; }
+    .ie-chip:hover { border-color: rgba(217,79,43,0.4); }
     .ie-done-btn { margin-top: 14px; width: 100%; padding: 11px; background: var(--red); color: var(--light); font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: background 0.15s ease, transform 0.15s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 3px 14px var(--red-glow); }
     .ie-done-btn:hover { background: var(--red-dark); transform: translateY(-1px); }
     .ie-done-btn:active { transform: translateY(0); }
@@ -520,9 +521,9 @@
       document.getElementById('place-order-btn').disabled = false;
 
       cartList.innerHTML = cart.map((item, idx) => {
-        const excl = item.excludedIngredients && item.excludedIngredients.length > 0
-          ? item.excludedIngredients.map(e => `no ${e}`).join(', ') : '';
-        const meta = [item.meatChoice, excl].filter(Boolean).join(' · ');
+        const excl = (item.excludedIngredients || []).map(e => `no ${e}`).join(', ');
+        const xtra = (item.extraIngredients || []).map(e => `+${e}`).join(', ');
+        const meta = [item.meatChoice, xtra, excl].filter(Boolean).join(' · ');
 
         // Detect meat: use hasMeat flag OR fall back to meatChoice being set (old cart items)
         const showMeat = item.hasMeat || item.meatChoice != null;
@@ -549,13 +550,17 @@
             </select>
           </div>` : '';
 
+        const extras = item.extraIngredients || [];
         const chipsHTML = `
           <div class="ie-row">
-            <div class="ie-label">Toppings — tap to remove</div>
+            <div class="ie-label">Toppings</div>
+            <div class="ie-chips-hint">Tap once for extra · tap twice to remove · tap again to reset</div>
             <div class="ie-chips" id="ie-chips-${idx}">
               ${avail.map(ing => {
-                const off = excluded.includes(ing);
-                return `<label class="ie-chip${off ? ' chip-off' : ''}" onclick="toggleIeChip(this)"><input type="checkbox" value="${ing}"${off ? '' : ' checked'}>${ing}</label>`;
+                const state = extras.includes(ing) ? 'extra' : excluded.includes(ing) ? 'none' : 'normal';
+                const cls = state === 'extra' ? ' chip-extra' : state === 'none' ? ' chip-off' : '';
+                const prefix = state === 'extra' ? '＋ ' : '';
+                return `<span class="ie-chip${cls}" data-state="${state}" data-ing="${ing}" onclick="toggleIeChip(this)">${prefix}${ing}</span>`;
               }).join('')}
             </div>
           </div>`;
@@ -615,10 +620,23 @@
       }
     }
 
-    function toggleIeChip(label) {
-      const cb = label.querySelector('input');
-      cb.checked = !cb.checked;
-      label.classList.toggle('chip-off', !cb.checked);
+    function toggleIeChip(el) {
+      const state = el.dataset.state;
+      const ing = el.dataset.ing;
+      if (state === 'normal') {
+        el.dataset.state = 'extra';
+        el.classList.add('chip-extra');
+        el.textContent = '＋ ' + ing;
+      } else if (state === 'extra') {
+        el.dataset.state = 'none';
+        el.classList.remove('chip-extra');
+        el.classList.add('chip-off');
+        el.textContent = ing;
+      } else {
+        el.dataset.state = 'normal';
+        el.classList.remove('chip-off');
+        el.textContent = ing;
+      }
     }
 
     function saveInlineEdit(idx) {
@@ -637,14 +655,16 @@
 
       const chipsContainer = document.getElementById(`ie-chips-${idx}`);
       if (chipsContainer) {
-        const excluded = [];
-        const all = [];
-        chipsContainer.querySelectorAll('input[type=checkbox]').forEach(cb => {
-          all.push(cb.value);
-          if (!cb.checked) excluded.push(cb.value);
+        const excluded = [], extra = [], all = [];
+        chipsContainer.querySelectorAll('[data-ing]').forEach(chip => {
+          const ing = chip.dataset.ing;
+          all.push(ing);
+          if (chip.dataset.state === 'none') excluded.push(ing);
+          if (chip.dataset.state === 'extra') extra.push(ing);
         });
         item.excludedIngredients = excluded;
-        item.availableIngredients = all; // persist the list for future edits
+        item.extraIngredients = extra;
+        item.availableIngredients = all;
       }
 
       saveCart(c);
@@ -665,10 +685,13 @@
       }
       summaryList.innerHTML = cart.map(item => {
         const meat = item.meatChoice ? `<span style="opacity:0.55; font-size:12px;"> · ${item.meatChoice}</span>` : '';
-        const excl = item.excludedIngredients && item.excludedIngredients.length > 0
-          ? `<span style="display:block; font-size:11px; opacity:0.5;">${item.excludedIngredients.map(e=>`no ${e}`).join(', ')}</span>` : '';
+        const mods = [
+          ...(item.extraIngredients || []).map(e => `+${e}`),
+          ...(item.excludedIngredients || []).map(e => `no ${e}`)
+        ].join(', ');
+        const modLine = mods ? `<span style="display:block; font-size:11px; opacity:0.5;">${mods}</span>` : '';
         return `<div style="display:flex; justify-content:space-between; align-items:flex-start; padding:5px 0; border-bottom:1px solid rgba(44,24,16,0.05);">
-          <span style="flex:1;">${item.quantity}× ${item.name}${meat}${excl}</span>
+          <span style="flex:1;">${item.quantity}× ${item.name}${meat}${modLine}</span>
           <span style="flex-shrink:0; margin-left:12px;">$${(item.price * item.quantity).toFixed(2)}</span>
         </div>`;
       }).join('');
