@@ -19,11 +19,7 @@
     }
     html { scroll-behavior: smooth; }
     body { background: var(--bg); color: var(--cream); font-family: 'DM Sans', sans-serif; line-height: 1.7; overflow-x: hidden; }
-    body::before {
-      content: ''; position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: 9000; opacity: 0.03; mix-blend-mode: multiply;
-    }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9000; opacity: 0.03; mix-blend-mode: multiply; }
 
     /* NAV TOPBAR */
     .nav-topbar { background: var(--red); padding: 7px 0; }
@@ -59,38 +55,71 @@
     .ftoggle-btn.active { background: var(--red); color: var(--light); }
     .ftoggle-btn:focus-visible { outline: 2px solid var(--red); outline-offset: -2px; }
 
+    /* LOCATION STEP */
+    .loc-step-label { font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+    .loc-step-label::before { content: ''; display: block; width: 20px; height: 1.5px; background: var(--gold); opacity: 0.5; }
+    .loc-step-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 4vw, 44px); letter-spacing: 0.03em; color: var(--cream); margin-bottom: 28px; line-height: 1; }
+    .loc-step-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .loc-step-card { border: 2px solid rgba(44,24,16,0.1); border-radius: 10px; padding: 28px; cursor: pointer; transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease; position: relative; overflow: hidden; background: var(--bg2); }
+    .loc-step-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(to right, var(--red), var(--gold)); opacity: 0; transition: opacity 0.2s ease; }
+    .loc-step-card:hover { border-color: rgba(217,79,43,0.4); transform: translateY(-3px); box-shadow: 0 8px 32px rgba(44,24,16,0.1); }
+    .loc-step-card:hover::before { opacity: 1; }
+    .loc-step-card.lsc-selected { border-color: var(--red); background: rgba(217,79,43,0.03); box-shadow: 0 0 0 3px rgba(217,79,43,0.12); }
+    .loc-step-card.lsc-selected::before { opacity: 1; }
+    .loc-step-card:active { transform: translateY(0); }
+    .lsc-name { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 0.04em; color: var(--cream); margin-bottom: 6px; }
+    .lsc-addr { font-size: 13px; color: var(--cream-dim); line-height: 1.5; margin-bottom: 10px; }
+    .lsc-hours { font-size: 12px; color: var(--gold); font-weight: 500; }
+    .lsc-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid rgba(44,24,16,0.2); display: flex; align-items: center; justify-content: center; position: absolute; top: 20px; right: 20px; transition: border-color 0.2s ease, background 0.2s ease; }
+    .loc-step-card.lsc-selected .lsc-check { border-color: var(--red); background: var(--red); }
+    .lsc-check svg { opacity: 0; transition: opacity 0.15s ease; }
+    .loc-step-card.lsc-selected .lsc-check svg { opacity: 1; }
+
+    /* SELECTED LOCATION BAR */
+    #selected-loc-bar { display: none; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 20px; background: rgba(217,79,43,0.06); border: 1.5px solid rgba(217,79,43,0.2); border-radius: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+    .slb-text { font-size: 14px; font-weight: 500; color: var(--cream); display: flex; align-items: center; gap: 8px; }
+    .slb-change { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); background: none; border: none; cursor: pointer; padding: 0; transition: opacity 0.2s ease; }
+    .slb-change:hover { opacity: 0.7; }
+
     /* CARDS */
     .card { background: var(--bg2); border: 1px solid rgba(44,24,16,0.08); border-radius: 8px; padding: 32px; box-shadow: 0 1px 3px rgba(44,24,16,0.05), 0 8px 32px rgba(44,24,16,0.04); }
     .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.04em; color: var(--cream); margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
 
     /* CART ITEMS */
-    .cart-item { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid rgba(44,24,16,0.06); }
-    .cart-item:last-child { border-bottom: none; }
-    .item-qty-ctrl { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
-    .qty-btn { width: 28px; height: 28px; border-radius: 50%; background: var(--bg3); border: 1px solid rgba(44,24,16,0.12); color: var(--cream); font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s ease, border-color 0.2s ease; }
+    .cart-item-wrap { border-bottom: 1px solid rgba(44,24,16,0.06); }
+    .cart-item-wrap:last-child { border-bottom: none; }
+    .cart-item { display: flex; align-items: flex-start; gap: 14px; padding: 14px 0 12px; }
+    .item-qty-ctrl { display: flex; align-items: center; gap: 7px; margin-top: 2px; flex-shrink: 0; }
+    .qty-btn { width: 26px; height: 26px; border-radius: 50%; background: var(--bg3); border: 1px solid rgba(44,24,16,0.12); color: var(--cream); font-size: 15px; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s ease, border-color 0.2s ease; }
     .qty-btn:hover { background: var(--bg4); border-color: rgba(44,24,16,0.25); }
     .qty-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
-    .qty-num { font-size: 14px; font-weight: 600; color: var(--cream); min-width: 20px; text-align: center; }
+    .qty-num { font-size: 14px; font-weight: 600; color: var(--cream); min-width: 18px; text-align: center; }
     .item-name { font-size: 14px; font-weight: 500; color: var(--cream); line-height: 1.4; }
     .item-meta { font-size: 12px; color: var(--cream-dim); margin-top: 3px; line-height: 1.4; }
-    .item-price-cell { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--gold); letter-spacing: 0.03em; margin-left: auto; white-space: nowrap; }
+    .item-price-cell { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--gold); letter-spacing: 0.03em; margin-left: auto; white-space: nowrap; flex-shrink: 0; }
+    .edit-item-btn { background: none; border: 1px solid rgba(44,24,16,0.14); border-radius: 4px; color: var(--cream-dim); cursor: pointer; padding: 5px 7px; transition: opacity 0.2s ease, color 0.2s ease, border-color 0.2s ease, background 0.2s ease; flex-shrink: 0; }
+    .edit-item-btn:hover, .edit-item-btn.ie-open { color: var(--red); border-color: rgba(217,79,43,0.35); background: rgba(217,79,43,0.05); }
     .remove-btn { background: none; border: none; color: var(--cream-dim); cursor: pointer; padding: 4px; opacity: 0.4; transition: opacity 0.2s ease, color 0.2s ease; flex-shrink: 0; }
     .remove-btn:hover { opacity: 1; color: var(--red); }
 
-    /* LOCATION SELECTOR */
-    .loc-option { border: 1.5px solid rgba(44,24,16,0.1); border-radius: 6px; padding: 20px 24px; cursor: pointer; transition: border-color 0.2s ease, background 0.2s ease; position: relative; }
-    .loc-option:hover { border-color: rgba(217,79,43,0.3); background: rgba(217,79,43,0.02); }
-    .loc-option.selected { border-color: var(--red); background: rgba(217,79,43,0.03); }
-    .loc-option::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 6px 6px 0 0; background: linear-gradient(to right, var(--red), var(--gold)); opacity: 0; transition: opacity 0.2s ease; }
-    .loc-option.selected::before { opacity: 1; }
-    .loc-option input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
-    .loc-option-name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--cream); }
-    .loc-option-addr { font-size: 13px; color: var(--cream-dim); margin-top: 4px; line-height: 1.5; }
-    .loc-option-hours { font-size: 12px; color: var(--gold); margin-top: 8px; font-weight: 500; }
-    .loc-radio-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(44,24,16,0.2); margin-left: auto; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: border-color 0.2s ease; }
-    .loc-option.selected .loc-radio-dot { border-color: var(--red); }
-    .loc-radio-inner { width: 8px; height: 8px; border-radius: 50%; background: var(--red); opacity: 0; transition: opacity 0.2s ease; }
-    .loc-option.selected .loc-radio-inner { opacity: 1; }
+    /* INLINE EDIT PANEL */
+    .inline-edit { display: none; padding: 0 0 16px 0; animation: ieSlide 0.2s ease; }
+    @keyframes ieSlide { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+    .ie-panel { background: var(--bg3); border-radius: 8px; padding: 16px; border: 1px solid rgba(44,24,16,0.07); }
+    .ie-row { margin-bottom: 14px; }
+    .ie-row:last-child { margin-bottom: 0; }
+    .ie-label { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .ie-meat-sel { width: 100%; background: var(--bg2); border: 1.5px solid rgba(44,24,16,0.1); border-radius: 4px; padding: 10px 13px; color: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237B5C4A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; cursor: pointer; }
+    .ie-meat-sel:focus { border-color: var(--red); box-shadow: 0 0 0 2px rgba(217,79,43,0.1); }
+    .ie-meat-sel option { background: var(--bg2); color: var(--cream); }
+    .ie-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ie-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border: 1.5px solid rgba(44,24,16,0.15); border-radius: 100px; cursor: pointer; font-size: 12px; font-weight: 500; color: var(--cream); background: var(--bg2); transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease; user-select: none; }
+    .ie-chip input { display: none; }
+    .ie-chip.chip-off { background: transparent; border-color: rgba(44,24,16,0.08); color: var(--cream-dim); text-decoration: line-through; opacity: 0.45; }
+    .ie-chip:hover:not(.chip-off) { border-color: rgba(217,79,43,0.4); }
+    .ie-done-btn { margin-top: 14px; width: 100%; padding: 11px; background: var(--red); color: var(--light); font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; transition: background 0.15s ease, transform 0.15s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 3px 14px var(--red-glow); }
+    .ie-done-btn:hover { background: var(--red-dark); transform: translateY(-1px); }
+    .ie-done-btn:active { transform: translateY(0); }
 
     /* FORM */
     .form-group { margin-bottom: 20px; }
@@ -143,6 +172,7 @@
 
     @media (max-width: 900px) {
       .order-grid { grid-template-columns: 1fr !important; }
+      .loc-step-grid { grid-template-columns: 1fr !important; }
       .nav-topbar-inner, .nav-inner { padding: 0 20px; }
       .page { padding: 110px 20px 80px; }
     }
@@ -204,7 +234,8 @@
   <div id="order-form-wrap">
     <div class="page">
 
-      <div style="margin-bottom:56px;">
+      <!-- Header -->
+      <div style="margin-bottom:48px;">
         <div class="section-label">Online Order</div>
         <h1 class="page-heading">YOUR<br><span>ORDER</span></h1>
         <p style="font-family:'Fraunces',serif; font-style:italic; font-size:16px; color:var(--cream-dim); margin-top:12px;">Review your cart, choose pickup or delivery, and we'll take care of the rest.</p>
@@ -241,141 +272,147 @@
         </div>
       </div>
 
-      <div class="order-grid" style="display:grid; grid-template-columns:1fr 420px; gap:32px; align-items:start;">
-
-        <!-- LEFT -->
-        <div style="display:flex; flex-direction:column; gap:24px;">
-
-          <!-- Cart -->
-          <div class="card">
-            <div class="card-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61H19a2 2 0 001.99-1.81L22 7H6"/></svg>
-              Cart
+      <!-- ── STEP 1: LOCATION (pickup only) ── -->
+      <div id="location-step">
+        <div class="loc-step-label">Step 1 of 2 — Pickup</div>
+        <div class="loc-step-heading">Where are you picking up?</div>
+        <div class="loc-step-grid">
+          <div class="loc-step-card" id="lsc-1" onclick="pickLocation('Santa Teresa Blvd', '5899 Santa Teresa Blvd #109', this)">
+            <div class="lsc-check">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF8F0" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
-            <div id="cart-list"></div>
+            <div class="lsc-name">Santa Teresa Blvd</div>
+            <div class="lsc-addr">5899 Santa Teresa Blvd #109<br>San Jose, CA 95123<br><a href="tel:4085784077" style="color:var(--gold); text-decoration:none;" onclick="event.stopPropagation()">(408) 578-4077</a></div>
+            <div class="lsc-hours">Mon–Fri 10am–8pm · Sat 10am–4pm · Sun Closed</div>
           </div>
-
-          <!-- Location (pickup only) -->
-          <div class="card" id="location-card">
-            <div class="card-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Pickup Location
+          <div class="loc-step-card" id="lsc-2" onclick="pickLocation('W Capitol Expressway', '426 W Capitol Expy', this)">
+            <div class="lsc-check">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF8F0" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
-            <div style="display:grid; gap:12px;">
-              <label class="loc-option selected" id="loc-1" for="loc-radio-1">
-                <input type="radio" name="location" id="loc-radio-1" value="Santa Teresa Blvd" checked>
-                <div style="display:flex; align-items:flex-start; gap:16px;">
-                  <div style="flex:1;">
-                    <div class="loc-option-name">Santa Teresa Blvd</div>
-                    <div class="loc-option-addr">5899 Santa Teresa Blvd #109, San Jose, CA 95123<br><a href="tel:4085784077" style="color:var(--gold); text-decoration:none;">(408) 578-4077</a></div>
-                    <div class="loc-option-hours">Mon–Fri 10am–8pm · Sat 10am–4pm · Sun Closed</div>
-                  </div>
-                  <div class="loc-radio-dot"><div class="loc-radio-inner"></div></div>
-                </div>
-              </label>
-              <label class="loc-option" id="loc-2" for="loc-radio-2">
-                <input type="radio" name="location" id="loc-radio-2" value="W Capitol Expressway">
-                <div style="display:flex; align-items:flex-start; gap:16px;">
-                  <div style="flex:1;">
-                    <div class="loc-option-name">W Capitol Expressway</div>
-                    <div class="loc-option-addr">426 W Capitol Expy, San Jose, CA 95136<br><a href="tel:4082292190" style="color:var(--gold); text-decoration:none;">(408) 229-2190</a></div>
-                    <div class="loc-option-hours">Mon–Thu 10am–9pm · Fri–Sun 9am–9pm</div>
-                  </div>
-                  <div class="loc-radio-dot"><div class="loc-radio-inner"></div></div>
-                </div>
-              </label>
-            </div>
+            <div class="lsc-name">W Capitol Expressway</div>
+            <div class="lsc-addr">426 W Capitol Expy<br>San Jose, CA 95136<br><a href="tel:4082292190" style="color:var(--gold); text-decoration:none;" onclick="event.stopPropagation()">(408) 229-2190</a></div>
+            <div class="lsc-hours">Mon–Thu 10am–9pm · Fri–Sun 9am–9pm</div>
           </div>
+        </div>
+      </div>
 
-          <!-- Customer Info -->
-          <div class="card">
-            <div class="card-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              Your Info
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-              <div class="form-group">
-                <label class="form-label" for="customer-name">Name</label>
-                <input type="text" id="customer-name" class="form-input" placeholder="Your full name" autocomplete="name" required>
+      <!-- ── SELECTED LOCATION BAR ── -->
+      <div id="selected-loc-bar">
+        <div class="slb-text">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Picking up from <strong id="selected-loc-name" style="margin-left:4px;"></strong>
+        </div>
+        <button class="slb-change" onclick="changeLocation()">Change location</button>
+      </div>
+
+      <!-- ── STEP 2: ORDER DETAILS ── -->
+      <div id="order-details" style="display:none;">
+
+        <div class="order-grid" style="display:grid; grid-template-columns:1fr 420px; gap:32px; align-items:start;">
+
+          <!-- LEFT -->
+          <div style="display:flex; flex-direction:column; gap:24px;">
+
+            <!-- Cart -->
+            <div class="card">
+              <div class="card-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61H19a2 2 0 001.99-1.81L22 7H6"/></svg>
+                Cart <span style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:400; opacity:0.5; letter-spacing:0; margin-left:4px;">— tap ✏ to edit an item</span>
               </div>
-              <div class="form-group">
-                <label class="form-label" for="customer-phone">Phone</label>
-                <input type="tel" id="customer-phone" class="form-input" placeholder="(555) 000-0000" autocomplete="tel" required>
-              </div>
+              <div id="cart-list"></div>
             </div>
-            <div class="form-group" id="pickup-time-group">
-              <label class="form-label" for="pickup-time">Pickup Time</label>
-              <select id="pickup-time" class="form-select">
-                <option value="">Select a pickup time...</option>
-              </select>
-            </div>
-            <div id="delivery-section" style="display:none;">
-              <div class="delivery-note">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" style="flex-shrink:0; margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Delivery available within the San Jose area. Estimated time: 35–50 min after confirmation.
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="delivery-street">Street Address</label>
-                <input type="text" id="delivery-street" class="form-input" placeholder="123 Main St, Apt 4" autocomplete="street-address">
+
+            <!-- Customer Info -->
+            <div class="card">
+              <div class="card-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Your Info
               </div>
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-                <div class="form-group" style="margin-bottom:0;">
-                  <label class="form-label" for="delivery-city">City</label>
-                  <input type="text" id="delivery-city" class="form-input" placeholder="San Jose" autocomplete="address-level2">
+                <div class="form-group">
+                  <label class="form-label" for="customer-name">Name</label>
+                  <input type="text" id="customer-name" class="form-input" placeholder="Your full name" autocomplete="name">
                 </div>
-                <div class="form-group" style="margin-bottom:0;">
-                  <label class="form-label" for="delivery-zip">ZIP Code</label>
-                  <input type="text" id="delivery-zip" class="form-input" placeholder="95123" inputmode="numeric" autocomplete="postal-code">
+                <div class="form-group">
+                  <label class="form-label" for="customer-phone">Phone</label>
+                  <input type="tel" id="customer-phone" class="form-input" placeholder="(555) 000-0000" autocomplete="tel">
                 </div>
               </div>
+              <div class="form-group" id="pickup-time-group">
+                <label class="form-label" for="pickup-time">Pickup Time</label>
+                <select id="pickup-time" class="form-select">
+                  <option value="">Select a pickup time...</option>
+                </select>
+              </div>
+              <div id="delivery-section" style="display:none;">
+                <div class="delivery-note">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" style="flex-shrink:0; margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  Delivery available within the San Jose area. Estimated time: 35–50 min after confirmation.
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="delivery-street">Street Address</label>
+                  <input type="text" id="delivery-street" class="form-input" placeholder="123 Main St, Apt 4" autocomplete="street-address">
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label" for="delivery-city">City</label>
+                    <input type="text" id="delivery-city" class="form-input" placeholder="San Jose" autocomplete="address-level2">
+                  </div>
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label" for="delivery-zip">ZIP Code</label>
+                    <input type="text" id="delivery-zip" class="form-input" placeholder="95123" inputmode="numeric" autocomplete="postal-code">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom:0; margin-top:20px;">
+                <label class="form-label" for="order-notes">Special Instructions (optional)</label>
+                <textarea id="order-notes" class="form-input" placeholder="Any allergies, special requests..." rows="3" style="resize:vertical; min-height:80px;"></textarea>
+              </div>
             </div>
-            <div class="form-group" style="margin-bottom:0; margin-top:20px;">
-              <label class="form-label" for="order-notes">Special Instructions (optional)</label>
-              <textarea id="order-notes" class="form-input" placeholder="Any allergies, special requests..." rows="3" style="resize:vertical; min-height:80px;"></textarea>
-            </div>
+
           </div>
 
-        </div>
+          <!-- RIGHT: Summary -->
+          <div style="position:sticky; top:110px; display:flex; flex-direction:column; gap:20px;">
+            <div class="card">
+              <div class="card-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1" ry="1"/></svg>
+                Summary
+              </div>
+              <div id="summary-list" style="margin-bottom:16px; min-height:60px; color:var(--cream-dim); font-size:14px;"></div>
+              <div class="totals-row"><span class="label">Subtotal</span><span class="value" id="subtotal-display">$0.00</span></div>
+              <div class="totals-row"><span class="label">Tax (9.25%)</span><span class="value" id="tax-display">$0.00</span></div>
+              <div class="totals-row"><span class="label">Service Fee</span><span class="value">$0.99</span></div>
+              <div class="totals-row" id="pickup-free-row"><span class="label">Pickup Fee</span><span class="value" style="color:var(--gold);">Free</span></div>
+              <div class="totals-row" id="delivery-fee-row" style="display:none;"><span class="label">Delivery Fee</span><span class="value" style="color:var(--red);">$5.99</span></div>
+              <div class="totals-total"><span class="label">TOTAL</span><span class="value" id="total-display">$0.00</span></div>
 
-        <!-- RIGHT: Summary -->
-        <div style="position:sticky; top:110px; display:flex; flex-direction:column; gap:20px;">
-          <div class="card">
-            <div class="card-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1" ry="1"/></svg>
-              Summary
+              <div style="background:var(--bg3); border:1px solid rgba(44,24,16,0.07); border-radius:4px; padding:16px; margin:20px 0; display:flex; align-items:flex-start; gap:12px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="flex-shrink:0; margin-top:2px;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                <div style="font-size:12px; color:var(--cream-dim); line-height:1.55;">Pay at <span id="pay-at-label">pickup</span> — we accept cash and all major cards at both locations.</div>
+              </div>
+
+              <button class="btn-submit" id="place-order-btn" type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Place Order
+              </button>
             </div>
-            <div id="summary-list" style="margin-bottom:16px; min-height:60px; color:var(--cream-dim); font-size:14px;"></div>
-            <div class="totals-row"><span class="label">Subtotal</span><span class="value" id="subtotal-display">$0.00</span></div>
-            <div class="totals-row"><span class="label">Tax (9.25%)</span><span class="value" id="tax-display">$0.00</span></div>
-            <div class="totals-row"><span class="label">Service Fee</span><span class="value">$0.99</span></div>
-            <div class="totals-row" id="pickup-free-row"><span class="label">Pickup Fee</span><span class="value" style="color:var(--gold);">Free</span></div>
-            <div class="totals-row" id="delivery-fee-row" style="display:none;"><span class="label">Delivery Fee</span><span class="value" style="color:var(--red);">$5.99</span></div>
-            <div class="totals-total"><span class="label">TOTAL</span><span class="value" id="total-display">$0.00</span></div>
 
-            <div style="background:var(--bg3); border:1px solid rgba(44,24,16,0.07); border-radius:4px; padding:16px; margin:20px 0; display:flex; align-items:flex-start; gap:12px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="flex-shrink:0; margin-top:2px;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-              <div style="font-size:12px; color:var(--cream-dim); line-height:1.55;">Pay at <span id="pay-at-label">pickup</span> — we accept cash and all major cards at both locations.</div>
-            </div>
-
-            <button class="btn-submit" id="place-order-btn" type="button">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              Place Order
-            </button>
-          </div>
-
-          <div style="text-align:center; padding:16px;">
-            <div style="font-size:12px; color:var(--cream-dim); opacity:0.5; margin-bottom:12px;">Follow us for daily specials</div>
-            <div style="display:flex; gap:12px; justify-content:center;">
-              <a href="https://www.facebook.com/profile.php?id=100094609569474" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; border:1px solid rgba(44,24,16,0.12); border-radius:50%; color:var(--cream-dim); text-decoration:none; transition:border-color 0.2s ease, color 0.2s ease;" onmouseover="this.style.borderColor='rgba(44,24,16,0.3)';this.style.color='var(--cream)'" onmouseout="this.style.borderColor='rgba(44,24,16,0.12)';this.style.color='var(--cream-dim)'">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-              </a>
-              <a href="https://www.instagram.com/taquerialelcoral1/" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; border:1px solid rgba(44,24,16,0.12); border-radius:50%; color:var(--cream-dim); text-decoration:none; transition:border-color 0.2s ease, color 0.2s ease;" onmouseover="this.style.borderColor='rgba(44,24,16,0.3)';this.style.color='var(--cream)'" onmouseout="this.style.borderColor='rgba(44,24,16,0.12)';this.style.color='var(--cream-dim)'">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-              </a>
+            <div style="text-align:center; padding:16px;">
+              <div style="font-size:12px; color:var(--cream-dim); opacity:0.5; margin-bottom:12px;">Follow us for daily specials</div>
+              <div style="display:flex; gap:12px; justify-content:center;">
+                <a href="https://www.facebook.com/profile.php?id=100094609569474" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; border:1px solid rgba(44,24,16,0.12); border-radius:50%; color:var(--cream-dim); text-decoration:none; transition:border-color 0.2s ease, color 0.2s ease;" onmouseover="this.style.borderColor='rgba(44,24,16,0.3)';this.style.color='var(--cream)'" onmouseout="this.style.borderColor='rgba(44,24,16,0.12)';this.style.color='var(--cream-dim)'">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                </a>
+                <a href="https://www.instagram.com/taquerialelcoral1/" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; border:1px solid rgba(44,24,16,0.12); border-radius:50%; color:var(--cream-dim); text-decoration:none; transition:border-color 0.2s ease, color 0.2s ease;" onmouseover="this.style.borderColor='rgba(44,24,16,0.3)';this.style.color='var(--cream)'" onmouseout="this.style.borderColor='rgba(44,24,16,0.12)';this.style.color='var(--cream-dim)'">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -384,23 +421,68 @@
     const TAX_RATE = 0.0925;
     const DELIVERY_FEE = 5.99;
     const SERVICE_FEE = 0.99;
-
     const MEATS = ['Grilled Steak','Grilled Chicken','Al Pastor','Carnitas','Chorizo','Tripa','Chile Verde','Beef Tongue','Beef Head','Barbacoa','Buche','Chile Relleno'];
 
     // TODO: Replace with live DoorDash Drive API credentials — see https://developer.doordash.com/en-US/docs/drive/tutorials/get_started
     let fulfillmentMode = 'pickup';
+    let selectedPickupLocation = null;
+    let selectedPickupAddress = null;
 
     function getCart() { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
     function saveCart(c) { localStorage.setItem(CART_KEY, JSON.stringify(c)); renderAll(); }
+
+    // ── LOCATION STEP ────────────────────────────────────────────────────────────
+    function pickLocation(value, address, cardEl) {
+      selectedPickupLocation = value;
+      selectedPickupAddress = address;
+      document.querySelectorAll('.loc-step-card').forEach(el => el.classList.remove('lsc-selected'));
+      cardEl.classList.add('lsc-selected');
+      setTimeout(() => {
+        document.getElementById('location-step').style.display = 'none';
+        document.getElementById('selected-loc-name').textContent = address;
+        document.getElementById('selected-loc-bar').style.display = 'flex';
+        const od = document.getElementById('order-details');
+        od.style.display = 'block';
+        od.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        renderAll();
+      }, 280);
+    }
+
+    function changeLocation() {
+      selectedPickupLocation = null;
+      selectedPickupAddress = null;
+      document.querySelectorAll('.loc-step-card').forEach(el => el.classList.remove('lsc-selected'));
+      document.getElementById('location-step').style.display = 'block';
+      document.getElementById('selected-loc-bar').style.display = 'none';
+      document.getElementById('order-details').style.display = 'none';
+      document.getElementById('location-step').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
     // ── FULFILLMENT ──────────────────────────────────────────────────────────────
     function setFulfillment(mode) {
       fulfillmentMode = mode;
       document.getElementById('ft-pickup').classList.toggle('active', mode === 'pickup');
       document.getElementById('ft-delivery').classList.toggle('active', mode === 'delivery');
-      document.getElementById('delivery-section').style.display = mode === 'delivery' ? 'block' : 'none';
-      document.getElementById('pickup-time-group').style.display = mode === 'pickup' ? 'block' : 'none';
-      document.getElementById('location-card').style.display = mode === 'pickup' ? 'block' : 'none';
+
+      if (mode === 'delivery') {
+        document.getElementById('location-step').style.display = 'none';
+        document.getElementById('selected-loc-bar').style.display = 'none';
+        document.getElementById('order-details').style.display = 'block';
+        document.getElementById('delivery-section').style.display = 'block';
+        document.getElementById('pickup-time-group').style.display = 'none';
+      } else {
+        document.getElementById('delivery-section').style.display = 'none';
+        document.getElementById('pickup-time-group').style.display = 'block';
+        if (!selectedPickupLocation) {
+          document.getElementById('location-step').style.display = 'block';
+          document.getElementById('selected-loc-bar').style.display = 'none';
+          document.getElementById('order-details').style.display = 'none';
+        } else {
+          document.getElementById('selected-loc-bar').style.display = 'flex';
+          document.getElementById('order-details').style.display = 'block';
+        }
+      }
+
       document.getElementById('delivery-fee-row').style.display = mode === 'delivery' ? 'flex' : 'none';
       document.getElementById('pickup-free-row').style.display = mode === 'pickup' ? 'flex' : 'none';
       document.getElementById('pay-at-label').textContent = mode === 'delivery' ? 'door' : 'pickup';
@@ -425,7 +507,7 @@
       }
     }
 
-    // ── CART RENDER ──────────────────────────────────────────────────────────────
+    // ── CART RENDER (with inline edit panels) ────────────────────────────────────
     function renderCart() {
       const cart = getCart();
       const cartList = document.getElementById('cart-list');
@@ -435,40 +517,124 @@
         return;
       }
       document.getElementById('place-order-btn').disabled = false;
+
       cartList.innerHTML = cart.map((item, idx) => {
         const excl = item.excludedIngredients && item.excludedIngredients.length > 0
           ? item.excludedIngredients.map(e => `no ${e}`).join(', ') : '';
         const meta = [item.meatChoice, excl].filter(Boolean).join(' · ');
-        return `<div class="cart-item">
-          <div class="item-qty-ctrl">
-            <button class="qty-btn" data-action="dec" data-idx="${idx}">−</button>
-            <span class="qty-num">${item.quantity}</span>
-            <button class="qty-btn" data-action="inc" data-idx="${idx}">+</button>
+
+        // Inline edit panel content
+        const hasMeat = !!item.hasMeat;
+        const avail = item.availableIngredients;
+        const hasIngredients = avail && avail.length > 0;
+        const excluded = item.excludedIngredients || [];
+
+        const meatHTML = hasMeat ? `
+          <div class="ie-row">
+            <div class="ie-label">Meat</div>
+            <select class="ie-meat-sel" id="ie-meat-${idx}">
+              ${MEATS.map(m => `<option value="${m}"${m === item.meatChoice ? ' selected' : ''}>${m}</option>`).join('')}
+            </select>
+          </div>` : '';
+
+        const chipsHTML = hasIngredients ? `
+          <div class="ie-row">
+            <div class="ie-label">Toppings — tap to remove</div>
+            <div class="ie-chips" id="ie-chips-${idx}">
+              ${avail.map(ing => {
+                const off = excluded.includes(ing);
+                return `<label class="ie-chip${off ? ' chip-off' : ''}" onclick="toggleIeChip(this)"><input type="checkbox" value="${ing}"${off ? '' : ' checked'}>${ing}</label>`;
+              }).join('')}
+            </div>
+          </div>` : '';
+
+        const hasEditContent = hasMeat || hasIngredients;
+
+        return `<div class="cart-item-wrap">
+          <div class="cart-item">
+            <div class="item-qty-ctrl">
+              <button class="qty-btn" data-action="dec" data-idx="${idx}">−</button>
+              <span class="qty-num">${item.quantity}</span>
+              <button class="qty-btn" data-action="inc" data-idx="${idx}">+</button>
+            </div>
+            <div style="flex:1;">
+              <div class="item-name">${item.name}</div>
+              ${meta ? `<div class="item-meta" id="ie-meta-${idx}">${meta}</div>` : `<div class="item-meta" id="ie-meta-${idx}" style="display:none;"></div>`}
+            </div>
+            <div class="item-price-cell">$${(item.price * item.quantity).toFixed(2)}</div>
+            ${hasEditContent ? `<button class="edit-item-btn" id="ie-btn-${idx}" data-action="edit" data-idx="${idx}" aria-label="Edit item" title="Edit item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>` : ''}
+            <button class="remove-btn" data-action="remove" data-idx="${idx}" aria-label="Remove item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
           </div>
-          <div style="flex:1;">
-            <div class="item-name">${item.name}</div>
-            ${meta ? `<div class="item-meta">${meta}</div>` : ''}
-          </div>
-          <div class="item-price-cell">$${(item.price * item.quantity).toFixed(2)}</div>
-          <button class="edit-item-btn" data-action="edit" data-idx="${idx}" aria-label="Edit item" title="Edit">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          </button>
-          <button class="remove-btn" data-action="remove" data-idx="${idx}" aria-label="Remove item">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
+          ${hasEditContent ? `<div class="inline-edit" id="ie-panel-${idx}">
+            <div class="ie-panel">
+              ${meatHTML}
+              ${chipsHTML}
+              <button class="ie-done-btn" onclick="saveInlineEdit(${idx})">Done — Save Changes</button>
+            </div>
+          </div>` : ''}
         </div>`;
       }).join('');
+
       cartList.addEventListener('click', e => {
         const btn = e.target.closest('[data-action]');
         if (!btn) return;
         const idx = parseInt(btn.dataset.idx);
-        if (btn.dataset.action === 'edit') { openEditModal(idx); return; }
+        if (btn.dataset.action === 'edit') { toggleInlineEdit(idx); return; }
         const c = getCart();
         if (btn.dataset.action === 'inc') c[idx].quantity++;
         else if (btn.dataset.action === 'dec') { c[idx].quantity--; if (c[idx].quantity <= 0) c.splice(idx, 1); }
         else if (btn.dataset.action === 'remove') c.splice(idx, 1);
         saveCart(c);
       }, { once: true });
+    }
+
+    // ── INLINE EDIT ──────────────────────────────────────────────────────────────
+    function toggleInlineEdit(idx) {
+      const panel = document.getElementById(`ie-panel-${idx}`);
+      const btn = document.getElementById(`ie-btn-${idx}`);
+      if (!panel) return;
+      const isOpen = panel.style.display === 'block';
+      // Close all
+      document.querySelectorAll('.inline-edit').forEach(p => p.style.display = 'none');
+      document.querySelectorAll('.edit-item-btn').forEach(b => b.classList.remove('ie-open'));
+      if (!isOpen) {
+        panel.style.display = 'block';
+        if (btn) btn.classList.add('ie-open');
+      }
+    }
+
+    function toggleIeChip(label) {
+      const cb = label.querySelector('input');
+      cb.checked = !cb.checked;
+      label.classList.toggle('chip-off', !cb.checked);
+    }
+
+    function saveInlineEdit(idx) {
+      const c = getCart();
+      const item = c[idx];
+
+      const meatSel = document.getElementById(`ie-meat-${idx}`);
+      if (meatSel) item.meatChoice = meatSel.value;
+
+      const chipsContainer = document.getElementById(`ie-chips-${idx}`);
+      if (chipsContainer) {
+        const excluded = [];
+        chipsContainer.querySelectorAll('input[type=checkbox]').forEach(cb => {
+          if (!cb.checked) excluded.push(cb.value);
+        });
+        item.excludedIngredients = excluded;
+      }
+
+      saveCart(c);
+      // Close the panel after save
+      const panel = document.getElementById(`ie-panel-${idx}`);
+      if (panel) panel.style.display = 'none';
+      const btn = document.getElementById(`ie-btn-${idx}`);
+      if (btn) btn.classList.remove('ie-open');
     }
 
     // ── SUMMARY ──────────────────────────────────────────────────────────────────
@@ -500,20 +666,6 @@
 
     function renderAll() { renderCart(); renderSummary(); }
 
-    // ── LOCATION TOGGLE ──────────────────────────────────────────────────────────
-    document.querySelectorAll('input[name="location"]').forEach(radio => {
-      radio.addEventListener('change', () => {
-        document.querySelectorAll('.loc-option').forEach(el => el.classList.remove('selected'));
-        radio.closest('.loc-option').classList.add('selected');
-      });
-    });
-    document.querySelectorAll('.loc-option').forEach(label => {
-      label.addEventListener('click', () => {
-        const radio = label.querySelector('input[type="radio"]');
-        if (radio) { radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
-      });
-    });
-
     // ── PLACE ORDER ──────────────────────────────────────────────────────────────
     document.getElementById('place-order-btn').addEventListener('click', async () => {
       const cart = getCart();
@@ -527,7 +679,7 @@
       let location = '', pickupTime = '', deliveryAddress = '';
       if (fulfillmentMode === 'pickup') {
         pickupTime = document.getElementById('pickup-time').value;
-        location = document.querySelector('input[name="location"]:checked')?.value || '';
+        location = selectedPickupAddress || selectedPickupLocation || '';
         if (!pickupTime) { document.getElementById('pickup-time').focus(); return; }
       } else {
         const street = document.getElementById('delivery-street').value.trim();
@@ -599,169 +751,6 @@
     style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
     document.head.appendChild(style);
   </script>
-
-<!-- ── EDIT MODAL ──────────────────────────────────────────────────────── -->
-<style>
-  .edit-item-btn { background: none; border: 1px solid rgba(44,24,16,0.14); border-radius: 4px; color: var(--cream-dim); cursor: pointer; padding: 5px 7px; opacity: 0.7; transition: opacity 0.2s ease, color 0.2s ease, border-color 0.2s ease; flex-shrink: 0; }
-  .edit-item-btn:hover { opacity: 1; color: var(--red); border-color: rgba(217,79,43,0.35); }
-  #edit-overlay { display:none; position:fixed; inset:0; background:rgba(44,24,16,0.35); backdrop-filter:blur(6px); z-index:5000; align-items:center; justify-content:center; padding:20px; }
-  #edit-overlay.edit-open { display:flex; }
-  #edit-box { background:#FFFFFF; border:1px solid rgba(44,24,16,0.1); border-radius:12px; width:100%; max-width:460px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 64px rgba(44,24,16,0.18), 0 4px 16px rgba(44,24,16,0.08); transform:translateY(16px) scale(0.97); opacity:0; transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease; }
-  #edit-overlay.edit-open #edit-box { transform:translateY(0) scale(1); opacity:1; }
-  .edit-hdr { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:24px 24px 0; }
-  .edit-hdr-name { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:0.04em; color:var(--cream); line-height:1.1; }
-  .edit-hdr-price { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--gold); letter-spacing:0.03em; white-space:nowrap; }
-  .edit-close { background:none; border:none; font-size:22px; color:var(--cream-dim); cursor:pointer; padding:0 4px; line-height:1; opacity:0.5; transition:opacity 0.15s; flex-shrink:0; }
-  .edit-close:hover { opacity:1; }
-  .edit-sec { padding:20px 24px 0; }
-  .edit-sec-title { font-size:10px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
-  .edit-meat-sel { width:100%; background:var(--bg3); border:1.5px solid rgba(44,24,16,0.1); border-radius:4px; padding:11px 14px; color:var(--cream); font-family:'DM Sans',sans-serif; font-size:14px; outline:none; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237B5C4A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; cursor:pointer; }
-  .edit-meat-sel:focus { border-color:var(--red); box-shadow:0 0 0 3px rgba(217,79,43,0.1); }
-  .edit-meat-sel option { background:var(--bg3); color:var(--cream); }
-  .edit-ing-grid { display:flex; flex-wrap:wrap; gap:8px; }
-  .edit-ing-chip { display:flex; align-items:center; gap:6px; padding:7px 13px; border:1.5px solid rgba(44,24,16,0.12); border-radius:100px; cursor:pointer; font-size:13px; font-weight:500; color:var(--cream); background:var(--bg3); transition:background 0.15s ease, border-color 0.15s ease, color 0.15s ease; user-select:none; }
-  .edit-ing-chip input { display:none; }
-  .edit-ing-chip.chip-off { background:transparent; border-color:rgba(44,24,16,0.08); color:var(--cream-dim); text-decoration:line-through; opacity:0.5; }
-  .edit-ing-chip:hover { border-color:rgba(217,79,43,0.35); }
-  .edit-qty-row { display:flex; align-items:center; gap:16px; }
-  .edit-qty-btn { width:36px; height:36px; border-radius:50%; background:var(--bg3); border:1px solid rgba(44,24,16,0.12); color:var(--cream); font-size:18px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background 0.15s ease; }
-  .edit-qty-btn:hover { background:var(--bg4); }
-  .edit-qty-val { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--cream); min-width:28px; text-align:center; }
-  .edit-footer { padding:24px; display:flex; gap:10px; }
-  .edit-save-btn { flex:1; padding:15px; background:var(--red); color:var(--light); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; border:none; border-radius:4px; cursor:pointer; box-shadow:0 4px 20px var(--red-glow); transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease; }
-  .edit-save-btn:hover { background:var(--red-dark); transform:translateY(-2px); }
-  .edit-save-btn:active { transform:translateY(0); }
-</style>
-
-<div id="edit-overlay" onclick="if(event.target===this)closeEditModal()">
-  <div id="edit-box">
-    <div class="edit-hdr">
-      <div>
-        <div class="edit-hdr-name" id="edit-name"></div>
-        <div class="edit-hdr-price" id="edit-price"></div>
-      </div>
-      <button class="edit-close" onclick="closeEditModal()" aria-label="Close">×</button>
-    </div>
-
-    <div class="edit-sec" id="edit-meat-sec" style="display:none;">
-      <div class="edit-sec-title">Meat</div>
-      <select class="edit-meat-sel" id="edit-meat">
-        <!-- populated by JS -->
-      </select>
-    </div>
-
-    <div class="edit-sec" id="edit-ing-sec" style="display:none;">
-      <div class="edit-sec-title">Included — tap to remove</div>
-      <div class="edit-ing-grid" id="edit-ing-grid"></div>
-    </div>
-
-    <div class="edit-sec">
-      <div class="edit-sec-title">Quantity</div>
-      <div class="edit-qty-row">
-        <button class="edit-qty-btn" onclick="adjustEditQty(-1)">−</button>
-        <span class="edit-qty-val" id="edit-qty-val">1</span>
-        <button class="edit-qty-btn" onclick="adjustEditQty(1)">+</button>
-      </div>
-    </div>
-
-    <div class="edit-footer">
-      <button class="edit-save-btn" onclick="confirmEditModal()">Save Changes</button>
-    </div>
-  </div>
-</div>
-
-<script>
-  let editIdx = -1;
-  let editQty = 1;
-
-  function openEditModal(idx) {
-    const cart = getCart();
-    const item = cart[idx];
-    if (!item) return;
-    editIdx = idx;
-    editQty = item.quantity;
-
-    document.getElementById('edit-name').textContent = item.name;
-    document.getElementById('edit-price').textContent = '$' + item.price.toFixed(2);
-    document.getElementById('edit-qty-val').textContent = editQty;
-
-    // Meat
-    const meatSec = document.getElementById('edit-meat-sec');
-    const meatSel = document.getElementById('edit-meat');
-    if (item.hasMeat) {
-      meatSec.style.display = 'block';
-      meatSel.innerHTML = MEATS.map(m => `<option value="${m}"${m === item.meatChoice ? ' selected' : ''}>${m}</option>`).join('');
-    } else {
-      meatSec.style.display = 'none';
-    }
-
-    // Ingredients
-    const ingSec = document.getElementById('edit-ing-sec');
-    const ingGrid = document.getElementById('edit-ing-grid');
-    const avail = item.availableIngredients;
-    if (avail && avail.length > 0) {
-      ingSec.style.display = 'block';
-      const excluded = item.excludedIngredients || [];
-      ingGrid.innerHTML = avail.map(ing => {
-        const off = excluded.includes(ing);
-        return `<label class="edit-ing-chip${off ? ' chip-off' : ''}" onclick="toggleEditChip(this)">
-          <input type="checkbox" value="${ing}"${off ? '' : ' checked'}> ${ing}
-        </label>`;
-      }).join('');
-    } else {
-      ingSec.style.display = 'none';
-      ingGrid.innerHTML = '';
-    }
-
-    const overlay = document.getElementById('edit-overlay');
-    overlay.classList.add('edit-open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeEditModal() {
-    document.getElementById('edit-overlay').classList.remove('edit-open');
-    document.body.style.overflow = '';
-    editIdx = -1;
-  }
-
-  function toggleEditChip(label) {
-    const cb = label.querySelector('input');
-    cb.checked = !cb.checked;
-    label.classList.toggle('chip-off', !cb.checked);
-  }
-
-  function adjustEditQty(delta) {
-    editQty = Math.max(1, editQty + delta);
-    document.getElementById('edit-qty-val').textContent = editQty;
-  }
-
-  function confirmEditModal() {
-    if (editIdx < 0) return;
-    const cart = getCart();
-    const item = cart[editIdx];
-
-    if (item.hasMeat) {
-      item.meatChoice = document.getElementById('edit-meat').value;
-    }
-
-    const avail = item.availableIngredients;
-    if (avail && avail.length > 0) {
-      const excluded = [];
-      document.querySelectorAll('#edit-ing-grid input[type=checkbox]').forEach(cb => {
-        if (!cb.checked) excluded.push(cb.value);
-      });
-      item.excludedIngredients = excluded;
-    }
-
-    item.quantity = editQty;
-    saveCart(cart);
-    closeEditModal();
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && editIdx >= 0) closeEditModal();
-  });
-</script>
 
 <!-- ── CALL WIDGET ──────────────────────────────────────────────────────── -->
 <style>
