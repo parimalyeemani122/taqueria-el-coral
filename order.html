@@ -76,7 +76,9 @@
     .loc-step-card:active { transform: translateY(0); }
     .lsc-name { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 0.04em; color: var(--cream); margin-bottom: 6px; }
     .lsc-addr { font-size: 13px; color: var(--cream-dim); line-height: 1.5; margin-bottom: 10px; }
-    .lsc-hours { font-size: 12px; color: var(--gold); font-weight: 500; }
+    .lsc-hours { font-size: 12px; color: var(--gold); font-weight: 500; margin-bottom: 12px; }
+    .lsc-call { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--red); text-decoration: none; padding: 6px 10px; border: 1.5px solid rgba(217,79,43,0.25); border-radius: 4px; background: rgba(217,79,43,0.04); transition: background 0.15s ease, border-color 0.15s ease; }
+    .lsc-call:hover { background: rgba(217,79,43,0.1); border-color: rgba(217,79,43,0.5); }
     .lsc-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid rgba(44,24,16,0.2); display: flex; align-items: center; justify-content: center; position: absolute; top: 20px; right: 20px; transition: border-color 0.2s ease, background 0.2s ease; }
     .loc-step-card.lsc-selected .lsc-check { border-color: var(--red); background: var(--red); }
     .lsc-check svg { opacity: 0; transition: opacity 0.15s ease; }
@@ -269,27 +271,6 @@
           </div>
         </div>
 
-        <!-- CALL BANNER -->
-        <div style="display:flex; align-items:center; gap:12px; margin-top:24px; padding:16px 20px; background:var(--bg2); border:1px solid rgba(44,24,16,0.08); border-radius:6px; box-shadow:0 2px 12px rgba(44,24,16,0.04); flex-wrap:wrap;">
-          <div style="width:40px; height:40px; border-radius:50%; background:rgba(217,79,43,0.08); border:1px solid rgba(217,79,43,0.2); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-          </div>
-          <div style="flex:1; min-width:160px;">
-            <div style="font-size:11px; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:3px;">Prefer to call?</div>
-            <div style="font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:0.06em; color:var(--cream); line-height:1;">(408) 422-1508</div>
-            <div style="font-size:12px; color:var(--cream-dim); margin-top:2px;">Both locations · call to place your order</div>
-          </div>
-          <div style="display:flex; gap:8px; flex-shrink:0;">
-            <a href="tel:4084221508" style="display:inline-flex; align-items:center; gap:6px; padding:9px 14px; background:var(--red); color:var(--light); font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none; border-radius:4px; box-shadow:0 2px 10px var(--red-glow); transition:background 0.15s ease, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.background='var(--red-dark)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--red)';this.style.transform='translateY(0)'">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-              Dial
-            </a>
-            <button id="banner-copy" onclick="bannerCopy()" style="display:inline-flex; align-items:center; gap:6px; padding:9px 14px; background:transparent; color:var(--cream); font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; border:1.5px solid rgba(44,24,16,0.18); border-radius:4px; cursor:pointer; transition:border-color 0.15s ease, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);" onmouseover="this.style.borderColor='rgba(44,24,16,0.4)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(44,24,16,0.18)';this.style.transform='translateY(0)'">
-              <svg id="bcopy-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              <span id="bcopy-lbl">Copy</span>
-            </button>
-          </div>
-        </div>
       </div>
 
       <!-- ── STEP 1: LOCATION (pickup only) ── -->
@@ -297,21 +278,29 @@
         <div class="loc-step-label">Step 1 of 2 — Pickup</div>
         <div class="loc-step-heading">Where are you picking up?</div>
         <div class="loc-step-grid">
-          <div class="loc-step-card" id="lsc-1" onclick="pickLocation('Santa Teresa Blvd', '5899 Santa Teresa Blvd #109', this)">
+          <div class="loc-step-card" id="lsc-1" onclick="pickLocation('Santa Teresa Blvd', '5899 Santa Teresa Blvd #109', '4085784077', '(408) 578-4077', this)">
             <div class="lsc-check">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF8F0" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
             <div class="lsc-name">Santa Teresa Blvd</div>
-            <div class="lsc-addr">5899 Santa Teresa Blvd #109<br>San Jose, CA 95123<br><a href="tel:4085784077" style="color:var(--gold); text-decoration:none;" onclick="event.stopPropagation()">(408) 578-4077</a></div>
+            <div class="lsc-addr">5899 Santa Teresa Blvd #109<br>San Jose, CA 95123</div>
             <div class="lsc-hours">Mon–Fri 10am–8pm · Sat 10am–4pm · Sun Closed</div>
+            <a href="tel:4085784077" class="lsc-call" onclick="event.stopPropagation()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              (408) 578-4077
+            </a>
           </div>
-          <div class="loc-step-card" id="lsc-2" onclick="pickLocation('W Capitol Expressway', '426 W Capitol Expy', this)">
+          <div class="loc-step-card" id="lsc-2" onclick="pickLocation('W Capitol Expressway', '426 W Capitol Expy', '4082292190', '(408) 229-2190', this)">
             <div class="lsc-check">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF8F0" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
             <div class="lsc-name">W Capitol Expressway</div>
-            <div class="lsc-addr">426 W Capitol Expy<br>San Jose, CA 95136<br><a href="tel:4082292190" style="color:var(--gold); text-decoration:none;" onclick="event.stopPropagation()">(408) 229-2190</a></div>
+            <div class="lsc-addr">426 W Capitol Expy<br>San Jose, CA 95136</div>
             <div class="lsc-hours">Mon–Thu 10am–9pm · Fri–Sun 9am–9pm</div>
+            <a href="tel:4082292190" class="lsc-call" onclick="event.stopPropagation()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              (408) 229-2190
+            </a>
           </div>
         </div>
       </div>
@@ -322,7 +311,13 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
           Picking up from <strong id="selected-loc-name" style="margin-left:4px;"></strong>
         </div>
-        <button class="slb-change" onclick="changeLocation()">Change location</button>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <a id="selected-loc-call" href="#" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--red); text-decoration:none; padding:5px 10px; border:1.5px solid rgba(217,79,43,0.25); border-radius:4px; background:rgba(217,79,43,0.04); transition:background 0.15s ease;" onmouseover="this.style.background='rgba(217,79,43,0.1)'" onmouseout="this.style.background='rgba(217,79,43,0.04)'">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            <span id="selected-loc-phone"></span>
+          </a>
+          <button class="slb-change" onclick="changeLocation()">Change</button>
+        </div>
       </div>
 
       <!-- ── STEP 2: ORDER DETAILS ── -->
@@ -443,6 +438,12 @@
     const SERVICE_FEE = 0.99;
     const MEATS = ['Grilled Steak','Grilled Chicken','Al Pastor','Carnitas','Chorizo','Tripa','Chile Verde','Beef Tongue','Beef Head','Barbacoa','Buche','Chile Relleno'];
     const DEFAULT_TOPPINGS = ['Onion','Cilantro','Salsa','Guacamole','Sour Cream','Cheese','Lime','Jalapeños'];
+    const TOPPING_PRICES = {
+      'Guacamole': 1.50, 'Sour Cream': 0.75, 'Cheese': 0.75,
+      'Chipotle Crema': 0.75, 'Pico de Gallo': 0.50,
+      'Jalapeños': 0.50, 'Rice': 0.75, 'Beans': 0.75,
+      'Eggs': 1.00, 'Tortillas': 0.50,
+    };
 
     // TODO: Replace with live DoorDash Drive API credentials — see https://developer.doordash.com/en-US/docs/drive/tutorials/get_started
     let fulfillmentMode = 'pickup';
@@ -453,7 +454,7 @@
     function saveCart(c) { localStorage.setItem(CART_KEY, JSON.stringify(c)); renderAll(); }
 
     // ── LOCATION STEP ────────────────────────────────────────────────────────────
-    function pickLocation(value, address, cardEl) {
+    function pickLocation(value, address, phone, phoneDisplay, cardEl) {
       selectedPickupLocation = value;
       selectedPickupAddress = address;
       document.querySelectorAll('.loc-step-card').forEach(el => el.classList.remove('lsc-selected'));
@@ -461,6 +462,8 @@
       setTimeout(() => {
         document.getElementById('location-step').style.display = 'none';
         document.getElementById('selected-loc-name').textContent = address;
+        document.getElementById('selected-loc-phone').textContent = phoneDisplay;
+        document.getElementById('selected-loc-call').href = 'tel:' + phone;
         document.getElementById('selected-loc-bar').style.display = 'flex';
         const od = document.getElementById('order-details');
         od.style.display = 'block';
@@ -587,8 +590,10 @@
             <div class="ie-chips" id="ie-extra-${idx}">
               ${avail.map(ing => {
                 const isExtra = extras.includes(ing);
+                const p = TOPPING_PRICES[ing];
+                const priceTag = p ? ` <span style="font-size:10px;opacity:0.65;">+$${p.toFixed(2)}</span>` : ' <span style="font-size:10px;opacity:0.45;">free</span>';
                 return `<label class="ie-chip${isExtra ? ' chip-extra' : ''}">
-                  <input type="checkbox"${isExtra ? ' checked' : ''} value="${ing}" onchange="this.closest('label').classList.toggle('chip-extra',this.checked)"> + ${ing}
+                  <input type="checkbox"${isExtra ? ' checked' : ''} value="${ing}" onchange="this.closest('label').classList.toggle('chip-extra',this.checked)"> + ${ing}${priceTag}
                 </label>`;
               }).join('')}
             </div>
@@ -681,6 +686,10 @@
           if (cb.checked) extra.push(cb.value);
         });
         item.extraIngredients = extra;
+        const extraPrice = extra.reduce((sum, ing) => sum + (TOPPING_PRICES[ing] || 0), 0);
+        item.extraToppingsPrice = extraPrice;
+        item.price = (item.basePrice || item.price) + extraPrice;
+        if (!item.basePrice) item.basePrice = item.price - extraPrice;
       }
 
       saveCart(c);
@@ -808,105 +817,5 @@
     document.head.appendChild(style);
   </script>
 
-<!-- ── CALL WIDGET ──────────────────────────────────────────────────────── -->
-<style>
-  #cw { position:fixed; bottom:28px; right:28px; z-index:8000; }
-  #cw-panel {
-    display:none; opacity:0; transform:translateY(14px) scale(0.96);
-    position:absolute; bottom:calc(100% + 14px); right:0; width:292px;
-    background:#FFFFFF; border:1px solid rgba(44,24,16,0.12); border-radius:14px; padding:24px 24px 20px;
-    box-shadow:0 12px 48px rgba(44,24,16,0.12), 0 4px 16px rgba(44,24,16,0.06);
-    transition:opacity 0.22s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  #cw-panel.cw-open { opacity:1; transform:translateY(0) scale(1); }
-  @keyframes cwPulse { 0%,100% { box-shadow:0 4px 28px rgba(217,79,43,0.45), 0 2px 8px rgba(44,24,16,0.1); } 50% { box-shadow:0 6px 40px rgba(217,79,43,0.7), 0 2px 12px rgba(44,24,16,0.1); } }
-  #cw-pill { display:flex; align-items:center; gap:10px; padding:13px 22px 13px 18px; background:#D94F2B; border:none; border-radius:100px; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 4px 28px rgba(217,79,43,0.45), 0 2px 8px rgba(44,24,16,0.1); animation:cwPulse 3s ease-in-out infinite; transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1); }
-  #cw-pill:hover { transform:translateY(-2px); }
-  #cw-pill:active { transform:translateY(0); }
-  #cw-pill span { font-size:14px; font-weight:700; letter-spacing:0.04em; color:#FFF8F0; }
-  .cw-action { display:flex; align-items:center; gap:10px; width:100%; padding:12px 14px; border-radius:7px; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.06em; text-decoration:none; border:none; transition:transform 0.18s cubic-bezier(0.34,1.56,0.64,1), background 0.15s ease, box-shadow 0.15s ease; margin-bottom:8px; }
-  .cw-action:last-child { margin-bottom:0; }
-  .cw-action:hover { transform:translateY(-2px); }
-  .cw-action:active { transform:translateY(0); }
-  .cw-dial { background:#D94F2B; color:#FFF8F0; box-shadow:0 3px 16px rgba(217,79,43,0.35); }
-  .cw-dial:hover { background:#B83D22; box-shadow:0 5px 24px rgba(217,79,43,0.55); }
-  .cw-copy-btn { background:rgba(44,24,16,0.04); color:#2C1810; border:1.5px solid rgba(44,24,16,0.12) !important; }
-  .cw-copy-btn:hover { background:rgba(44,24,16,0.08); border-color:rgba(44,24,16,0.25) !important; }
-  .cw-copy-btn.cw-copied { color:#E8940F; border-color:rgba(232,148,15,0.4) !important; background:rgba(232,148,15,0.06); }
-  .cw-divider { display:flex; align-items:center; gap:10px; margin:16px 0; color:#7B5C4A; font-size:10px; font-family:'DM Sans',sans-serif; letter-spacing:0.14em; text-transform:uppercase; }
-  .cw-divider::before,.cw-divider::after { content:''; flex:1; height:1px; background:rgba(44,24,16,0.08); }
-</style>
-
-<div id="cw">
-  <div id="cw-panel" role="dialog" aria-label="Call options">
-    <button onclick="cwClose()" aria-label="Close" style="position:absolute; top:10px; right:14px; background:none; border:none; color:#7B5C4A; font-size:20px; cursor:pointer; line-height:1; padding:4px; opacity:0.6; transition:opacity 0.15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">&times;</button>
-    <div style="font-size:10px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:#E8940F; margin-bottom:6px; font-family:'DM Sans',sans-serif;">Order by Phone</div>
-    <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; letter-spacing:0.05em; color:#2C1810; line-height:1; margin-bottom:4px;">(408) 422-1508</div>
-    <div style="font-size:12px; color:#7B5C4A; margin-bottom:20px; font-family:'DM Sans',sans-serif;">Both locations &middot; Mon&ndash;Sun</div>
-    <a href="tel:4084221508" class="cw-action cw-dial">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-      <div><div>Open Phone App</div><div style="font-size:11px; opacity:0.65; font-weight:400; margin-top:1px;">Works with iPhone &amp; Skype on desktop</div></div>
-    </a>
-    <button id="cw-copy-btn" class="cw-action cw-copy-btn" onclick="cwCopy()">
-      <svg id="cw-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-      <div><div id="cw-copy-label">Copy Number</div><div style="font-size:11px; opacity:0.65; font-weight:400; margin-top:1px;">Paste it into any app to call</div></div>
-    </button>
-    <div class="cw-divider">scan from your phone</div>
-    <div style="display:flex; align-items:center; gap:16px;">
-      <div style="background:#F5EDE0; border-radius:10px; padding:8px; flex-shrink:0; border:1px solid rgba(44,24,16,0.08);">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?data=tel%3A4084221508&size=120x120&margin=2" alt="Scan to call" width="96" height="96" style="display:block;">
-      </div>
-      <div>
-        <div style="font-size:13px; font-weight:600; color:#2C1810; font-family:'DM Sans',sans-serif; margin-bottom:4px;">Scan with your phone</div>
-        <div style="font-size:12px; color:#7B5C4A; font-family:'DM Sans',sans-serif; line-height:1.5;">Opens your dialer automatically &mdash; no typing needed</div>
-      </div>
-    </div>
-  </div>
-  <button id="cw-pill" onclick="cwToggle()" aria-expanded="false" aria-controls="cw-panel">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFF8F0" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-    <span>(408) 422-1508</span>
-  </button>
-</div>
-
-<script>
-(function() {
-  var open = false;
-  function cwShow() {
-    open = true;
-    var p = document.getElementById('cw-panel');
-    p.style.display = 'block';
-    requestAnimationFrame(function() { requestAnimationFrame(function() { p.classList.add('cw-open'); }); });
-    document.getElementById('cw-pill').setAttribute('aria-expanded','true');
-    document.getElementById('cw-pill').style.animation = 'none';
-  }
-  window.cwClose = function() {
-    open = false;
-    var p = document.getElementById('cw-panel');
-    p.classList.remove('cw-open');
-    setTimeout(function() { p.style.display = 'none'; }, 230);
-    document.getElementById('cw-pill').setAttribute('aria-expanded','false');
-    document.getElementById('cw-pill').style.animation = 'cwPulse 3s ease-in-out infinite';
-  };
-  window.cwToggle = function() { open ? cwClose() : cwShow(); };
-  window.cwCopy = function() {
-    var num = '(408) 422-1508';
-    var btn = document.getElementById('cw-copy-btn'), lbl = document.getElementById('cw-copy-label'), ico = document.getElementById('cw-copy-icon');
-    function flash() {
-      btn.classList.add('cw-copied'); lbl.textContent = 'Copied!';
-      ico.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
-      setTimeout(function() { btn.classList.remove('cw-copied'); lbl.textContent = 'Copy Number'; ico.innerHTML = '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>'; }, 2200);
-    }
-    if (navigator.clipboard) navigator.clipboard.writeText(num).then(flash).catch(function() { fallbackCopy(num); flash(); });
-    else { fallbackCopy(num); flash(); }
-  };
-  function fallbackCopy(text) {
-    var ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
-    document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch(e) {} document.body.removeChild(ta);
-  }
-  document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && open) cwClose(); });
-  document.addEventListener('click', function(e) { if (open && !document.getElementById('cw').contains(e.target)) cwClose(); });
-})();
-</script>
-<!-- ── END CALL WIDGET ──────────────────────────────────────────────────── -->
 </body>
 </html>
