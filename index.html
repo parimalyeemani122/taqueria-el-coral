@@ -503,11 +503,14 @@
         <div class="nav-links">
           <a href="menu.html" class="nav-link">Menu</a>
           <a href="about.html" class="nav-link">About</a>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;opacity:0.5;color:var(--cream)"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-            <a href="tel:4085784077" style="font-size:11px;font-weight:600;letter-spacing:0.04em;color:var(--cream-dim);text-decoration:none;transition:color 0.15s ease;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--cream-dim)'">(408) 578-4077</a>
-            <span style="opacity:0.25;font-size:10px;">·</span>
-            <a href="tel:4082292190" style="font-size:11px;font-weight:600;letter-spacing:0.04em;color:var(--cream-dim);text-decoration:none;transition:color 0.15s ease;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--cream-dim)'">(408) 229-2190</a>
+          <div style="display:flex;align-items:center;gap:14px;">
+            <a href="https://www.instagram.com/taquerialelcoral1/" target="_blank" rel="noopener" title="Instagram @taquerialelcoral1" aria-label="Instagram" style="display:flex;align-items:center;color:var(--cream-dim);opacity:0.55;transition:opacity 0.2s ease,color 0.2s ease;" onmouseover="this.style.opacity='1';this.style.color='var(--red)'" onmouseout="this.style.opacity='0.55';this.style.color='var(--cream-dim)'">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <button id="nav-call-btn" onclick="openCallDd(this)" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--cream-dim);background:none;border:none;cursor:pointer;padding:0;transition:color 0.15s ease;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--cream-dim)'">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              Call
+            </button>
           </div>
           <a href="order.html" class="btn-nav">
             Order
@@ -552,24 +555,10 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61H19a2 2 0 001.99-1.81L22 7H6"/></svg>
             Order
           </a>
-          <div style="position:relative;display:inline-block;" id="call-dropdown-wrap">
-            <button onclick="document.getElementById('call-dropdown').classList.toggle('hidden')" class="btn-ghost" style="border-color:rgba(232,148,15,0.4); color:var(--gold);">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-              Call to Order
-            </button>
-            <div id="call-dropdown" class="hidden" style="position:absolute;top:calc(100% + 8px);left:0;background:#1a0a00;border:1px solid rgba(232,148,15,0.25);border-radius:10px;padding:8px 0;min-width:220px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,0.5);">
-              <div style="padding:6px 14px 4px;font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--gold);opacity:0.6;text-transform:uppercase;">Choose a location</div>
-              <a href="tel:4085784077" style="display:flex;flex-direction:column;padding:8px 14px;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(232,148,15,0.08)'" onmouseout="this.style.background='none'">
-                <span style="font-size:12px;font-weight:700;color:var(--cream);letter-spacing:0.02em;">Santa Teresa Blvd</span>
-                <span style="font-size:11px;color:var(--gold);margin-top:1px;">(408) 578-4077</span>
-              </a>
-              <a href="tel:4082292190" style="display:flex;flex-direction:column;padding:8px 14px;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(232,148,15,0.08)'" onmouseout="this.style.background='none'">
-                <span style="font-size:12px;font-weight:700;color:var(--cream);letter-spacing:0.02em;">W Capitol Expressway</span>
-                <span style="font-size:11px;color:var(--gold);margin-top:1px;">(408) 229-2190</span>
-              </a>
-            </div>
-          </div>
-          <script>document.addEventListener('click',function(e){var w=document.getElementById('call-dropdown-wrap');if(w&&!w.contains(e.target)){var d=document.getElementById('call-dropdown');if(d)d.classList.add('hidden');}});</script>
+          <button id="hero-call-btn" onclick="openCallDd(this)" class="btn-ghost" style="border-color:rgba(232,148,15,0.4); color:var(--gold);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            Call to Order
+          </button>
           <a href="menu.html" class="btn-ghost">
             View Full Menu
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -793,6 +782,38 @@
     }
     updateCartBadge();
     window.addEventListener('storage', updateCartBadge);
+  </script>
+
+  <!-- Global call dropdown — position:fixed so it escapes overflow:hidden ancestors -->
+  <div id="global-call-dd" style="display:none;position:fixed;background:#1a0a00;border:1px solid rgba(232,148,15,0.28);border-radius:10px;padding:8px 0;min-width:230px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.6);">
+    <div style="padding:6px 14px 5px;font-size:10px;font-weight:700;letter-spacing:0.11em;color:var(--gold);opacity:0.6;text-transform:uppercase;">Choose a location</div>
+    <a href="tel:4085784077" style="display:flex;flex-direction:column;padding:9px 14px;text-decoration:none;transition:background 0.12s;" onmouseover="this.style.background='rgba(232,148,15,0.09)'" onmouseout="this.style.background='none'">
+      <span style="font-size:12px;font-weight:700;color:#FFF8F0;letter-spacing:0.02em;">Santa Teresa Blvd</span>
+      <span style="font-size:11px;color:var(--gold);margin-top:2px;">(408) 578-4077</span>
+    </a>
+    <a href="tel:4082292190" style="display:flex;flex-direction:column;padding:9px 14px;text-decoration:none;transition:background 0.12s;" onmouseover="this.style.background='rgba(232,148,15,0.09)'" onmouseout="this.style.background='none'">
+      <span style="font-size:12px;font-weight:700;color:#FFF8F0;letter-spacing:0.02em;">W Capitol Expressway</span>
+      <span style="font-size:11px;color:var(--gold);margin-top:2px;">(408) 229-2190</span>
+    </a>
+  </div>
+  <script>
+    function openCallDd(btn) {
+      var dd = document.getElementById('global-call-dd');
+      if (dd.style.display !== 'none') { dd.style.display = 'none'; return; }
+      var r = btn.getBoundingClientRect();
+      dd.style.top = (r.bottom + 8) + 'px';
+      dd.style.left = r.left + 'px';
+      dd.style.display = 'block';
+    }
+    document.addEventListener('click', function(e) {
+      var dd = document.getElementById('global-call-dd');
+      if (!dd || dd.style.display === 'none') return;
+      var nb = document.getElementById('nav-call-btn');
+      var hb = document.getElementById('hero-call-btn');
+      if ((!nb || !nb.contains(e.target)) && (!hb || !hb.contains(e.target)) && !dd.contains(e.target)) {
+        dd.style.display = 'none';
+      }
+    });
   </script>
 
 </body>
