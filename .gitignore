@@ -1,6 +1,7 @@
 node_modules/
 package-lock.json
 temporary screenshots/
+.env
 *.DS_Store
 .DS_Store
 .vercel
