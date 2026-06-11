@@ -433,18 +433,18 @@
   </div>
 
   <!-- CUSTOMIZATION MODAL -->
-  <div id="modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Customize your order">
+  <div id="modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-item-name">
     <div class="modal-box" id="modal-box">
       <div class="modal-header">
         <div>
           <div class="modal-item-name" id="modal-item-name"></div>
           <div class="modal-item-price" id="modal-item-price"></div>
         </div>
-        <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
+        <button class="modal-close" id="modal-close-btn" onclick="closeModal()" aria-label="Close">&times;</button>
       </div>
       <div id="modal-meat-section" class="modal-section" style="display:none;">
         <div class="modal-section-label">Choose Your Meat</div>
-        <select class="modal-meat-select" id="modal-meat">
+        <select class="modal-meat-select" id="modal-meat" aria-label="Choose meat">
           <option>Grilled Steak</option>
           <option>Grilled Chicken</option>
           <option>Al Pastor</option>
@@ -467,9 +467,9 @@
       </div>
       <div class="modal-footer">
         <div class="modal-qty-ctrl">
-          <button class="modal-qty-btn" id="modal-qty-dec" aria-label="Decrease">−</button>
+          <button class="modal-qty-btn" id="modal-qty-dec" aria-label="Decrease quantity">−</button>
           <span class="modal-qty-val" id="modal-qty-val">1</span>
-          <button class="modal-qty-btn" id="modal-qty-inc" aria-label="Increase">+</button>
+          <button class="modal-qty-btn" id="modal-qty-inc" aria-label="Increase quantity">+</button>
         </div>
         <button class="modal-add-btn" id="modal-add-btn" onclick="confirmModalAdd()">
           Add to Cart — <span id="modal-price-display">$0.00</span>
@@ -655,19 +655,34 @@
     let modalItem = null;
     let modalCatId = null;
     let modalQty = 1;
+    let modalTriggerEl = null;
 
-    function openModal(catId, itemId) {
+    function trapFocus(modalEl) {
+      const focusable = modalEl.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      modalEl.addEventListener('keydown', function trap(e) {
+        if (e.key !== 'Tab') return;
+        if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+        else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
+      });
+    }
+
+    function openModal(catId, itemId, triggerEl) {
       const cat = MENU.find(c => c.id === catId);
       const item = cat ? cat.items.find(i => i.id === itemId) : null;
       if (!item) return;
       modalItem = item;
       modalCatId = catId;
       modalQty = 1;
+      modalTriggerEl = triggerEl || document.activeElement;
 
       document.getElementById('modal-item-name').textContent = item.name;
       document.getElementById('modal-item-price').textContent = '$' + item.price.toFixed(2);
       document.getElementById('modal-qty-val').textContent = '1';
       updateModalPrice();
+
+      // Set dynamic aria-label on "Add to Cart" button
+      document.getElementById('modal-add-btn').setAttribute('aria-label', 'Add ' + item.name + ' to cart');
 
       // Meat selector
       const meatSec = document.getElementById('modal-meat-section');
@@ -691,7 +706,7 @@
         // Remove toppings (checked by default)
         ingContainer.innerHTML = ingList.map(ing => `
           <label class="ingredient-check">
-            <input type="checkbox" checked value="${ing}" onchange="this.closest('.ingredient-check').classList.toggle('unchecked',!this.checked)"> ${ing}
+            <input type="checkbox" checked value="${ing}" aria-label="Remove ${ing}" onchange="this.closest('.ingredient-check').classList.toggle('unchecked',!this.checked)"> ${ing}
           </label>
         `).join('');
         // Extra toppings (unchecked by default)
@@ -699,7 +714,7 @@
           const p = TOPPING_PRICES[ing];
           const priceTag = p ? ` <span style="font-size:11px;opacity:0.7;">+$${p.toFixed(2)}</span>` : ' <span style="font-size:11px;opacity:0.5;">free</span>';
           return `<label class="ingredient-check ingredient-extra">
-            <input type="checkbox" value="${ing}" onchange="this.closest('.ingredient-check').classList.toggle('extra-checked',this.checked); updateModalPrice()"> + ${ing}${priceTag}
+            <input type="checkbox" value="${ing}" aria-label="Add extra ${ing}" onchange="this.closest('.ingredient-check').classList.toggle('extra-checked',this.checked); updateModalPrice()"> + ${ing}${priceTag}
           </label>`;
         }).join('');
       } else {
@@ -710,7 +725,13 @@
 
       const overlay = document.getElementById('modal-overlay');
       overlay.style.display = 'flex';
-      requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add('modal-visible')));
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        overlay.classList.add('modal-visible');
+        // Move focus to close button (first focusable element)
+        const closeBtn = document.getElementById('modal-close-btn');
+        if (closeBtn) closeBtn.focus();
+        trapFocus(overlay);
+      }));
       document.body.style.overflow = 'hidden';
     }
 
@@ -721,6 +742,11 @@
       setTimeout(() => {
         overlay.style.display = 'none';
         document.body.style.overflow = '';
+        // Return focus to the element that triggered the modal
+        if (modalTriggerEl && typeof modalTriggerEl.focus === 'function') {
+          modalTriggerEl.focus();
+        }
+        modalTriggerEl = null;
       }, 250);
     }
 
@@ -837,7 +863,7 @@
         // Customize & Add button → open modal
         const btn = e.target.closest('.btn-add');
         if (btn) {
-          openModal(btn.dataset.cat, btn.dataset.id);
+          openModal(btn.dataset.cat, btn.dataset.id, btn);
           return;
         }
         // Direct add (sides/drinks)

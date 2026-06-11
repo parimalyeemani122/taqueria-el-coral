@@ -277,36 +277,36 @@
       </div>
 
       <!-- ── STEP 1: LOCATION (pickup only) ── -->
-      <div id="location-step">
+      <section id="location-step" aria-labelledby="location-step-heading">
         <div class="loc-step-label">Step 1 of 2 — Pickup</div>
-        <div class="loc-step-heading">Where are you picking up?</div>
+        <div class="loc-step-heading" id="location-step-heading">Where are you picking up?</div>
         <div class="loc-step-grid">
-          <div class="loc-step-card" id="lsc-1" onclick="pickLocation('Santa Teresa Blvd', '5899 Santa Teresa Blvd #109', '4085784077', '(408) 578-4077', this)">
-            <div class="lsc-check">
+          <div class="loc-step-card" id="lsc-1" role="button" tabindex="0" aria-label="Select Santa Teresa Blvd location" onclick="pickLocation('Santa Teresa Blvd', '5899 Santa Teresa Blvd #109', '4085784077', '(408) 578-4077', this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickLocation('Santa Teresa Blvd','5899 Santa Teresa Blvd #109','4085784077','(408) 578-4077',this);}">
+            <div class="lsc-check" aria-hidden="true">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF8F0" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
             <div class="lsc-name">Santa Teresa Blvd</div>
             <div class="lsc-addr">5899 Santa Teresa Blvd #109<br>San Jose, CA 95123</div>
             <div class="lsc-hours">Mon–Fri 10am–8pm · Sat 10am–4pm · Sun Closed</div>
-            <a href="tel:4085784077" class="lsc-call" onclick="event.stopPropagation()">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            <a href="tel:4085784077" class="lsc-call" aria-label="Call Santa Teresa Blvd location at (408) 578-4077" onclick="event.stopPropagation()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
               (408) 578-4077
             </a>
           </div>
-          <div class="loc-step-card" id="lsc-2" onclick="pickLocation('W Capitol Expressway', '426 W Capitol Expy', '4082292190', '(408) 229-2190', this)">
-            <div class="lsc-check">
+          <div class="loc-step-card" id="lsc-2" role="button" tabindex="0" aria-label="Select W Capitol Expressway location" onclick="pickLocation('W Capitol Expressway', '426 W Capitol Expy', '4082292190', '(408) 229-2190', this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickLocation('W Capitol Expressway','426 W Capitol Expy','4082292190','(408) 229-2190',this);}">
+            <div class="lsc-check" aria-hidden="true">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF8F0" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
             <div class="lsc-name">W Capitol Expressway</div>
             <div class="lsc-addr">426 W Capitol Expy<br>San Jose, CA 95136</div>
             <div class="lsc-hours">Mon–Thu 10am–9pm · Fri–Sun 9am–9pm</div>
-            <a href="tel:4082292190" class="lsc-call" onclick="event.stopPropagation()">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            <a href="tel:4082292190" class="lsc-call" aria-label="Call W Capitol Expressway location at (408) 229-2190" onclick="event.stopPropagation()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
               (408) 229-2190
             </a>
           </div>
         </div>
-      </div>
+      </section>
 
       <!-- ── SELECTED LOCATION BAR ── -->
       <div id="selected-loc-bar">
@@ -561,16 +561,16 @@
           <div class="ie-row">
             <div class="ie-label">Quantity</div>
             <div style="display:flex; align-items:center; gap:10px;">
-              <button class="qty-btn" onclick="ieAdjustQty(${idx}, -1)" style="width:32px;height:32px;font-size:18px;" aria-label="Decrease">−</button>
+              <button class="qty-btn" onclick="ieAdjustQty(${idx}, -1)" style="width:32px;height:32px;font-size:18px;" aria-label="Decrease quantity">−</button>
               <span class="qty-num" id="ie-qty-num-${idx}" style="font-size:16px; min-width:24px;">${item.quantity}</span>
-              <button class="qty-btn" onclick="ieAdjustQty(${idx}, 1)" style="width:32px;height:32px;font-size:18px;" aria-label="Increase">+</button>
+              <button class="qty-btn" onclick="ieAdjustQty(${idx}, 1)" style="width:32px;height:32px;font-size:18px;" aria-label="Increase quantity">+</button>
             </div>
           </div>`;
 
         const meatHTML = showMeat ? `
           <div class="ie-row">
             <div class="ie-label">Meat</div>
-            <select class="ie-meat-sel" id="ie-meat-${idx}">
+            <select class="ie-meat-sel" id="ie-meat-${idx}" aria-label="Choose meat">
               ${MEATS.map(m => `<option value="${m}"${m === item.meatChoice ? ' selected' : ''}>${m}</option>`).join('')}
             </select>
           </div>` : '';
@@ -583,7 +583,7 @@
               ${avail.map(ing => {
                 const isOff = excluded.includes(ing);
                 return `<label class="ie-chip${isOff ? ' chip-off' : ''}">
-                  <input type="checkbox"${isOff ? '' : ' checked'} value="${ing}" onchange="this.closest('label').classList.toggle('chip-off',!this.checked)"> ${ing}
+                  <input type="checkbox"${isOff ? '' : ' checked'} value="${ing}" aria-label="Remove ${ing}" onchange="this.closest('label').classList.toggle('chip-off',!this.checked)"> ${ing}
                 </label>`;
               }).join('')}
             </div>
@@ -596,7 +596,7 @@
                 const p = TOPPING_PRICES[ing];
                 const priceTag = p ? ` <span style="font-size:10px;opacity:0.65;">+$${p.toFixed(2)}</span>` : ' <span style="font-size:10px;opacity:0.45;">free</span>';
                 return `<label class="ie-chip${isExtra ? ' chip-extra' : ''}">
-                  <input type="checkbox"${isExtra ? ' checked' : ''} value="${ing}" onchange="this.closest('label').classList.toggle('chip-extra',this.checked)"> + ${ing}${priceTag}
+                  <input type="checkbox"${isExtra ? ' checked' : ''} value="${ing}" aria-label="Add extra ${ing}" onchange="this.closest('label').classList.toggle('chip-extra',this.checked)"> + ${ing}${priceTag}
                 </label>`;
               }).join('')}
             </div>
@@ -610,19 +610,19 @@
               <div style="font-size:12px; color:var(--cream-dim); margin-top:3px;">qty: ${item.quantity}</div>
             </div>
             <div class="item-price-cell" id="ie-price-${idx}">$${(item.price * item.quantity).toFixed(2)}</div>
-            <button class="edit-item-btn" id="ie-btn-${idx}" onclick="toggleInlineEdit(${idx})" aria-label="Edit item" title="Edit item">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            <button class="edit-item-btn" id="ie-btn-${idx}" onclick="toggleInlineEdit(${idx})" aria-label="Edit ${item.name}" title="Edit ${item.name}">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </button>
-            <button class="remove-btn" onclick="removeCartItem(${idx})" aria-label="Remove item">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <button class="remove-btn" onclick="removeCartItem(${idx})" aria-label="Remove ${item.name} from cart">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
-          <div class="inline-edit" id="ie-panel-${idx}">
+          <div class="inline-edit" id="ie-panel-${idx}" role="dialog" aria-modal="false" aria-label="Edit ${item.name}">
             <div class="ie-panel">
               ${qtyHTML}
               ${meatHTML}
               ${chipsHTML}
-              <button class="ie-done-btn" onclick="saveInlineEdit(${idx})">Done — Save Changes</button>
+              <button class="ie-done-btn" id="ie-done-btn-${idx}" onclick="saveInlineEdit(${idx})" aria-label="Save changes to ${item.name}">Done — Save Changes</button>
             </div>
           </div>
         </div>`;
@@ -654,6 +654,11 @@
       if (!isOpen) {
         panel.style.display = 'block';
         if (btn) btn.classList.add('ie-open');
+        // Move focus to the first focusable element inside the panel
+        requestAnimationFrame(() => {
+          const focusable = panel.querySelectorAll('button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+          if (focusable.length) focusable[0].focus();
+        });
       }
     }
 
@@ -699,7 +704,10 @@
       const panel = document.getElementById(`ie-panel-${idx}`);
       if (panel) panel.style.display = 'none';
       const btn = document.getElementById(`ie-btn-${idx}`);
-      if (btn) btn.classList.remove('ie-open');
+      if (btn) {
+        btn.classList.remove('ie-open');
+        btn.focus();
+      }
     }
 
     // ── SUMMARY ──────────────────────────────────────────────────────────────────
@@ -800,6 +808,19 @@
           : `<strong style="color:var(--cream);">📍 ${location}</strong><br><strong style="color:var(--cream);">🕐 Pickup at ${pickupTime}</strong><br><strong style="color:var(--cream);">👤 ${name}</strong> · ${phone}<br><strong style="color:var(--gold);">Total: $${total.toFixed(2)}</strong> (pay at pickup)`;
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }, 800);
+    });
+
+    // Close active inline edit panel on Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key !== 'Escape') return;
+      const openPanel = document.querySelector('.inline-edit[style*="display: block"], .inline-edit[style*="display:block"]');
+      if (!openPanel) return;
+      const idMatch = openPanel.id.match(/ie-panel-(\d+)/);
+      if (!idMatch) return;
+      const idx = parseInt(idMatch[1]);
+      openPanel.style.display = 'none';
+      const btn = document.getElementById(`ie-btn-${idx}`);
+      if (btn) { btn.classList.remove('ie-open'); btn.focus(); }
     });
 
     generatePickupTimes();
