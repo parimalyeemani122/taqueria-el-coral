@@ -49,6 +49,7 @@
     .nav-links { display: flex; align-items: center; gap: 32px; }
     .nav-link { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cream); text-decoration: none; opacity: 0.65; transition: opacity 0.2s ease, color 0.2s ease; }
     .nav-link:hover { opacity: 1; color: var(--red); }
+    .nav-link:focus-visible { opacity: 1; color: var(--red); outline: 2px solid var(--red); outline-offset: 4px; border-radius: 2px; }
     .nav-link.active { opacity: 1; color: var(--gold); }
     .btn-order {
       display: inline-flex; align-items: center; gap: 8px;
@@ -59,6 +60,7 @@
     }
     .btn-order:hover { background: var(--red-dark); transform: translateY(-2px); }
     .btn-order:active { transform: translateY(0); }
+    .btn-order:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
     #cart-badge { background: var(--gold); color: var(--light); border-radius: 50%; width: 18px; height: 18px; font-size: 10px; font-weight: 700; display: none; align-items: center; justify-content: center; }
 
     /* LAYOUT */
@@ -140,7 +142,8 @@
       cursor: pointer;
       transition: border-color 0.2s ease;
     }
-    .item-meat-select:focus { border-color: var(--red); outline: none; }
+    .item-meat-select:focus-visible { border-color: var(--red); outline: 3px solid var(--red); outline-offset: 2px; }
+    .item-meat-select:focus:not(:focus-visible) { border-color: var(--red); outline: none; }
 
     .btn-add {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
@@ -220,6 +223,7 @@
       transition: background 0.2s ease, color 0.2s ease;
     }
     .modal-close:hover { background: rgba(217,79,43,0.1); color: var(--red); }
+    .modal-close:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
     .modal-section { padding: 20px 24px; border-bottom: 1px solid rgba(44,24,16,0.07); }
     .modal-section-label {
       font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
@@ -237,7 +241,8 @@
       cursor: pointer;
       transition: border-color 0.2s ease;
     }
-    .modal-meat-select:focus { border-color: var(--red); }
+    .modal-meat-select:focus-visible { border-color: var(--red); outline: 3px solid var(--red); outline-offset: 2px; }
+    .modal-meat-select:focus:not(:focus-visible) { border-color: var(--red); outline: none; }
     .modal-ingredients {
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 8px;
@@ -282,6 +287,7 @@
       transition: background 0.2s ease, border-color 0.2s ease;
     }
     .modal-qty-btn:hover { background: var(--bg4); border-color: rgba(44,24,16,0.22); }
+    .modal-qty-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
     .modal-qty-val {
       font-size: 18px; font-weight: 700; color: var(--cream);
       min-width: 28px; text-align: center;
@@ -297,6 +303,7 @@
     }
     .modal-add-btn:hover { background: var(--red-dark); transform: translateY(-2px); box-shadow: 0 8px 24px var(--red-glow); }
     .modal-add-btn:active { transform: translateY(0); }
+    .modal-add-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
     /* TOAST */
     #toast {
@@ -337,13 +344,32 @@
       .nav-locs-desktop { display: none; }
       .nav-locs-mobile { display: flex; }
     }
+
+    /* ── ACCESSIBILITY ── */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    :focus-visible {
+      outline: 3px solid var(--red);
+      outline-offset: 3px;
+    }
+    *:focus:not(:focus-visible) {
+      outline: none;
+    }
+    /* Minimum touch targets */
+    .sidebar-link, .nav-link, .nav-loc {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
   </style>
 </head>
 <body>
   <a href="#main-content" class="skip-link" style="position:absolute;top:-40px;left:0;background:var(--red);color:#FFF8F0;padding:8px 16px;font-size:13px;font-weight:600;z-index:10000;text-decoration:none;border-radius:0 0 4px 0;transition:top 0.2s ease;" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to main content</a>
 
   <!-- NAV -->
-  <nav id="nav">
+  <nav id="nav" aria-label="Main navigation">
     <div class="nav-topbar">
       <div class="nav-topbar-inner">
         <div class="nav-locs-desktop">
@@ -392,12 +418,12 @@
   </div>
 
   <!-- MAIN LAYOUT -->
-  <div class="menu-layout" id="main-content" style="padding-top:0;">
+  <div class="menu-layout" style="padding-top:0;">
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-      <nav class="sidebar-nav">
-        <div class="sidebar-heading">Categories</div>
+      <nav class="sidebar-nav" aria-label="Menu categories">
+        <div class="sidebar-heading" id="sidebar-categories-heading">Categories</div>
         <a href="#tacos" class="sidebar-link active"><span class="icon" aria-hidden="true">🌮</span> Tacos</a>
         <a href="#meals" class="sidebar-link"><span class="icon" aria-hidden="true">🍽️</span> Meals</a>
         <a href="#burritos" class="sidebar-link"><span class="icon" aria-hidden="true">🌯</span> Burritos</a>
@@ -412,22 +438,25 @@
     </aside>
 
     <!-- MENU CONTENT -->
-    <main class="menu-content" id="menu-content">
+    <main class="menu-content" id="main-content" tabindex="-1" aria-label="Menu items">
     </main>
   </div>
 
   <!-- FOOTER MINI -->
-  <div class="footer-mini">
+  <footer class="footer-mini" aria-label="Site footer">
     <a href="index.html">Home</a>
     <a href="order.html">Order</a>
     <a href="about.html">About Us</a>
     <div style="margin-top:16px; font-size:12px; color:var(--cream-dim); opacity:0.5;">
       &copy; 2025 Taqueria El Coral &middot; San Jose, CA
     </div>
-  </div>
+  </footer>
+
+  <!-- Aria-live region for cart updates (screen readers) -->
+  <div aria-live="polite" aria-atomic="true" class="sr-only" id="cart-status"></div>
 
   <!-- TOAST -->
-  <div id="toast">
+  <div id="toast" role="status" aria-live="polite">
     <span class="toast-icon">✓</span>
     <span class="toast-msg" id="toast-msg">Added to order!</span>
   </div>
@@ -437,10 +466,10 @@
     <div class="modal-box" id="modal-box">
       <div class="modal-header">
         <div>
-          <div class="modal-item-name" id="modal-item-name"></div>
+          <div class="modal-item-name" id="modal-item-name" role="heading" aria-level="2"></div>
           <div class="modal-item-price" id="modal-item-price"></div>
         </div>
-        <button class="modal-close" id="modal-close-btn" onclick="closeModal()" aria-label="Close">&times;</button>
+        <button class="modal-close" id="modal-close-btn" onclick="closeModal()" aria-label="Close customization dialog">&times;</button>
       </div>
       <div id="modal-meat-section" class="modal-section" style="display:none;">
         <div class="modal-section-label">Choose Your Meat</div>
@@ -496,6 +525,11 @@
       if (existing) { existing.quantity += item.quantity || 1; }
       else { cart.push({ ...item, quantity: item.quantity || 1 }); }
       saveCart(cart);
+      // Update aria-live region for screen readers
+      const updatedCart = getCart();
+      const totalItems = updatedCart.reduce((s, i) => s + i.quantity, 0);
+      const status = document.getElementById('cart-status');
+      if (status) status.textContent = item.name + ' added to cart. ' + totalItems + ' item' + (totalItems !== 1 ? 's' : '') + ' in cart.';
     }
 
     function updateCartBadge() {
@@ -816,7 +850,7 @@
 
     // ── RENDER ─────────────────────────────────────────────────────────────────
     function renderMenu() {
-      const content = document.getElementById('menu-content');
+      const content = document.getElementById('main-content');
       content.innerHTML = MENU.map(cat => {
         const noCustomize = cat.id === 'sides' || cat.id === 'drinks';
         return `
@@ -836,19 +870,19 @@
                   <div class="item-desc">${item.desc}</div>
                   ${item.hasMeat ? `
                     <div class="item-meat-wrap">
-                      <div class="item-meat-label">Meat</div>
-                      <select class="item-meat-select" data-id="${item.id}">
+                      <label class="item-meat-label" for="meat-${item.id}">Meat</label>
+                      <select class="item-meat-select" id="meat-${item.id}" data-id="${item.id}" aria-label="Choose meat for ${item.name}">
                         ${MEATS.map(m => `<option value="${m}">${m}</option>`).join('')}
                       </select>
                     </div>
                   ` : ''}
                   ${noCustomize
-                    ? `<button class="btn-direct-add" data-id="${item.id}" data-cat="${cat.id}" data-name="${item.name}" data-price="${item.price}">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    ? `<button class="btn-direct-add" data-id="${item.id}" data-cat="${cat.id}" data-name="${item.name}" data-price="${item.price}" aria-label="Add ${item.name} to cart">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         Add
                       </button>`
-                    : `<button class="btn-add" data-id="${item.id}" data-cat="${cat.id}">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    : `<button class="btn-add" data-id="${item.id}" data-cat="${cat.id}" aria-label="Customize and add ${item.name} to cart">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         Customize &amp; Add
                       </button>`
                   }

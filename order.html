@@ -39,6 +39,7 @@
     .nav-link { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cream); text-decoration: none; opacity: 0.6; transition: opacity 0.2s ease, color 0.2s ease; }
     .nav-link:hover { opacity: 1; color: var(--red); }
     .nav-link.active { opacity: 1; color: var(--red); }
+    .nav-link:focus-visible { opacity: 1; color: var(--red); outline: 2px solid var(--red); outline-offset: 4px; border-radius: 2px; }
 
     /* PAGE */
     .page { max-width: 1280px; margin: 0 auto; padding: 120px 40px 80px; }
@@ -187,13 +188,44 @@
       .nav-topbar-inner, .nav-inner { padding: 0 20px; }
       .page { padding: 110px 20px 80px; }
     }
+
+    /* ── ACCESSIBILITY ── */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    :focus-visible {
+      outline: 3px solid var(--red);
+      outline-offset: 3px;
+    }
+    *:focus:not(:focus-visible) {
+      outline: none;
+    }
+    /* Minimum touch targets */
+    .nav-link, .nav-loc, .ftoggle-btn, .qty-btn, .modal-qty-btn {
+      min-height: 44px;
+    }
+    .qty-btn { min-width: 44px; }
+    /* Error state styling */
+    .form-input[aria-invalid="true"],
+    .form-select[aria-invalid="true"] {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(217,79,43,0.15);
+    }
+    .field-error {
+      font-size: 12px;
+      color: var(--red);
+      margin-top: 4px;
+      display: none;
+    }
+    .field-error.visible { display: block; }
   </style>
 </head>
 <body>
   <a href="#main-content" class="skip-link" style="position:absolute;top:-40px;left:0;background:var(--red);color:#FFF8F0;padding:8px 16px;font-size:13px;font-weight:600;z-index:10000;text-decoration:none;border-radius:0 0 4px 0;transition:top 0.2s ease;" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to main content</a>
 
   <!-- NAV -->
-  <nav id="nav">
+  <nav id="nav" aria-label="Main navigation">
     <div class="nav-topbar">
       <div class="nav-topbar-inner">
         <div class="nav-locs-desktop">
@@ -227,12 +259,12 @@
   </nav>
 
   <!-- CONFIRMATION (hidden initially) -->
-  <div id="confirmation">
+  <div id="confirmation" role="main" aria-label="Order confirmation">
     <div class="page" style="max-width:640px; padding-top:140px; margin:0 auto;">
-      <div class="confirm-check">
+      <div class="confirm-check" aria-hidden="true">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <div class="confirm-title">ORDER PLACED!</div>
+      <h1 class="confirm-title">ORDER PLACED!</h1>
       <div class="confirm-sub">Your order is confirmed.</div>
       <div class="confirm-detail" id="confirm-tagline">We'll have it ready for pickup at your selected location.</div>
       <div class="confirm-order-id" id="confirm-order-id">#EC-000000</div>
@@ -246,7 +278,7 @@
 
   <!-- ORDER FORM -->
   <div id="order-form-wrap">
-    <div class="page" id="main-content">
+    <main class="page" id="main-content" tabindex="-1">
 
       <!-- Header -->
       <div style="margin-bottom:48px;">
@@ -348,19 +380,22 @@
               </div>
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
                 <div class="form-group">
-                  <label class="form-label" for="customer-name">Name</label>
-                  <input type="text" id="customer-name" class="form-input" placeholder="Your full name" autocomplete="name">
+                  <label class="form-label" for="customer-name">Name <span aria-hidden="true" style="color:var(--red);">*</span></label>
+                  <input type="text" id="customer-name" class="form-input" placeholder="Your full name" autocomplete="name" required aria-required="true" aria-describedby="name-error">
+                  <div class="field-error" id="name-error" role="alert">Please enter your name.</div>
                 </div>
                 <div class="form-group">
-                  <label class="form-label" for="customer-phone">Phone</label>
-                  <input type="tel" id="customer-phone" class="form-input" placeholder="(555) 000-0000" autocomplete="tel">
+                  <label class="form-label" for="customer-phone">Phone <span aria-hidden="true" style="color:var(--red);">*</span></label>
+                  <input type="tel" id="customer-phone" class="form-input" placeholder="(555) 000-0000" autocomplete="tel" required aria-required="true" aria-describedby="phone-error">
+                  <div class="field-error" id="phone-error" role="alert">Please enter your phone number.</div>
                 </div>
               </div>
               <div class="form-group" id="pickup-time-group">
-                <label class="form-label" for="pickup-time">Pickup Time</label>
-                <select id="pickup-time" class="form-select">
+                <label class="form-label" for="pickup-time">Pickup Time <span aria-hidden="true" style="color:var(--red);">*</span></label>
+                <select id="pickup-time" class="form-select" required aria-required="true" aria-describedby="pickup-time-error">
                   <option value="">Select a pickup time...</option>
                 </select>
+                <div class="field-error" id="pickup-time-error" role="alert">Please select a pickup time.</div>
               </div>
               <div id="delivery-section" style="display:none;">
                 <div class="delivery-note">
@@ -368,17 +403,20 @@
                   Delivery available within the San Jose area. Estimated time: 35–50 min after confirmation.
                 </div>
                 <div class="form-group">
-                  <label class="form-label" for="delivery-street">Street Address</label>
-                  <input type="text" id="delivery-street" class="form-input" placeholder="123 Main St, Apt 4" autocomplete="street-address">
+                  <label class="form-label" for="delivery-street">Street Address <span aria-hidden="true" style="color:var(--red);">*</span></label>
+                  <input type="text" id="delivery-street" class="form-input" placeholder="123 Main St, Apt 4" autocomplete="street-address" required aria-required="true" aria-describedby="street-error">
+                  <div class="field-error" id="street-error" role="alert">Please enter your street address.</div>
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
                   <div class="form-group" style="margin-bottom:0;">
-                    <label class="form-label" for="delivery-city">City</label>
-                    <input type="text" id="delivery-city" class="form-input" placeholder="San Jose" autocomplete="address-level2">
+                    <label class="form-label" for="delivery-city">City <span aria-hidden="true" style="color:var(--red);">*</span></label>
+                    <input type="text" id="delivery-city" class="form-input" placeholder="San Jose" autocomplete="address-level2" required aria-required="true" aria-describedby="city-error">
+                    <div class="field-error" id="city-error" role="alert">Please enter your city.</div>
                   </div>
                   <div class="form-group" style="margin-bottom:0;">
-                    <label class="form-label" for="delivery-zip">ZIP Code</label>
-                    <input type="text" id="delivery-zip" class="form-input" placeholder="95123" inputmode="numeric" autocomplete="postal-code">
+                    <label class="form-label" for="delivery-zip">ZIP Code <span aria-hidden="true" style="color:var(--red);">*</span></label>
+                    <input type="text" id="delivery-zip" class="form-input" placeholder="95123" inputmode="numeric" autocomplete="postal-code" required aria-required="true" aria-describedby="zip-error">
+                    <div class="field-error" id="zip-error" role="alert">Please enter your ZIP code.</div>
                   </div>
                 </div>
               </div>
@@ -431,8 +469,11 @@
         </div>
       </div>
 
-    </div>
+    </main><!-- end #main-content -->
   </div>
+
+  <!-- Aria-live region for cart updates (screen readers) -->
+  <div aria-live="polite" aria-atomic="true" class="sr-only" id="cart-status"></div>
 
   <script>
     const CART_KEY = 'elCoral_cart';
@@ -454,7 +495,14 @@
     let selectedPickupAddress = null;
 
     function getCart() { return JSON.parse(sessionStorage.getItem(CART_KEY) || '[]'); }
-    function saveCart(c) { sessionStorage.setItem(CART_KEY, JSON.stringify(c)); renderAll(); }
+    function saveCart(c) {
+      sessionStorage.setItem(CART_KEY, JSON.stringify(c));
+      renderAll();
+      // Update aria-live region for screen readers
+      const totalItems = c.reduce((s, i) => s + i.quantity, 0);
+      const status = document.getElementById('cart-status');
+      if (status) status.textContent = totalItems + ' item' + (totalItems !== 1 ? 's' : '') + ' in cart.';
+    }
 
     // ── LOCATION STEP ────────────────────────────────────────────────────────────
     function pickLocation(value, address, phone, phoneDisplay, cardEl) {
@@ -569,8 +617,8 @@
 
         const meatHTML = showMeat ? `
           <div class="ie-row">
-            <div class="ie-label">Meat</div>
-            <select class="ie-meat-sel" id="ie-meat-${idx}" aria-label="Choose meat">
+            <label class="ie-label" for="ie-meat-${idx}">Meat</label>
+            <select class="ie-meat-sel" id="ie-meat-${idx}" aria-label="Choose meat for ${item.name}">
               ${MEATS.map(m => `<option value="${m}"${m === item.meatChoice ? ' selected' : ''}>${m}</option>`).join('')}
             </select>
           </div>` : '';
@@ -742,28 +790,54 @@
 
     function renderAll() { renderCart(); renderSummary(); }
 
+    // ── VALIDATION HELPERS ────────────────────────────────────────────────────────
+    function setFieldError(inputId, errorId, hasError) {
+      const input = document.getElementById(inputId);
+      const errorEl = document.getElementById(errorId);
+      if (input) input.setAttribute('aria-invalid', hasError ? 'true' : 'false');
+      if (errorEl) errorEl.classList.toggle('visible', hasError);
+    }
+
+    function clearAllErrors() {
+      [
+        ['customer-name','name-error'],
+        ['customer-phone','phone-error'],
+        ['pickup-time','pickup-time-error'],
+        ['delivery-street','street-error'],
+        ['delivery-city','city-error'],
+        ['delivery-zip','zip-error'],
+      ].forEach(([input, err]) => setFieldError(input, err, false));
+    }
+
     // ── PLACE ORDER ──────────────────────────────────────────────────────────────
     document.getElementById('place-order-btn').addEventListener('click', async () => {
       const cart = getCart();
       if (cart.length === 0) { alert('Your cart is empty.'); return; }
+      clearAllErrors();
+
       const name = document.getElementById('customer-name').value.trim();
       const phone = document.getElementById('customer-phone').value.trim();
       const notes = document.getElementById('order-notes').value.trim();
-      if (!name) { document.getElementById('customer-name').focus(); return; }
-      if (!phone) { document.getElementById('customer-phone').focus(); return; }
+
+      let hasError = false;
+      if (!name) { setFieldError('customer-name', 'name-error', true); document.getElementById('customer-name').focus(); hasError = true; }
+      if (!phone) { setFieldError('customer-phone', 'phone-error', true); if (!hasError) { document.getElementById('customer-phone').focus(); } hasError = true; }
+      if (hasError) return;
 
       let location = '', pickupTime = '', deliveryAddress = '';
       if (fulfillmentMode === 'pickup') {
         pickupTime = document.getElementById('pickup-time').value;
         location = selectedPickupAddress || selectedPickupLocation || '';
-        if (!pickupTime) { document.getElementById('pickup-time').focus(); return; }
+        if (!pickupTime) { setFieldError('pickup-time', 'pickup-time-error', true); document.getElementById('pickup-time').focus(); return; }
       } else {
         const street = document.getElementById('delivery-street').value.trim();
         const city = document.getElementById('delivery-city').value.trim();
         const zip = document.getElementById('delivery-zip').value.trim();
-        if (!street) { document.getElementById('delivery-street').focus(); return; }
-        if (!city) { document.getElementById('delivery-city').focus(); return; }
-        if (!zip) { document.getElementById('delivery-zip').focus(); return; }
+        let deliveryError = false;
+        if (!street) { setFieldError('delivery-street', 'street-error', true); deliveryError = true; }
+        if (!city) { setFieldError('delivery-city', 'city-error', true); deliveryError = true; }
+        if (!zip) { setFieldError('delivery-zip', 'zip-error', true); deliveryError = true; }
+        if (deliveryError) { if (!street) document.getElementById('delivery-street').focus(); else if (!city) document.getElementById('delivery-city').focus(); else document.getElementById('delivery-zip').focus(); return; }
         deliveryAddress = `${street}, ${city}, CA ${zip}`;
       }
 

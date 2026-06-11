@@ -60,6 +60,7 @@
     .nav-links { display: flex; align-items: center; gap: 32px; }
     .nav-link { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cream); text-decoration: none; opacity: 0.65; transition: opacity 0.2s ease, color 0.2s ease; }
     .nav-link:hover { opacity: 1; color: var(--red); }
+    .nav-link:focus-visible { opacity: 1; color: var(--red); outline: 2px solid var(--red); outline-offset: 4px; border-radius: 2px; }
     .nav-link.active { opacity: 1; color: var(--gold); }
     .btn-nav {
       display: inline-flex; align-items: center; gap: 8px;
@@ -71,6 +72,7 @@
     }
     .btn-nav:hover { background: var(--red-dark); transform: translateY(-2px); }
     .btn-nav:active { transform: translateY(0); }
+    .btn-nav:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
     #cart-badge { background: var(--gold); color: var(--light); border-radius: 50%; width: 18px; height: 18px; font-size: 10px; font-weight: 700; display: none; align-items: center; justify-content: center; }
 
     /* SHARED BUTTONS */
@@ -84,6 +86,7 @@
     }
     .btn-red:hover { background: var(--red-dark); transform: translateY(-3px); box-shadow: 0 8px 32px var(--red-glow); }
     .btn-red:active { transform: translateY(0); }
+    .btn-red:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
     .btn-ghost {
       display: inline-flex; align-items: center; gap: 10px;
       padding: 15px 36px; background: transparent; color: var(--cream);
@@ -94,6 +97,7 @@
     }
     .btn-ghost:hover { border-color: rgba(44,24,16,0.45); background: rgba(44,24,16,0.04); transform: translateY(-3px); }
     .btn-ghost:active { transform: translateY(0); }
+    .btn-ghost:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
     /* PAGE HERO */
     .page-hero {
@@ -228,13 +232,32 @@
       .nav-locs-desktop { display: none; }
       .nav-locs-mobile { display: flex; }
     }
+
+    /* ── ACCESSIBILITY ── */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    :focus-visible {
+      outline: 3px solid var(--red);
+      outline-offset: 3px;
+    }
+    *:focus:not(:focus-visible) {
+      outline: none;
+    }
+    /* Minimum touch targets */
+    .nav-link, .nav-loc, .foot-link {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
   </style>
 </head>
 <body>
   <a href="#main-content" class="skip-link" style="position:absolute;top:-40px;left:0;background:var(--red);color:#FFF8F0;padding:8px 16px;font-size:13px;font-weight:600;z-index:10000;text-decoration:none;border-radius:0 0 4px 0;transition:top 0.2s ease;" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to main content</a>
 
   <!-- NAV -->
-  <nav id="nav">
+  <nav id="nav" aria-label="Main navigation">
     <div class="nav-topbar">
       <div class="nav-topbar-inner">
         <div class="nav-locs-desktop">
@@ -268,8 +291,10 @@
     </div>
   </nav>
 
+  <!-- MAIN CONTENT -->
+  <main id="main-content" tabindex="-1">
   <!-- PAGE HERO -->
-  <section class="page-hero" id="main-content" style="padding-top:120px;">
+  <section class="page-hero" style="padding-top:120px;">
     <div class="page-hero-bg"></div>
     <div class="page-hero-img">
       <img src="brand_assets/images/img-09.png" alt="Green enchiladas with rice and beans" style="width:100%; height:100%; object-fit:cover; object-position:center; filter:brightness(0.75) contrast(1.05) saturate(1.1);">
@@ -421,8 +446,8 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
               Call to Order
             </a>
-            <a href="https://maps.google.com/?q=5899+Santa+Teresa+Blvd+109+San+Jose+CA+95123" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); text-decoration:none; opacity:0.8; white-space:nowrap; transition:opacity 0.2s ease;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <a href="https://maps.google.com/?q=5899+Santa+Teresa+Blvd+109+San+Jose+CA+95123" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); text-decoration:none; opacity:0.8; white-space:nowrap; transition:opacity 0.2s ease;" aria-label="Get directions to Santa Teresa Blvd location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
               Directions
             </a>
           </div>
@@ -446,8 +471,8 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
               Call to Order
             </a>
-            <a href="https://maps.google.com/?q=426+W+Capitol+Expy+San+Jose+CA+95136" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); text-decoration:none; opacity:0.8; white-space:nowrap; transition:opacity 0.2s ease;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <a href="https://maps.google.com/?q=426+W+Capitol+Expy+San+Jose+CA+95136" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); text-decoration:none; opacity:0.8; white-space:nowrap; transition:opacity 0.2s ease;" aria-label="Get directions to W Capitol Expressway location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
               Directions
             </a>
           </div>
@@ -471,6 +496,8 @@
       </div>
     </div>
   </section>
+
+  </main><!-- end #main-content -->
 
   <!-- FOOTER -->
   <footer>
@@ -500,6 +527,9 @@
     </div>
   </footer>
 
+  <!-- Aria-live region for cart updates (screen readers) -->
+  <div aria-live="polite" aria-atomic="true" class="sr-only" id="cart-status"></div>
+
   <script>
     function updateCartBadge() {
       const cart = JSON.parse(sessionStorage.getItem('elCoral_cart') || '[]');
@@ -508,6 +538,7 @@
       if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
     }
     updateCartBadge();
+    window.addEventListener('storage', updateCartBadge);
   </script>
 
   <div id="global-call-dd" style="display:none;position:fixed;background:#1a0a00;border:1px solid rgba(232,148,15,0.28);border-radius:10px;padding:8px 0;min-width:230px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.6);">
