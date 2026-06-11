@@ -501,7 +501,7 @@
 
   <script>
     function updateCartBadge() {
-      const cart = JSON.parse(localStorage.getItem('elCoral_cart') || '[]');
+      const cart = JSON.parse(sessionStorage.getItem('elCoral_cart') || '[]');
       const count = cart.reduce((s, i) => s + i.quantity, 0);
       const badge = document.getElementById('cart-badge');
       if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }

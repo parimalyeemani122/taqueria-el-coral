@@ -452,8 +452,8 @@
     let selectedPickupLocation = null;
     let selectedPickupAddress = null;
 
-    function getCart() { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
-    function saveCart(c) { localStorage.setItem(CART_KEY, JSON.stringify(c)); renderAll(); }
+    function getCart() { return JSON.parse(sessionStorage.getItem(CART_KEY) || '[]'); }
+    function saveCart(c) { sessionStorage.setItem(CART_KEY, JSON.stringify(c)); renderAll(); }
 
     // ── LOCATION STEP ────────────────────────────────────────────────────────────
     function pickLocation(value, address, phone, phoneDisplay, cardEl) {
@@ -784,7 +784,7 @@
         catch (err) { console.warn('Webhook error (order still confirmed):', err); }
       }
 
-      localStorage.removeItem(CART_KEY);
+      sessionStorage.removeItem(CART_KEY);
 
       setTimeout(() => {
         document.getElementById('order-form-wrap').style.display = 'none';
