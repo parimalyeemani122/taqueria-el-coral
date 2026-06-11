@@ -340,18 +340,19 @@
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link" style="position:absolute;top:-40px;left:0;background:var(--red);color:#FFF8F0;padding:8px 16px;font-size:13px;font-weight:600;z-index:10000;text-decoration:none;border-radius:0 0 4px 0;transition:top 0.2s ease;" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to main content</a>
 
   <!-- NAV -->
   <nav id="nav">
     <div class="nav-topbar">
       <div class="nav-topbar-inner">
         <div class="nav-locs-desktop">
-          <a href="https://maps.google.com/?q=5899+Santa+Teresa+Blvd+109+San+Jose+CA+95123" target="_blank" rel="noopener" class="nav-loc">📍 5899 Santa Teresa Blvd #109 · (408) 578-4077</a>
+          <a href="https://maps.google.com/?q=5899+Santa+Teresa+Blvd+109+San+Jose+CA+95123" target="_blank" rel="noopener" class="nav-loc"><span aria-hidden="true">📍</span> 5899 Santa Teresa Blvd #109 · (408) 578-4077</a>
           <span class="nav-loc-sep">·</span>
-          <a href="https://maps.google.com/?q=426+W+Capitol+Expy+San+Jose+CA+95136" target="_blank" rel="noopener" class="nav-loc">📍 426 W Capitol Expy · (408) 229-2190</a>
+          <a href="https://maps.google.com/?q=426+W+Capitol+Expy+San+Jose+CA+95136" target="_blank" rel="noopener" class="nav-loc"><span aria-hidden="true">📍</span> 426 W Capitol Expy · (408) 229-2190</a>
         </div>
         <div class="nav-locs-mobile">
-          <a href="about.html#locations" class="nav-loc">📍 2 Locations in San Jose</a>
+          <a href="about.html#locations" class="nav-loc"><span aria-hidden="true">📍</span> 2 Locations in San Jose</a>
         </div>
       </div>
     </div>
@@ -363,7 +364,7 @@
         <a href="menu.html" class="nav-link active">Menu</a>
         <a href="about.html" class="nav-link">About</a>
         <div style="display:flex;align-items:center;gap:14px;">
-          <button id="nav-call-btn" onclick="openCallDd(this)" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--cream-dim);background:none;border:none;cursor:pointer;padding:0;transition:color 0.15s ease;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--cream-dim)'">
+          <button id="nav-call-btn" aria-label="Call to order" onclick="openCallDd(this)" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--cream-dim);background:none;border:none;cursor:pointer;padding:0;transition:color 0.15s ease;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--cream-dim)'">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
             Call
           </button>
@@ -391,22 +392,22 @@
   </div>
 
   <!-- MAIN LAYOUT -->
-  <div class="menu-layout" style="padding-top:0;">
+  <div class="menu-layout" id="main-content" style="padding-top:0;">
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <nav class="sidebar-nav">
         <div class="sidebar-heading">Categories</div>
-        <a href="#tacos" class="sidebar-link active"><span class="icon">🌮</span> Tacos</a>
-        <a href="#meals" class="sidebar-link"><span class="icon">🍽️</span> Meals</a>
-        <a href="#burritos" class="sidebar-link"><span class="icon">🌯</span> Burritos</a>
-        <a href="#seafood" class="sidebar-link"><span class="icon">🦐</span> Seafood</a>
-        <a href="#breakfast" class="sidebar-link"><span class="icon">🍳</span> Breakfast</a>
-        <a href="#grilled" class="sidebar-link"><span class="icon">🥩</span> Grilled Platters</a>
-        <a href="#kids" class="sidebar-link"><span class="icon">⭐</span> Kids Menu</a>
-        <a href="#specials" class="sidebar-link"><span class="icon">🌟</span> Specials</a>
-        <a href="#sides" class="sidebar-link"><span class="icon">🍚</span> Sides</a>
-        <a href="#drinks" class="sidebar-link"><span class="icon">🥤</span> Drinks</a>
+        <a href="#tacos" class="sidebar-link active"><span class="icon" aria-hidden="true">🌮</span> Tacos</a>
+        <a href="#meals" class="sidebar-link"><span class="icon" aria-hidden="true">🍽️</span> Meals</a>
+        <a href="#burritos" class="sidebar-link"><span class="icon" aria-hidden="true">🌯</span> Burritos</a>
+        <a href="#seafood" class="sidebar-link"><span class="icon" aria-hidden="true">🦐</span> Seafood</a>
+        <a href="#breakfast" class="sidebar-link"><span class="icon" aria-hidden="true">🍳</span> Breakfast</a>
+        <a href="#grilled" class="sidebar-link"><span class="icon" aria-hidden="true">🥩</span> Grilled Platters</a>
+        <a href="#kids" class="sidebar-link"><span class="icon" aria-hidden="true">⭐</span> Kids Menu</a>
+        <a href="#specials" class="sidebar-link"><span class="icon" aria-hidden="true">🌟</span> Specials</a>
+        <a href="#sides" class="sidebar-link"><span class="icon" aria-hidden="true">🍚</span> Sides</a>
+        <a href="#drinks" class="sidebar-link"><span class="icon" aria-hidden="true">🥤</span> Drinks</a>
       </nav>
     </aside>
 

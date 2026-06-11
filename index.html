@@ -480,18 +480,19 @@
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link" style="position:absolute;top:-40px;left:0;background:var(--red);color:#FFF8F0;padding:8px 16px;font-size:13px;font-weight:600;z-index:10000;text-decoration:none;border-radius:0 0 4px 0;transition:top 0.2s ease;" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to main content</a>
 
   <!-- NAV -->
   <nav id="nav">
     <div class="nav-topbar" id="nav-topbar">
       <div class="nav-topbar-inner">
         <div class="nav-locs-desktop">
-          <a href="https://maps.google.com/?q=5899+Santa+Teresa+Blvd+109+San+Jose+CA+95123" target="_blank" rel="noopener" class="nav-loc">📍 5899 Santa Teresa Blvd #109 · (408) 578-4077</a>
+          <a href="https://maps.google.com/?q=5899+Santa+Teresa+Blvd+109+San+Jose+CA+95123" target="_blank" rel="noopener" class="nav-loc"><span aria-hidden="true">📍</span> 5899 Santa Teresa Blvd #109 · (408) 578-4077</a>
           <span class="nav-loc-sep">·</span>
-          <a href="https://maps.google.com/?q=426+W+Capitol+Expy+San+Jose+CA+95136" target="_blank" rel="noopener" class="nav-loc">📍 426 W Capitol Expy · (408) 229-2190</a>
+          <a href="https://maps.google.com/?q=426+W+Capitol+Expy+San+Jose+CA+95136" target="_blank" rel="noopener" class="nav-loc"><span aria-hidden="true">📍</span> 426 W Capitol Expy · (408) 229-2190</a>
         </div>
         <div class="nav-locs-mobile">
-          <a href="#locations" class="nav-loc">📍 2 Locations in San Jose</a>
+          <a href="#locations" class="nav-loc"><span aria-hidden="true">📍</span> 2 Locations in San Jose</a>
         </div>
       </div>
     </div>
@@ -504,7 +505,7 @@
           <a href="menu.html" class="nav-link">Menu</a>
           <a href="about.html" class="nav-link">About</a>
           <div style="display:flex;align-items:center;gap:14px;">
-            <button id="nav-call-btn" onclick="openCallDd(this)" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--cream-dim);background:none;border:none;cursor:pointer;padding:0;transition:color 0.15s ease;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--cream-dim)'">
+            <button id="nav-call-btn" aria-label="Call to order" onclick="openCallDd(this)" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--cream-dim);background:none;border:none;cursor:pointer;padding:0;transition:color 0.15s ease;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--cream-dim)'">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
               Call
             </button>
@@ -519,7 +520,7 @@
   </nav>
 
   <!-- HERO -->
-  <section class="hero">
+  <section class="hero" id="main-content">
     <div class="hero-bg"></div>
 
     <div class="hero-img-wrap">
@@ -716,10 +717,10 @@
           <img src="brand_assets/images/img-01.png" alt="Taqueria El Coral" style="height:80px; width:auto; filter:drop-shadow(0 3px 12px rgba(44,24,16,0.15));">
           <div class="foot-tagline" style="margin-top:12px;">Authentic Mexican flavors,<br>made with love.</div>
           <div style="display:flex; gap:12px; margin-top:28px;">
-            <a href="https://www.facebook.com/profile.php?id=100094609569474" target="_blank" rel="noopener" class="foot-social" aria-label="Facebook">
+            <a href="https://www.facebook.com/profile.php?id=100094609569474" target="_blank" rel="noopener" class="foot-social" aria-label="Follow us on Facebook">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
             </a>
-            <a href="https://www.instagram.com/taquerialelcoral1/" target="_blank" rel="noopener" class="foot-social" aria-label="Instagram">
+            <a href="https://www.instagram.com/taquerialelcoral1/" target="_blank" rel="noopener" class="foot-social" aria-label="Follow us on Instagram">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
             </a>
           </div>
