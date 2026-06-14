@@ -898,7 +898,7 @@
 
       const btn = document.getElementById('place-order-btn');
       btn.disabled = true;
-      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Sending to Maya...`;
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Sending to Assistant...`;
       openMayaModal(payload);
     });
 
@@ -930,7 +930,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
         </div>
         <div class="maya-header-text">
-          <div class="maya-header-name" id="maya-modal-title">Review with Maya</div>
+          <div class="maya-header-name" id="maya-modal-title">Review with Assistant</div>
           <div class="maya-header-sub">Chat to review your order, then confirm when ready</div>
         </div>
         <button class="maya-close" id="maya-close-btn" aria-label="Close order review">
@@ -939,7 +939,7 @@
       </div>
       <div class="maya-messages" id="maya-messages" aria-live="polite" aria-label="Chat messages"></div>
       <div class="maya-input-row">
-        <textarea class="maya-textarea" id="maya-textarea" placeholder="Ask Maya anything about your order..." rows="1" aria-label="Message Maya"></textarea>
+        <textarea class="maya-textarea" id="maya-textarea" placeholder="Ask the Assistant anything about your order..." rows="1" aria-label="Message Assistant"></textarea>
         <button class="maya-send" id="maya-send-btn" aria-label="Send message" disabled>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>

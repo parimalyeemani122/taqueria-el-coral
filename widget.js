@@ -157,15 +157,15 @@
   const html = `
     <button id="maya-widget-btn" aria-label="Open chat">
       💬
-      <span class="maya-btn-label">Chat with Maya</span>
+      <span class="maya-btn-label">Chat with Assistant</span>
       <span class="maya-badge" id="maya-badge">1</span>
     </button>
-    <div id="maya-widget-panel" role="dialog" aria-label="Maya Chat">
+    <div id="maya-widget-panel" role="dialog" aria-label="AI Assistant Chat">
       <div class="maya-header">
-        <div class="maya-avatar">M</div>
+        <div class="maya-avatar">AI</div>
         <div class="maya-header-info">
           <div class="maya-header-name">${restaurantName}</div>
-          <div class="maya-header-sub">Maya · AI Order Assistant</div>
+          <div class="maya-header-sub">AI Order Assistant</div>
         </div>
         <button class="maya-close" id="maya-close" aria-label="Close">×</button>
       </div>
@@ -229,7 +229,7 @@
   closeBtn.addEventListener('click', closePanel);
 
   function renderWelcome() {
-    const welcome = `Welcome to ${restaurantName}! I'm Maya, your order assistant. I can take your order, tell you about the menu, or answer any questions. What can I get you today?`;
+    const welcome = `Welcome to ${restaurantName}! I'm your AI order assistant. I can take your order, tell you about the menu, or answer any questions. What can I get you today?`;
     history = [{ role: 'assistant', content: welcome }];
     saveHistory(history);
     appendBubble('bot', welcome);

@@ -41,7 +41,7 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'Missing ANTHROPIC_API_KEY environment variable' });
   }
 
-  const systemPrompt = `You are Maya, a friendly restaurant order assistant for Taqueria El Coral. Help customers with the menu, answer questions about the restaurant, and guide them toward placing an order in a warm, conversational, natural tone. Keep responses concise and helpful. If you do not know an answer, say so honestly.`;
+  const systemPrompt = `You are a friendly restaurant order assistant for Taqueria El Coral. Help customers with the menu, answer questions about the restaurant, and guide them toward placing an order in a warm, conversational, natural tone. Keep responses concise and helpful. If you do not know an answer, say so honestly.`;
 
   const chatMessages = [
     { role: 'system', content: systemPrompt },
