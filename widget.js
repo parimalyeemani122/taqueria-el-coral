@@ -40,15 +40,16 @@
   const css = `
     #maya-widget-btn {
       position: fixed; bottom: 24px; ${position}: 24px; z-index: 99998;
-      width: 60px; height: 60px; border-radius: 50%;
+      height: 52px; border-radius: 26px; padding: 0 20px 0 16px;
       background: ${primaryColor}; color: #fff; border: none; cursor: pointer;
-      font-size: 26px; box-shadow: 0 4px 20px rgba(0,0,0,.25);
-      display: flex; align-items: center; justify-content: center;
-      transition: transform .2s, box-shadow .2s;
+      font-size: 20px; box-shadow: 0 4px 20px rgba(0,0,0,.25);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: transform .2s, box-shadow .2s; white-space: nowrap;
     }
-    #maya-widget-btn:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(0,0,0,.3); }
+    #maya-widget-btn:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(0,0,0,.3); }
+    #maya-widget-btn .maya-btn-label { font-size: 14px; font-weight: 600; letter-spacing: 0.01em; }
     #maya-widget-btn .maya-badge {
-      position: absolute; top: -4px; right: -4px;
+      position: absolute; top: -6px; right: -6px;
       background: #ef4444; color: #fff; font-size: 11px; font-weight: 700;
       width: 20px; height: 20px; border-radius: 50%; display: none;
       align-items: center; justify-content: center; border: 2px solid #fff;
@@ -156,6 +157,7 @@
   const html = `
     <button id="maya-widget-btn" aria-label="Open chat">
       💬
+      <span class="maya-btn-label">Chat with Maya</span>
       <span class="maya-badge" id="maya-badge">1</span>
     </button>
     <div id="maya-widget-panel" role="dialog" aria-label="Maya Chat">

@@ -219,6 +219,45 @@
       display: none;
     }
     .field-error.visible { display: block; }
+
+    /* MAYA CHAT MODAL */
+    #maya-modal { display:none; position:fixed; inset:0; z-index:9100; background:rgba(44,24,16,0.78); backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:20px; }
+    #maya-modal.open { display:flex; }
+    .maya-box { background:var(--bg); border:1px solid rgba(44,24,16,0.12); border-radius:16px; width:100%; max-width:560px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 80px rgba(44,24,16,0.35), 0 0 0 1px rgba(232,148,15,0.08); overflow:hidden; }
+    .maya-header { padding:20px 24px 16px; border-bottom:1px solid rgba(44,24,16,0.08); display:flex; align-items:center; gap:14px; flex-shrink:0; }
+    .maya-avatar-wrap { width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,var(--red),var(--red-dark)); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 4px 12px var(--red-glow); }
+    .maya-header-text { flex:1; min-width:0; }
+    .maya-header-name { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.04em; color:var(--cream); line-height:1; }
+    .maya-header-sub { font-size:12px; color:var(--cream-dim); opacity:0.55; margin-top:2px; }
+    .maya-close { background:none; border:none; cursor:pointer; color:var(--cream-dim); opacity:0.45; padding:6px; border-radius:6px; transition:opacity 0.15s ease, background 0.15s ease; flex-shrink:0; }
+    .maya-close:hover { opacity:1; background:rgba(44,24,16,0.06); }
+    .maya-close:focus-visible { outline:2px solid var(--red); outline-offset:2px; opacity:1; }
+    .maya-messages { flex:1; overflow-y:auto; padding:20px 24px; display:flex; flex-direction:column; gap:16px; scroll-behavior:smooth; }
+    .maya-msg { display:flex; gap:10px; }
+    .maya-msg.user { flex-direction:row-reverse; }
+    .maya-bubble { max-width:82%; padding:12px 16px; font-size:14px; line-height:1.65; }
+    .maya-msg.bot .maya-bubble { background:var(--bg2); border:1px solid rgba(44,24,16,0.08); border-radius:4px 12px 12px 12px; color:var(--cream); box-shadow:0 1px 4px rgba(44,24,16,0.05); }
+    .maya-msg.user .maya-bubble { background:var(--red); color:var(--light); border-radius:12px 4px 12px 12px; box-shadow:0 2px 8px var(--red-glow); }
+    .maya-msg-time { font-size:11px; opacity:0.38; margin-top:5px; }
+    .maya-msg.user .maya-msg-time { text-align:right; }
+    .maya-typing-bubble { background:var(--bg2); border:1px solid rgba(44,24,16,0.08); border-radius:4px 12px 12px 12px; padding:14px 18px; display:flex; gap:5px; align-items:center; box-shadow:0 1px 4px rgba(44,24,16,0.05); }
+    .maya-typing-bubble span { width:7px; height:7px; border-radius:50%; background:var(--cream-dim); opacity:0.35; animation:maya-dot 1.2s ease-in-out infinite; }
+    .maya-typing-bubble span:nth-child(2) { animation-delay:0.18s; }
+    .maya-typing-bubble span:nth-child(3) { animation-delay:0.36s; }
+    @keyframes maya-dot { 0%,60%,100%{transform:translateY(0);opacity:0.35;} 30%{transform:translateY(-6px);opacity:0.85;} }
+    .maya-input-row { padding:14px 20px; border-top:1px solid rgba(44,24,16,0.08); display:flex; gap:10px; align-items:flex-end; flex-shrink:0; }
+    .maya-textarea { flex:1; background:var(--bg2); border:1.5px solid rgba(44,24,16,0.12); border-radius:10px; padding:10px 14px; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--cream); outline:none; resize:none; line-height:1.5; max-height:120px; overflow-y:auto; transition:border-color 0.2s ease; }
+    .maya-textarea:focus { border-color:rgba(217,79,43,0.4); }
+    .maya-textarea::placeholder { color:var(--cream-dim); opacity:0.4; }
+    .maya-send { background:var(--red); color:var(--light); border:none; border-radius:10px; width:42px; height:42px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background 0.2s ease, transform 0.15s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease; box-shadow:0 2px 8px var(--red-glow); }
+    .maya-send:hover:not(:disabled) { background:var(--red-dark); transform:translateY(-1px); box-shadow:0 4px 12px var(--red-glow); }
+    .maya-send:active:not(:disabled) { transform:translateY(0); }
+    .maya-send:disabled { opacity:0.35; cursor:not-allowed; box-shadow:none; }
+    .maya-footer { padding:0 20px 20px; flex-shrink:0; }
+    .maya-confirm-btn { width:100%; padding:15px; background:var(--red); color:var(--light); border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; letter-spacing:0.04em; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:background 0.2s ease, transform 0.15s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease; box-shadow:0 4px 16px var(--red-glow); }
+    .maya-confirm-btn:hover:not(:disabled) { background:var(--red-dark); transform:translateY(-2px); box-shadow:0 8px 24px var(--red-glow); }
+    .maya-confirm-btn:active:not(:disabled) { transform:translateY(0); }
+    .maya-confirm-btn:disabled { opacity:0.45; cursor:not-allowed; transform:none; box-shadow:none; }
   </style>
 </head>
 <body>
@@ -859,29 +898,8 @@
 
       const btn = document.getElementById('place-order-btn');
       btn.disabled = true;
-      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Placing Order...`;
-
-      const webhookUrl = (typeof CONFIG !== 'undefined' && CONFIG.webhookUrl) ? CONFIG.webhookUrl : '';
-      if (webhookUrl) {
-        try { await fetch(webhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); }
-        catch (err) { console.warn('Webhook error (order still confirmed):', err); }
-      }
-
-      sessionStorage.removeItem(CART_KEY);
-
-      setTimeout(() => {
-        document.getElementById('order-form-wrap').style.display = 'none';
-        document.getElementById('confirmation').style.display = 'block';
-        document.getElementById('confirm-order-id').textContent = `#${orderId}`;
-        const isDelivery = fulfillmentMode === 'delivery';
-        document.getElementById('confirm-tagline').textContent = isDelivery
-          ? 'Your order is on its way! Estimated delivery: 35–50 min.'
-          : "We'll have it ready for pickup at your selected location.";
-        document.getElementById('confirm-details').innerHTML = isDelivery
-          ? `<strong style="color:var(--cream);">🚗 Delivery to ${deliveryAddress}</strong><br><strong style="color:var(--cream);">⏱ Estimated: 35–50 min</strong><br><strong style="color:var(--cream);">👤 ${name}</strong> · ${phone}<br><strong style="color:var(--gold);">Total: $${total.toFixed(2)}</strong> (pay at door)`
-          : `<strong style="color:var(--cream);">📍 ${location}</strong><br><strong style="color:var(--cream);">🕐 Pickup at ${pickupTime}</strong><br><strong style="color:var(--cream);">👤 ${name}</strong> · ${phone}<br><strong style="color:var(--gold);">Total: $${total.toFixed(2)}</strong> (pay at pickup)`;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 800);
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Sending to Maya...`;
+      openMayaModal(payload);
     });
 
     // Close active inline edit panel on Escape
@@ -902,6 +920,270 @@
     const style = document.createElement('style');
     style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
     document.head.appendChild(style);
+  </script>
+
+  <!-- Maya Order Confirmation Modal -->
+  <div id="maya-modal" role="dialog" aria-modal="true" aria-labelledby="maya-modal-title" aria-hidden="true">
+    <div class="maya-box">
+      <div class="maya-header">
+        <div class="maya-avatar-wrap" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="maya-header-text">
+          <div class="maya-header-name" id="maya-modal-title">Review with Maya</div>
+          <div class="maya-header-sub">Chat to review your order, then confirm when ready</div>
+        </div>
+        <button class="maya-close" id="maya-close-btn" aria-label="Close order review">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="maya-messages" id="maya-messages" aria-live="polite" aria-label="Chat messages"></div>
+      <div class="maya-input-row">
+        <textarea class="maya-textarea" id="maya-textarea" placeholder="Ask Maya anything about your order..." rows="1" aria-label="Message Maya"></textarea>
+        <button class="maya-send" id="maya-send-btn" aria-label="Send message" disabled>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+      <div class="maya-footer">
+        <button class="maya-confirm-btn" id="maya-confirm-btn" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Confirm &amp; Place Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Maya chat modal ──────────────────────────────────────────────────
+    let _mayaSessionId = null;
+    let _mayaHistory  = [];   // [{role, content}] conversation sent to /api/chat
+    let _mayaPayload  = null; // order payload held until confirm
+
+    function _mayaGenId() {
+      return 'ec-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+    }
+
+    function _formatOrderMsg(p) {
+      const lines = ['Hi! Please review and confirm my order:\n'];
+      p.items.forEach(function(i) {
+        let line = '• ' + i.quantity + '× ' + i.name + ' — $' + (i.price * i.quantity).toFixed(2);
+        if (i.meatChoice) line += ' (' + i.meatChoice + ')';
+        if (i.excludedIngredients && i.excludedIngredients.length) line += ', no ' + i.excludedIngredients.join(', ');
+        lines.push(line);
+      });
+      lines.push('');
+      lines.push('Name: ' + p.customer.name);
+      lines.push('Phone: ' + p.customer.phone);
+      if (p.fulfillment === 'pickup') {
+        lines.push('Pickup: ' + (p.location || '') + (p.pickupTime ? ' at ' + p.pickupTime : ''));
+      } else {
+        lines.push('Delivery to: ' + (p.deliveryAddress || ''));
+      }
+      if (p.notes) lines.push('Notes: ' + p.notes);
+      lines.push('\nSubtotal: $' + p.subtotal.toFixed(2) + '  |  Tax: $' + p.tax.toFixed(2) + '  |  Total: $' + p.total.toFixed(2));
+      lines.push('\nPlease confirm this looks right!');
+      return lines.join('\n');
+    }
+
+    function _mayaTime() {
+      return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function _mayaSanitize(text) {
+      return text
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/\n/g, '<br>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    }
+
+    function _mayaAppendMsg(role, text) {
+      var msgs = document.getElementById('maya-messages');
+      var wrap = document.createElement('div');
+      wrap.className = 'maya-msg ' + role;
+      if (role === 'bot') {
+        wrap.innerHTML =
+          '<div class="maya-avatar-wrap" style="width:32px;height:32px;flex-shrink:0;" aria-hidden="true">' +
+            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>' +
+          '</div>' +
+          '<div>' +
+            '<div class="maya-bubble">' + _mayaSanitize(text) + '</div>' +
+            '<div class="maya-msg-time">' + _mayaTime() + '</div>' +
+          '</div>';
+      } else {
+        wrap.innerHTML =
+          '<div>' +
+            '<div class="maya-bubble">' + _mayaSanitize(text) + '</div>' +
+            '<div class="maya-msg-time">' + _mayaTime() + '</div>' +
+          '</div>';
+      }
+      msgs.appendChild(wrap);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function _mayaShowTyping() {
+      var msgs = document.getElementById('maya-messages');
+      var row = document.createElement('div');
+      row.className = 'maya-msg bot';
+      row.id = 'maya-typing-row';
+      row.innerHTML =
+        '<div class="maya-avatar-wrap" style="width:32px;height:32px;flex-shrink:0;" aria-hidden="true">' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>' +
+        '</div>' +
+        '<div class="maya-typing-bubble"><span></span><span></span><span></span></div>';
+      msgs.appendChild(row);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function _mayaHideTyping() {
+      var el = document.getElementById('maya-typing-row');
+      if (el) el.remove();
+    }
+
+    async function _mayaSend(userText) {
+      var chatbotUrl = (typeof CONFIG !== 'undefined' && CONFIG.chatbotUrl)
+        ? CONFIG.chatbotUrl.replace(/\/$/, '') : '';
+
+      _mayaHistory.push({ role: 'user', content: userText });
+
+      var sendBtn   = document.getElementById('maya-send-btn');
+      var textarea  = document.getElementById('maya-textarea');
+      var confirmBtn = document.getElementById('maya-confirm-btn');
+      sendBtn.disabled  = true;
+      textarea.disabled = true;
+      _mayaShowTyping();
+
+      try {
+        var res = await fetch(chatbotUrl + '/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: _mayaHistory, sessionId: _mayaSessionId, restaurantId: 'el-coral-001' })
+        });
+        var data = await res.json();
+        _mayaHideTyping();
+        var reply = (data && data.content) ? data.content : (data && data.error) ? data.error : 'Something went wrong — please try again.';
+        _mayaHistory.push({ role: 'assistant', content: reply });
+        _mayaAppendMsg('bot', reply);
+        confirmBtn.disabled = false;
+      } catch (err) {
+        _mayaHideTyping();
+        _mayaAppendMsg('bot', 'I had trouble connecting right now. Your order details are saved — click Confirm & Place Order to proceed anyway.');
+        console.warn('Maya chat error:', err);
+        confirmBtn.disabled = false;
+      } finally {
+        sendBtn.disabled  = !textarea.value.trim();
+        textarea.disabled = false;
+        textarea.focus();
+      }
+    }
+
+    function openMayaModal(payload) {
+      _mayaSessionId = _mayaGenId();
+      _mayaHistory   = [];
+      _mayaPayload   = payload;
+
+      document.getElementById('maya-messages').innerHTML = '';
+      document.getElementById('maya-confirm-btn').disabled = true;
+      document.getElementById('maya-textarea').value = '';
+      document.getElementById('maya-send-btn').disabled = true;
+
+      var modal = document.getElementById('maya-modal');
+      modal.classList.add('open');
+      modal.removeAttribute('aria-hidden');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('maya-close-btn').focus();
+
+      var firstMsg = _formatOrderMsg(payload);
+      _mayaAppendMsg('user', firstMsg);
+      _mayaSend(firstMsg);
+    }
+
+    function _closeMayaModal() {
+      var modal = document.getElementById('maya-modal');
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      // Restore Place Order button so customer can retry if they want
+      var btn = document.getElementById('place-order-btn');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Place Order';
+      }
+    }
+
+    function _finalizeMayaOrder() {
+      var p = _mayaPayload;
+      if (!p) return;
+
+      var confirmBtn = document.getElementById('maya-confirm-btn');
+      confirmBtn.disabled = true;
+      confirmBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Placing Order...';
+
+      // TODO: connect confirmed order to restaurant dashboard.
+      // The dashboard will need to receive:
+      //   - p.customer.name       (customer name)
+      //   - p.items               (list of items: name, quantity, price, meatChoice, excludedIngredients)
+      //   - p.total               (total price)
+      //   - p.timestamp           (ISO timestamp of when the order was placed)
+
+      var webhookUrl = (typeof CONFIG !== 'undefined' && CONFIG.webhookUrl) ? CONFIG.webhookUrl : '';
+      var webhookPromise = webhookUrl
+        ? fetch(webhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(p) }).catch(function(err) { console.warn('Webhook error:', err); })
+        : Promise.resolve();
+
+      webhookPromise.then(function() {
+        sessionStorage.removeItem(CART_KEY);
+        _closeMayaModal();
+
+        setTimeout(function() {
+          document.getElementById('order-form-wrap').style.display = 'none';
+          document.getElementById('confirmation').style.display = 'block';
+          document.getElementById('confirm-order-id').textContent = '#' + p.orderId;
+          var isDelivery = p.fulfillment === 'delivery';
+          document.getElementById('confirm-tagline').textContent = isDelivery
+            ? 'Your order is on its way! Estimated delivery: 35–50 min.'
+            : "We'll have it ready for pickup at your selected location.";
+          document.getElementById('confirm-details').innerHTML = isDelivery
+            ? '<strong style="color:var(--cream);">🚗 Delivery to ' + p.deliveryAddress + '</strong><br><strong style="color:var(--cream);">⏱ Estimated: 35–50 min</strong><br><strong style="color:var(--cream);">👤 ' + p.customer.name + '</strong> · ' + p.customer.phone + '<br><strong style="color:var(--gold);">Total: $' + p.total.toFixed(2) + '</strong> (pay at door)'
+            : '<strong style="color:var(--cream);">📍 ' + p.location + '</strong><br><strong style="color:var(--cream);">🕐 Pickup at ' + p.pickupTime + '</strong><br><strong style="color:var(--cream);">👤 ' + p.customer.name + '</strong> · ' + p.customer.phone + '<br><strong style="color:var(--gold);">Total: $' + p.total.toFixed(2) + '</strong> (pay at pickup)';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 400);
+      });
+    }
+
+    document.getElementById('maya-close-btn').addEventListener('click', _closeMayaModal);
+    document.getElementById('maya-modal').addEventListener('click', function(e) {
+      if (e.target === this) _closeMayaModal();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && document.getElementById('maya-modal').classList.contains('open')) {
+        _closeMayaModal();
+      }
+    });
+
+    document.getElementById('maya-send-btn').addEventListener('click', function() {
+      var textarea = document.getElementById('maya-textarea');
+      var text = textarea.value.trim();
+      if (!text) return;
+      _mayaAppendMsg('user', text);
+      textarea.value = '';
+      textarea.style.height = 'auto';
+      this.disabled = true;
+      _mayaSend(text);
+    });
+
+    document.getElementById('maya-textarea').addEventListener('input', function() {
+      document.getElementById('maya-send-btn').disabled = !this.value.trim();
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+    document.getElementById('maya-textarea').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        document.getElementById('maya-send-btn').click();
+      }
+    });
+
+    document.getElementById('maya-confirm-btn').addEventListener('click', _finalizeMayaOrder);
   </script>
 
   <div id="global-call-dd" style="display:none;position:fixed;background:#1a0a00;border:1px solid rgba(232,148,15,0.28);border-radius:10px;padding:8px 0;min-width:230px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.6);">

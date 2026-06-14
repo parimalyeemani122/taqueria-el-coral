@@ -51,18 +51,20 @@ module.exports = async function handler(req, res) {
     })),
   ];
 
+  const systemPrompt2 = chatMessages.shift()?.content;
   try {
-    const response = await fetch('https://api.anthropic.com/v1/chat/completions', {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-API-Key': apiKey,
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-3.5-mini',
+        model: 'claude-haiku-4-5-20251001',
+        system: systemPrompt2,
         messages: chatMessages,
         max_tokens: 500,
-        temperature: 0.75,
       }),
     });
 
@@ -71,7 +73,7 @@ module.exports = async function handler(req, res) {
       return res.status(response.status).json({ error: data.error?.message || 'Anthropic request failed' });
     }
 
-    const message = data?.choices?.[0]?.message?.content || 'Sorry, something went wrong. Please try again.';
+    const message = data?.content?.[0]?.text || 'Sorry, something went wrong. Please try again.';
     return res.status(200).json({ message });
   } catch (error) {
     return res.status(500).json({ error: error instanceof Error ? error.message : 'Server error' });
