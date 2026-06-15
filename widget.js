@@ -297,7 +297,7 @@
     appendTyping();
 
     try {
-      const chatBase = (typeof CONFIG !== 'undefined' && CONFIG.chatbotUrl) ? CONFIG.chatbotUrl : apiBase;
+      const chatBase = 'https://restaurant-chatbot-production-2aa6.up.railway.app';
       const res = await fetch(`${chatBase}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
