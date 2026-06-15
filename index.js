@@ -43,6 +43,12 @@ http.createServer(async (req, res) => {
   if (handler) {
     await parseBody(req);
     req.query = Object.fromEntries(new URL(req.url, `http://localhost`).searchParams);
+    // Wrap res with Express-like helpers
+    res.status = (code) => { res.statusCode = code; return res; };
+    res.json = (data) => {
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(data));
+    };
     return handler(req, res);
   }
 
