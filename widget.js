@@ -297,7 +297,8 @@
     appendTyping();
 
     try {
-      const res = await fetch(`${apiBase}/api/chat`, {
+      const chatBase = (typeof CONFIG !== 'undefined' && CONFIG.chatbotUrl) ? CONFIG.chatbotUrl : apiBase;
+const res = await fetch(`${chatBase}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: history, sessionId, restaurantId }),
