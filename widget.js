@@ -298,7 +298,7 @@
 
     try {
       const chatBase = (typeof CONFIG !== 'undefined' && CONFIG.chatbotUrl) ? CONFIG.chatbotUrl : apiBase;
-const res = await fetch(`${chatBase}/api/chat`, {
+      const res = await fetch(`${chatBase}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: history, sessionId, restaurantId }),
