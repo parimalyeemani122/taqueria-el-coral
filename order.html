@@ -945,6 +945,11 @@
         </button>
       </div>
       <div class="maya-footer">
+        <div id="maya-order-error" style="display:none;background:#fff1f2;border:1px solid #fca5a5;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:12.5px;line-height:1.6;color:#991b1b;">
+          We had trouble sending your order. Please try again, or call us directly:<br>
+          <strong>Santa Teresa:</strong> <a href="tel:4085784077" style="color:#b91c1c;">(408) 578-4077</a> &nbsp;·&nbsp;
+          <strong>Capitol Expy:</strong> <a href="tel:4082292190" style="color:#b91c1c;">(408) 229-2190</a>
+        </div>
         <button class="maya-confirm-btn" id="maya-confirm-btn" disabled>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
           Confirm &amp; Place Order
@@ -1083,8 +1088,10 @@
 
       document.getElementById('maya-messages').innerHTML = '';
       document.getElementById('maya-confirm-btn').disabled = true;
+      document.getElementById('maya-confirm-btn').innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Confirm &amp; Place Order';
       document.getElementById('maya-textarea').value = '';
       document.getElementById('maya-send-btn').disabled = true;
+      _clearOrderError();
 
       var modal = document.getElementById('maya-modal');
       modal.classList.add('open');
@@ -1110,6 +1117,42 @@
       }
     }
 
+    function _mayaPostOrder(p, webhookUrl) {
+      return fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(p)
+      });
+    }
+
+    function _showConfirmation(p) {
+      sessionStorage.removeItem(CART_KEY);
+      _closeMayaModal();
+      setTimeout(function() {
+        document.getElementById('order-form-wrap').style.display = 'none';
+        document.getElementById('confirmation').style.display = 'block';
+        document.getElementById('confirm-order-id').textContent = '#' + p.orderId;
+        var isDelivery = p.fulfillment === 'delivery';
+        document.getElementById('confirm-tagline').textContent = isDelivery
+          ? 'Your order is on its way! Estimated delivery: 35–50 min.'
+          : "We'll have it ready for pickup at your selected location.";
+        document.getElementById('confirm-details').innerHTML = isDelivery
+          ? '<strong style="color:var(--cream);">🚗 Delivery to ' + p.deliveryAddress + '</strong><br><strong style="color:var(--cream);">⏱ Estimated: 35–50 min</strong><br><strong style="color:var(--cream);">👤 ' + p.customer.name + '</strong> · ' + p.customer.phone + '<br><strong style="color:var(--gold);">Total: $' + p.total.toFixed(2) + '</strong> (pay at door)'
+          : '<strong style="color:var(--cream);">📍 ' + p.location + '</strong><br><strong style="color:var(--cream);">🕐 Pickup at ' + p.pickupTime + '</strong><br><strong style="color:var(--cream);">👤 ' + p.customer.name + '</strong> · ' + p.customer.phone + '<br><strong style="color:var(--gold);">Total: $' + p.total.toFixed(2) + '</strong> (pay at pickup)';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 400);
+    }
+
+    function _showOrderError(confirmBtn) {
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Try Again';
+      document.getElementById('maya-order-error').style.display = 'block';
+    }
+
+    function _clearOrderError() {
+      document.getElementById('maya-order-error').style.display = 'none';
+    }
+
     function _finalizeMayaOrder() {
       var p = _mayaPayload;
       if (!p) return;
@@ -1117,37 +1160,27 @@
       var confirmBtn = document.getElementById('maya-confirm-btn');
       confirmBtn.disabled = true;
       confirmBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Placing Order...';
-
-      // TODO: connect confirmed order to restaurant dashboard.
-      // The dashboard will need to receive:
-      //   - p.customer.name       (customer name)
-      //   - p.items               (list of items: name, quantity, price, meatChoice, excludedIngredients)
-      //   - p.total               (total price)
-      //   - p.timestamp           (ISO timestamp of when the order was placed)
+      _clearOrderError();
 
       var webhookUrl = (typeof CONFIG !== 'undefined' && CONFIG.webhookUrl) ? CONFIG.webhookUrl : '';
-      var webhookPromise = webhookUrl
-        ? fetch(webhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(p) }).catch(function(err) { console.warn('Webhook error:', err); })
-        : Promise.resolve();
+      if (!webhookUrl) { _showConfirmation(p); return; }
 
-      webhookPromise.then(function() {
-        sessionStorage.removeItem(CART_KEY);
-        _closeMayaModal();
-
-        setTimeout(function() {
-          document.getElementById('order-form-wrap').style.display = 'none';
-          document.getElementById('confirmation').style.display = 'block';
-          document.getElementById('confirm-order-id').textContent = '#' + p.orderId;
-          var isDelivery = p.fulfillment === 'delivery';
-          document.getElementById('confirm-tagline').textContent = isDelivery
-            ? 'Your order is on its way! Estimated delivery: 35–50 min.'
-            : "We'll have it ready for pickup at your selected location.";
-          document.getElementById('confirm-details').innerHTML = isDelivery
-            ? '<strong style="color:var(--cream);">🚗 Delivery to ' + p.deliveryAddress + '</strong><br><strong style="color:var(--cream);">⏱ Estimated: 35–50 min</strong><br><strong style="color:var(--cream);">👤 ' + p.customer.name + '</strong> · ' + p.customer.phone + '<br><strong style="color:var(--gold);">Total: $' + p.total.toFixed(2) + '</strong> (pay at door)'
-            : '<strong style="color:var(--cream);">📍 ' + p.location + '</strong><br><strong style="color:var(--cream);">🕐 Pickup at ' + p.pickupTime + '</strong><br><strong style="color:var(--cream);">👤 ' + p.customer.name + '</strong> · ' + p.customer.phone + '<br><strong style="color:var(--gold);">Total: $' + p.total.toFixed(2) + '</strong> (pay at pickup)';
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 400);
-      });
+      _mayaPostOrder(p, webhookUrl)
+        .then(function(res) {
+          if (res.ok) {
+            _showConfirmation(p);
+          } else {
+            return new Promise(function(resolve) { setTimeout(resolve, 2000); })
+              .then(function() { return _mayaPostOrder(p, webhookUrl); })
+              .then(function(res2) { res2.ok ? _showConfirmation(p) : _showOrderError(confirmBtn); });
+          }
+        })
+        .catch(function() {
+          return new Promise(function(resolve) { setTimeout(resolve, 2000); })
+            .then(function() { return _mayaPostOrder(p, webhookUrl); })
+            .then(function(res2) { res2.ok ? _showConfirmation(p) : _showOrderError(confirmBtn); })
+            .catch(function() { _showOrderError(confirmBtn); });
+        });
     }
 
     document.getElementById('maya-close-btn').addEventListener('click', _closeMayaModal);
