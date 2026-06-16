@@ -1056,11 +1056,11 @@
         var res = await fetch(chatbotUrl + '/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: _mayaHistory, sessionId: _mayaSessionId, restaurantId: 'el-coral-001' })
+          body: JSON.stringify({ messages: _mayaHistory, sessionId: _mayaSessionId, restaurantId: 'taqueria_el_coral_santa_teresa' })
         });
         var data = await res.json();
         _mayaHideTyping();
-        var reply = (data && data.content) ? data.content : (data && data.error) ? data.error : 'Something went wrong — please try again.';
+        var reply = (data && (data.message || data.content)) ? (data.message || data.content) : (data && data.error) ? data.error : 'Something went wrong — please try again.';
         _mayaHistory.push({ role: 'assistant', content: reply });
         _mayaAppendMsg('bot', reply);
         confirmBtn.disabled = false;
