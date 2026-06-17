@@ -4,11 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Order — Taqueria El Coral</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
-  <script src="config.js"></script>
+  <script src="/config.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -606,18 +605,45 @@
     // ── PICKUP TIMES ─────────────────────────────────────────────────────────────
     function generatePickupTimes() {
       const sel = document.getElementById('pickup-time');
-      const now = new Date();
-      const base = new Date(now.getTime() + 20 * 60000);
-      const roundedMins = Math.ceil(base.getMinutes() / 15) * 15;
-      base.setMinutes(roundedMins, 0, 0);
-      if (roundedMins >= 60) { base.setHours(base.getHours() + 1); base.setMinutes(0); }
-      for (let i = 0; i < 12; i++) {
-        const t = new Date(base.getTime() + i * 15 * 60000);
-        const h = t.getHours(), m = t.getMinutes();
+
+      // Always work in Pacific Time regardless of customer's device timezone
+      const nowPT  = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+      const dayPT  = nowPT.getDay(); // 0=Sun … 6=Sat
+
+      // Closing hours per location per day (24-hr decimal) — keep in sync with badge JS
+      const stClose = { 1:20, 2:20, 3:20, 4:20, 5:20, 6:16, 0: null };
+      const ceClose = { 1:21, 2:21, 3:21, 4:21, 5:21, 6:21, 0:21 };
+      // Use the earlier closing of the two locations so slots are always valid for both
+      const closeA = stClose[dayPT], closeB = ceClose[dayPT];
+      const closeHour = (closeA == null && closeB == null) ? null
+                      : closeA == null ? closeB
+                      : closeB == null ? closeA
+                      : Math.min(closeA, closeB);
+
+      // Start 20 min from now, rounded up to next 15-min mark
+      const basePT = new Date(nowPT.getTime() + 20 * 60000);
+      const rounded = Math.ceil(basePT.getMinutes() / 15) * 15;
+      basePT.setMinutes(rounded % 60, 0, 0);
+      if (rounded >= 60) basePT.setHours(basePT.getHours() + 1);
+
+      let added = 0;
+      for (let i = 0; i < 16 && added < 12; i++) {
+        const t  = new Date(basePT.getTime() + i * 15 * 60000);
+        const h  = t.getHours(), m = t.getMinutes();
+        // Stop if we've passed the closing hour for today
+        if (closeHour !== null && (h + m / 60) >= closeHour) break;
         const label = `${h > 12 ? h - 12 : h || 12}:${m.toString().padStart(2,'0')} ${h >= 12 ? 'PM' : 'AM'}`;
         const opt = document.createElement('option');
         opt.value = label; opt.textContent = `Today, ${label}`;
         sel.appendChild(opt);
+        added++;
+      }
+
+      // If restaurant is closed or no slots fit before closing, say so
+      if (added === 0) {
+        const opt = document.createElement('option');
+        opt.value = ''; opt.textContent = 'Closed today — call to order';
+        opt.disabled = true; sel.appendChild(opt);
       }
     }
 
@@ -1484,7 +1510,6 @@
     });
   </script>
 
-  <script src="/config.js"></script>
   <script>
     (function () {
       function isOpen(hours) {
@@ -1509,6 +1534,6 @@
       });
     })();
   </script>
-  <script src="https://restaurant-chatbot-production-2aa6.up.railway.app/widget.js" data-restaurant="taqueria_el_coral_santa_teresa" data-name="Taqueria El Coral" data-color="#D94F2B" data-position="right"></script>
+  <script async src="https://restaurant-chatbot-production-2aa6.up.railway.app/widget.js" data-restaurant="taqueria_el_coral_santa_teresa" data-name="Taqueria El Coral" data-color="#D94F2B" data-position="right"></script>
 </body>
 </html>
