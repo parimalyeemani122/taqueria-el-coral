@@ -983,13 +983,11 @@
         if (confPage) confPage.style.paddingTop = '60px';
 
         /* ── Auto-select Santa Teresa, skip location picker ──────────── */
-        setTimeout(function () {
-          var lsc1 = document.getElementById('lsc-1');
-          if (lsc1) {
-            pickLocation('Santa Teresa Blvd', '5899 Santa Teresa Blvd #109',
-                         '4085784077', '(408) 578-4077', lsc1);
-          }
-        }, 80);
+        var lsc1 = document.getElementById('lsc-1');
+        if (lsc1) {
+          pickLocation('Santa Teresa Blvd', '5899 Santa Teresa Blvd #109',
+                       '4085784077', '(408) 578-4077', lsc1);
+        }
 
         /* ── Hide fulfillment toggle (cashier = pickup only) ─────────── */
         var fw = document.querySelector('.fulfillment-wrap');
