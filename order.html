@@ -356,7 +356,7 @@
             <div class="lsc-check" aria-hidden="true">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF8F0" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
-            <div class="lsc-name">Santa Teresa Blvd</div>
+            <div class="lsc-name">Santa Teresa Blvd <span data-loc-status="st"></span></div>
             <div class="lsc-addr">5899 Santa Teresa Blvd #109<br>San Jose, CA 95123</div>
             <div class="lsc-hours">Mon–Fri 10am–8pm · Sat 10am–4pm · Sun Closed</div>
             <a href="tel:4085784077" class="lsc-call" aria-label="Call Santa Teresa Blvd location at (408) 578-4077" onclick="event.stopPropagation()">
@@ -368,7 +368,7 @@
             <div class="lsc-check" aria-hidden="true">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF8F0" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
-            <div class="lsc-name">W Capitol Expressway</div>
+            <div class="lsc-name">W Capitol Expressway <span data-loc-status="ce"></span></div>
             <div class="lsc-addr">426 W Capitol Expy<br>San Jose, CA 95136</div>
             <div class="lsc-hours">Mon–Thu 10am–9pm · Fri–Sun 9am–9pm</div>
             <a href="tel:4082292190" class="lsc-call" aria-label="Call W Capitol Expressway location at (408) 229-2190" onclick="event.stopPropagation()">
@@ -1248,6 +1248,30 @@
   </script>
 
   <script src="/config.js"></script>
-  <script src="/widget.js" data-restaurant="taqueria_el_coral_santa_teresa" data-name="Taqueria El Coral" data-color="#D94F2B" data-position="right"></script>
+  <script>
+    (function () {
+      function isOpen(hours) {
+        var now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+        var day = now.getDay();
+        var h = now.getHours() + now.getMinutes() / 60;
+        var range = hours[day];
+        return range ? (h >= range[0] && h < range[1]) : false;
+      }
+      var stHours = { 1:[10,20],2:[10,20],3:[10,20],4:[10,20],5:[10,20],6:[10,16],0:null };
+      var ceHours = { 1:[10,21],2:[10,21],3:[10,21],4:[10,21],5:[9,21],6:[9,21],0:[9,21] };
+      function badge(open) {
+        return open
+          ? '<span style="display:inline-block;margin-left:6px;padding:1px 7px;background:#dcfce7;color:#15803d;font-size:10px;font-weight:700;border-radius:20px;letter-spacing:0.04em;vertical-align:middle;">OPEN</span>'
+          : '<span style="display:inline-block;margin-left:6px;padding:1px 7px;background:#fee2e2;color:#b91c1c;font-size:10px;font-weight:700;border-radius:20px;letter-spacing:0.04em;vertical-align:middle;">CLOSED</span>';
+      }
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('[data-loc-status]').forEach(function (el) {
+          var hours = el.dataset.locStatus === 'st' ? stHours : ceHours;
+          el.innerHTML = badge(isOpen(hours));
+        });
+      });
+    })();
+  </script>
+  <script src="https://restaurant-chatbot-production-2aa6.up.railway.app/widget.js" data-restaurant="taqueria_el_coral_santa_teresa" data-name="Taqueria El Coral" data-color="#D94F2B" data-position="right"></script>
 </body>
 </html>

@@ -619,7 +619,7 @@
             (408) 578-4077
           </a>
           <div class="loc-hours">
-            <div class="hours-label">Hours</div>
+            <div class="hours-label">Hours <span data-loc-status="st"></span></div>
             <div class="hours-row"><span class="days">Mon – Fri</span><span class="time">10 am – 8 pm</span></div>
             <div class="hours-row"><span class="days">Saturday</span><span class="time">10 am – 4 pm</span></div>
             <div class="hours-row"><span class="days">Sunday</span><span class="time" style="color:var(--red);">Closed</span></div>
@@ -647,7 +647,7 @@
             (408) 229-2190
           </a>
           <div class="loc-hours">
-            <div class="hours-label">Hours</div>
+            <div class="hours-label">Hours <span data-loc-status="ce"></span></div>
             <div class="hours-row"><span class="days">Mon – Thu</span><span class="time">10 am – 9 pm</span></div>
             <div class="hours-row"><span class="days">Fri – Sun</span><span class="time">9 am – 9 pm</span></div>
           </div>
@@ -843,6 +843,32 @@
   </script>
 
   <script src="/config.js"></script>
-  <script src="/widget.js" data-restaurant="taqueria_el_coral_santa_teresa" data-name="Taqueria El Coral" data-color="#D94F2B" data-position="right"></script>
+  <script>
+    (function () {
+      function isOpen(hours) {
+        var now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+        var day = now.getDay(); // 0=Sun,1=Mon,...,6=Sat
+        var h = now.getHours() + now.getMinutes() / 60;
+        var range = hours[day];
+        return range ? (h >= range[0] && h < range[1]) : false;
+      }
+      // [open, close] in decimal hours; null = closed all day
+      var stHours = { 1:[10,20],2:[10,20],3:[10,20],4:[10,20],5:[10,20],6:[10,16],0:null };
+      var ceHours = { 1:[10,21],2:[10,21],3:[10,21],4:[10,21],5:[9,21],6:[9,21],0:[9,21] };
+      function badge(open) {
+        return open
+          ? '<span style="display:inline-block;margin-left:8px;padding:2px 8px;background:#dcfce7;color:#15803d;font-size:11px;font-weight:700;border-radius:20px;letter-spacing:0.04em;">OPEN</span>'
+          : '<span style="display:inline-block;margin-left:8px;padding:2px 8px;background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:700;border-radius:20px;letter-spacing:0.04em;">CLOSED</span>';
+      }
+      document.addEventListener('DOMContentLoaded', function () {
+        var els = document.querySelectorAll('[data-loc-status]');
+        els.forEach(function (el) {
+          var hours = el.dataset.locStatus === 'st' ? stHours : ceHours;
+          el.innerHTML = badge(isOpen(hours));
+        });
+      });
+    })();
+  </script>
+  <script src="https://restaurant-chatbot-production-2aa6.up.railway.app/widget.js" data-restaurant="taqueria_el_coral_santa_teresa" data-name="Taqueria El Coral" data-color="#D94F2B" data-position="right"></script>
 </body>
 </html>
