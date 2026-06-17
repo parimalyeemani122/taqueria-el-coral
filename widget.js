@@ -29,13 +29,12 @@
   const sessionId = getSessionId();
 
   const HISTORY_KEY = `maya_history_${restaurantId}`;
-  function loadHistory() {
-    try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { return []; }
-  }
   function saveHistory(h) {
-    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h.slice(-40))); } catch {}
+    try { sessionStorage.setItem(HISTORY_KEY, JSON.stringify(h.slice(-40))); } catch {}
   }
-  let history = loadHistory();
+  // Always start fresh on page load — clear any persisted history
+  try { localStorage.removeItem(HISTORY_KEY); sessionStorage.removeItem(HISTORY_KEY); } catch {}
+  let history = [];
 
   const css = `
     #maya-widget-btn {
