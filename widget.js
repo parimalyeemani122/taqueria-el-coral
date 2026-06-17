@@ -18,7 +18,10 @@
   const restaurantName = script?.getAttribute('data-name') || 'Our Restaurant';
   const primaryColor = script?.getAttribute('data-color') || '#92400e';
   const position = script?.getAttribute('data-position') || 'right';
-  const apiBase = script?.src ? new URL(script.src).origin : window.location.origin;
+  // All API calls go to the chatbot backend — reads from config.js, falls back to hardcoded URL
+  const chatBase = (typeof CONFIG !== 'undefined' && CONFIG.chatbotUrl)
+    ? CONFIG.chatbotUrl.replace(/\/$/, '')
+    : 'https://restaurant-chatbot-production-2aa6.up.railway.app';
 
   const SESSION_KEY = `maya_session_${restaurantId}`;
   function getSessionId() {
@@ -296,7 +299,6 @@
     appendTyping();
 
     try {
-      const chatBase = 'https://restaurant-chatbot-production-2aa6.up.railway.app';
       const res = await fetch(`${chatBase}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -321,7 +323,7 @@
 
   async function refreshOrderBar() {
     try {
-      const res = await fetch(`${apiBase}/api/order?sessionId=${sessionId}`);
+      const res = await fetch(`${chatBase}/api/order?sessionId=${sessionId}`);
       if (!res.ok) return;
       const data = await res.json();
       if (!data.empty && data.items?.length > 0) {
