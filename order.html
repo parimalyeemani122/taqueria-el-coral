@@ -922,6 +922,245 @@
     document.head.appendChild(style);
   </script>
 
+  <!-- ── CASHIER MODE ──────────────────────────────────────────────────── -->
+  <style>
+    /* Cashier banner */
+    .cashier-banner {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 2000;
+      background: #1e293b; color: #60a5fa;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      text-align: center; padding: 7px;
+    }
+    /* Cash / Card buttons */
+    .cashier-pay-btns { display: flex; gap: 12px; }
+    .cashier-pay-btns .btn-submit { flex: 1; }
+    .btn-cash { background: #16a34a !important; box-shadow: 0 4px 16px rgba(22,163,74,.3) !important; }
+    .btn-cash:hover:not(:disabled) { background: #15803d !important; }
+
+    /* Print receipt — only show the confirmation, clean receipt style */
+    @media print {
+      * { color: #000 !important; background: #fff !important;
+          box-shadow: none !important; text-shadow: none !important; }
+      body::before, .cashier-banner, #nav, .nav-topbar,
+      #order-form-wrap, .confirm-check, .confirm-sub,
+      #btn-print-receipt, .confirm-cashier-btns { display: none !important; }
+      #confirmation { display: block !important; }
+      .page {
+        padding: 20px !important; margin: 0 !important;
+        max-width: 100% !important; text-align: center;
+      }
+      .confirm-title { font-size: 22pt !important; }
+      .confirm-order-id {
+        font-size: 26pt !important; border: 2px solid #000 !important;
+        display: block !important; margin: 10px auto !important;
+        background: #f5f5f5 !important;
+      }
+      #confirm-tagline { font-size: 11pt !important; color: #444 !important; margin-bottom: 10px !important; }
+      #confirm-details {
+        border: 1px solid #ccc !important; margin: 10px auto !important;
+        max-width: 100% !important; font-size: 11pt !important;
+      }
+    }
+  </style>
+  <script>
+    (function () {
+      var CASHIER = new URLSearchParams(location.search).get('mode') === 'cashier';
+      if (!CASHIER) return;
+
+      /* ── Cashier banner ─────────────────────────────────────────────── */
+      var banner = document.createElement('div');
+      banner.className = 'cashier-banner';
+      banner.textContent = '🏪 CASHIER MODE — In-Store Orders';
+      document.body.insertBefore(banner, document.body.firstChild);
+
+      /* Shift nav + page down to clear the banner */
+      document.addEventListener('DOMContentLoaded', function () {
+        var navEl = document.getElementById('nav');
+        if (navEl) navEl.style.top = '26px';
+        var page = document.querySelector('#main-content');
+        if (page) page.style.paddingTop = '150px';
+        var confPage = document.querySelector('#confirmation .page');
+        if (confPage) confPage.style.paddingTop = '60px';
+
+        /* ── Auto-select Santa Teresa, skip location picker ──────────── */
+        setTimeout(function () {
+          var lsc1 = document.getElementById('lsc-1');
+          if (lsc1) {
+            pickLocation('Santa Teresa Blvd', '5899 Santa Teresa Blvd #109',
+                         '4085784077', '(408) 578-4077', lsc1);
+          }
+        }, 80);
+
+        /* ── Hide fulfillment toggle (cashier = pickup only) ─────────── */
+        var fw = document.querySelector('.fulfillment-wrap');
+        if (fw) fw.style.display = 'none';
+
+        /* ── Phone optional in store ─────────────────────────────────── */
+        var ph = document.getElementById('customer-phone');
+        if (ph) {
+          ph.placeholder = 'Phone (optional)';
+          ph.removeAttribute('required');
+          var star = ph.closest('.form-group') &&
+                     ph.closest('.form-group').querySelector('[aria-hidden]');
+          if (star) star.style.display = 'none';
+        }
+
+        /* ── Replace "Place Order" with Cash + Card buttons ──────────── */
+        var oldBtn = document.getElementById('place-order-btn');
+        if (oldBtn) {
+          oldBtn.style.display = 'none';
+          var wrap = document.createElement('div');
+          wrap.className = 'cashier-pay-btns';
+          wrap.innerHTML =
+            '<button id="btn-pay-cash" class="btn-submit btn-cash" type="button" onclick="cashierPlace(\'cash\')">' +
+              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>' +
+              'Cash' +
+            '</button>' +
+            '<button id="btn-pay-card" class="btn-submit" type="button" onclick="cashierPlace(\'card\')">' +
+              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>' +
+              'Card' +
+            '</button>';
+          oldBtn.parentNode.insertBefore(wrap, oldBtn.nextSibling);
+        }
+
+        /* ── Swap confirmation-page buttons ──────────────────────────── */
+        var backHome = document.querySelector('#confirmation a[href="index.html"]');
+        if (backHome) backHome.style.display = 'none';
+        var orderAgain = document.querySelector('#confirmation a[href="menu.html"]');
+        if (orderAgain) {
+          orderAgain.textContent = '✚ New Order';
+          orderAgain.href = 'order.html?mode=cashier';
+          orderAgain.style.cssText += 'background:var(--red);color:var(--light);box-shadow:0 4px 20px var(--red-glow);border-color:var(--red);';
+        }
+        /* Insert Print Receipt button */
+        var actionRow = document.querySelector('#confirmation .page > div:last-child');
+        if (actionRow && !document.getElementById('btn-print-receipt')) {
+          var pBtn = document.createElement('button');
+          pBtn.id = 'btn-print-receipt';
+          pBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Print Receipt';
+          pBtn.style.cssText = 'display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:rgba(44,24,16,0.06);color:var(--cream-dim);border:1.5px solid rgba(44,24,16,0.15);border-radius:3px;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;';
+          pBtn.className = 'confirm-cashier-btns';
+          pBtn.onclick = function () { window.print(); };
+          actionRow.insertBefore(pBtn, actionRow.firstChild);
+        }
+      });
+
+      /* ── Direct order submission — no Maya chat modal ────────────────── */
+      window.cashierPlace = function (paymentMethod) {
+        var cart = getCart();
+        if (!cart.length) { alert('Cart is empty — add items from the menu first.'); return; }
+
+        clearAllErrors();
+        var name  = (document.getElementById('customer-name').value  || '').trim();
+        var phone = (document.getElementById('customer-phone').value || '').trim();
+        var notes = (document.getElementById('order-notes').value    || '').trim();
+
+        if (!name) {
+          setFieldError('customer-name', 'name-error', true);
+          document.getElementById('customer-name').focus();
+          return;
+        }
+
+        var pickupTime = document.getElementById('pickup-time').value || 'ASAP';
+        var loc = selectedPickupAddress || selectedPickupLocation || 'Santa Teresa Blvd';
+
+        var subtotal = cart.reduce(function (s, i) { return s + i.price * i.quantity; }, 0);
+        var tax   = subtotal * TAX_RATE;
+        var total = subtotal + tax + SERVICE_FEE;
+        var orderId = 'EC-' + Date.now().toString(36).toUpperCase().slice(-6);
+
+        var payload = {
+          orderId:    orderId,
+          timestamp:  new Date().toISOString(),
+          fulfillment: 'pickup',
+          location:   loc,
+          customer:   { name: name, phone: phone },
+          pickupTime: pickupTime,
+          notes:      notes,
+          items: cart.map(function (i) {
+            return { name: i.name, quantity: i.quantity, price: i.price,
+                     meatChoice: i.meatChoice || null,
+                     excludedIngredients: i.excludedIngredients || [] };
+          }),
+          subtotal:    +subtotal.toFixed(2),
+          tax:         +tax.toFixed(2),
+          serviceFee:  SERVICE_FEE,
+          deliveryFee: 0,
+          total:       +total.toFixed(2),
+          source:      'in-store',
+          paymentMethod: paymentMethod,
+        };
+
+        /* Disable buttons while posting */
+        var cashBtn = document.getElementById('btn-pay-cash');
+        var cardBtn = document.getElementById('btn-pay-card');
+        [cashBtn, cardBtn].forEach(function (b) { if (b) b.disabled = true; });
+        if (cashBtn) cashBtn.textContent = 'Placing…';
+
+        var wh = (typeof CONFIG !== 'undefined' && CONFIG.webhookUrl) ? CONFIG.webhookUrl : '';
+
+        var doPost = function () {
+          return fetch(wh, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+        };
+
+        var succeed = function () {
+          sessionStorage.removeItem(CART_KEY);
+          /* Fill in confirmation details */
+          document.getElementById('confirm-tagline').textContent =
+            (paymentMethod === 'cash' ? '💵 Cash' : '💳 Card') +
+            ' — ready in ~10 min';
+          document.getElementById('confirm-details').innerHTML =
+            '<strong style="color:var(--cream);">👤 ' + name + '</strong>' +
+            (phone ? '&nbsp;&nbsp;·&nbsp;&nbsp;' + phone : '') + '<br>' +
+            '<strong style="color:var(--cream);">📍 ' + loc + '</strong><br>' +
+            '<strong style="color:var(--cream);">🕐 ' + pickupTime + '</strong>' +
+            '<br><br>' +
+            payload.items.map(function (i) {
+              return '• ' + i.quantity + '× ' + i.name +
+                (i.meatChoice ? ' (' + i.meatChoice + ')' : '');
+            }).join('<br>') +
+            '<br><br>' +
+            '<strong style="color:var(--gold);">' +
+              'Subtotal $' + subtotal.toFixed(2) +
+              '&nbsp;&nbsp;·&nbsp;&nbsp;Tax $' + tax.toFixed(2) +
+              '&nbsp;&nbsp;·&nbsp;&nbsp;<span style="font-size:15px;">Total $' + total.toFixed(2) + '</span>' +
+            '</strong>';
+          document.getElementById('order-form-wrap').style.display = 'none';
+          document.getElementById('confirmation').style.display = 'block';
+          document.getElementById('confirm-order-id').textContent = '#' + orderId;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        var fail = function () {
+          [cashBtn, cardBtn].forEach(function (b) { if (b) b.disabled = false; });
+          if (cashBtn) cashBtn.textContent = 'Cash';
+          alert('Could not send order. Check your connection and try again, or call the kitchen directly.');
+        };
+
+        /* No webhook configured — still show confirmation (dev/offline mode) */
+        if (!wh) { succeed(); return; }
+
+        doPost()
+          .then(function (r) {
+            if (r.ok) { succeed(); return; }
+            return new Promise(function (res) { setTimeout(res, 1500); })
+              .then(doPost)
+              .then(function (r2) { r2.ok ? succeed() : fail(); });
+          })
+          .catch(function () {
+            new Promise(function (res) { setTimeout(res, 1500); })
+              .then(doPost)
+              .then(function (r2) { r2.ok ? succeed() : fail(); })
+              .catch(fail);
+          });
+      };
+    })();
+  </script>
+
   <!-- Maya Order Confirmation Modal -->
   <div id="maya-modal" role="dialog" aria-modal="true" aria-labelledby="maya-modal-title" aria-hidden="true">
     <div class="maya-box">
