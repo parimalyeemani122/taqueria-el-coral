@@ -891,6 +891,7 @@
       // Direct order submission — no chatbot review step
       (function submitDirect(p) {
         var wh = (typeof CONFIG !== 'undefined' && CONFIG.webhookUrl) ? CONFIG.webhookUrl : '';
+        function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
         function succeed() {
           sessionStorage.removeItem(CART_KEY);
           document.getElementById('order-form-wrap').style.display = 'none';
@@ -901,8 +902,8 @@
             ? 'Your order is on its way! Estimated delivery: 35–50 min.'
             : "We'll have it ready for pickup at your selected location.";
           document.getElementById('confirm-details').innerHTML = isDelivery
-            ? '<strong style="color:var(--cream);">🚗 Delivery to ' + p.deliveryAddress + '</strong><br><strong style="color:var(--cream);">⏱ Estimated: 35–50 min</strong><br><strong style="color:var(--cream);">👤 ' + p.customer.name + '</strong> · ' + p.customer.phone + '<br><strong style="color:var(--gold);">Total: $' + p.total.toFixed(2) + '</strong> (pay at door)'
-            : '<strong style="color:var(--cream);">📍 ' + p.location + '</strong><br><strong style="color:var(--cream);">🕐 Pickup at ' + p.pickupTime + '</strong><br><strong style="color:var(--cream);">👤 ' + p.customer.name + '</strong> · ' + p.customer.phone + '<br><strong style="color:var(--gold);">Total: $' + p.total.toFixed(2) + '</strong> (pay at pickup)';
+            ? '<strong style="color:var(--cream);">🚗 Delivery to ' + esc(p.deliveryAddress) + '</strong><br><strong style="color:var(--cream);">⏱ Estimated: 35–50 min</strong><br><strong style="color:var(--cream);">👤 ' + esc(p.customer.name) + '</strong> · ' + esc(p.customer.phone) + '<br><strong style="color:var(--gold);">Total: $' + p.total.toFixed(2) + '</strong> (pay at door)'
+            : '<strong style="color:var(--cream);">📍 ' + esc(p.location) + '</strong><br><strong style="color:var(--cream);">🕐 Pickup at ' + esc(p.pickupTime) + '</strong><br><strong style="color:var(--cream);">👤 ' + esc(p.customer.name) + '</strong> · ' + esc(p.customer.phone) + '<br><strong style="color:var(--gold);">Total: $' + p.total.toFixed(2) + '</strong> (pay at pickup)';
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         function fail() {
@@ -913,7 +914,7 @@
         function doPost() {
           return fetch(wh, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(p) });
         }
-        if (!wh) { succeed(); return; }
+        if (!wh) { fail(); return; }
         doPost()
           .then(function(r) {
             if (r.ok) { succeed(); return; }
