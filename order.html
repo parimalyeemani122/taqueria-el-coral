@@ -569,18 +569,29 @@
       const sel = document.getElementById('pickup-time');
 
       // Always work in Pacific Time regardless of customer's device timezone
-      const nowPT  = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
-      const dayPT  = nowPT.getDay(); // 0=Sun … 6=Sat
+      const nowPT = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+      const dayPT = nowPT.getDay(); // 0=Sun … 6=Sat
+      const nowH  = nowPT.getHours() + nowPT.getMinutes() / 60;
 
-      // Closing hours per location per day (24-hr decimal) — keep in sync with badge JS
-      const stClose = { 1:20, 2:20, 3:20, 4:20, 5:20, 6:16, 0: null };
-      const ceClose = { 1:21, 2:21, 3:21, 4:21, 5:21, 6:21, 0:21 };
-      // Use the earlier closing of the two locations so slots are always valid for both
-      const closeA = stClose[dayPT], closeB = ceClose[dayPT];
-      const closeHour = (closeA == null && closeB == null) ? null
-                      : closeA == null ? closeB
-                      : closeB == null ? closeA
-                      : Math.min(closeA, closeB);
+      // [open, close] per location per day (24-hr decimal) — keep in sync with badge JS
+      const stHrs = { 1:[10,20], 2:[10,20], 3:[10,20], 4:[10,20], 5:[10,20], 6:[10,16], 0:null };
+      const ceHrs = { 1:[10,21], 2:[10,21], 3:[10,21], 4:[10,21], 5:[9,21],  6:[9,21],  0:[9,21] };
+      const stDay = stHrs[dayPT], ceDay = ceHrs[dayPT];
+
+      // Most conservative window: latest open, earliest close (slots valid for both locations)
+      const openA = stDay ? stDay[0] : null, openB = ceDay ? ceDay[0] : null;
+      const closeA = stDay ? stDay[1] : null, closeB = ceDay ? ceDay[1] : null;
+      const openHour  = openA  === null && openB  === null ? null : openA  === null ? openB  : openB  === null ? openA  : Math.max(openA,  openB);
+      const closeHour = closeA === null && closeB === null ? null : closeA === null ? closeB : closeB === null ? closeA : Math.min(closeA, closeB);
+
+      // Closed all day, or it's already past closing → show message, no slots
+      if (openHour === null || (closeHour !== null && nowH >= closeHour)) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = openHour === null ? 'Closed today — call (669) 248-9997' : 'Closed for today — call (669) 248-9997';
+        opt.disabled = true; sel.appendChild(opt);
+        return;
+      }
 
       // Start 20 min from now, rounded up to next 15-min mark
       const basePT = new Date(nowPT.getTime() + 20 * 60000);
@@ -588,11 +599,15 @@
       basePT.setMinutes(rounded % 60, 0, 0);
       if (rounded >= 60) basePT.setHours(basePT.getHours() + 1);
 
+      // Clamp to opening time — never show slots before the store opens
+      if (basePT.getHours() + basePT.getMinutes() / 60 < openHour) {
+        basePT.setHours(Math.floor(openHour), Math.round((openHour % 1) * 60), 0, 0);
+      }
+
       let added = 0;
       for (let i = 0; i < 16 && added < 12; i++) {
-        const t  = new Date(basePT.getTime() + i * 15 * 60000);
-        const h  = t.getHours(), m = t.getMinutes();
-        // Stop if we've passed the closing hour for today
+        const t = new Date(basePT.getTime() + i * 15 * 60000);
+        const h = t.getHours(), m = t.getMinutes();
         if (closeHour !== null && (h + m / 60) >= closeHour) break;
         const label = `${h > 12 ? h - 12 : h || 12}:${m.toString().padStart(2,'0')} ${h >= 12 ? 'PM' : 'AM'}`;
         const opt = document.createElement('option');
@@ -601,10 +616,9 @@
         added++;
       }
 
-      // If restaurant is closed or no slots fit before closing, say so
       if (added === 0) {
         const opt = document.createElement('option');
-        opt.value = ''; opt.textContent = 'Closed today — call to order';
+        opt.value = ''; opt.textContent = 'No slots available today — call (669) 248-9997';
         opt.disabled = true; sel.appendChild(opt);
       }
     }
